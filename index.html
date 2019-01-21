@@ -6,7 +6,7 @@
 -->
 <html>
 	<head>
-		<title>Arcana by HTML5 UP</title>
+		<title>My Stable</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
@@ -58,7 +58,7 @@
 				
 				<br><br><img src="pictures/logoPNG.png" alt="" />
 					<header>
-						<h2>MyStable<em>Willkommen auf unserer Webseite hier gelangen Sie zu ihrem persönlichen Zugang.</em></h2><br>
+						<h2>MyStable: <em>Willkommen auf unserer Webseite hier gelangen Sie zu ihrem persönlichen Zugang.</em></h2><br>
 						<a href="#" class="button">Login</a>
 						
 					</header>
@@ -97,8 +97,8 @@
 				<section class="wrapper style2">
 					<div class="container">
 						<header class="major">
-							<h2>A gigantic heading you can use for whatever</h2>
-							<p>With a much smaller subtitle hanging out just below it</p>
+							<h2>Ihr persönlicher Stall Verwaltungsassistent</h2>
+							<p>Organisieren Sie Ihre Hallen, Reitplätze und vieles mehr mit nur wenigen Klicks.</p>
 						</header>
 					</div>
 				</section>
@@ -109,19 +109,19 @@
 						<div class="row">
 							<section class="col-6 col-12-narrower">
 								<div class="box post">
-									<a href="#" class="image left"><img src="images/pic01.jpg" alt="" /></a>
+									<a href="#" class="image left"><img src="pictures/calendar.png" alt="" /></a>
 									<div class="inner">
-										<h3>The First Thing</h3>
-										<p>Duis neque nisi, dapibus sed mattis et quis, nibh. Sed et dapibus nisl amet mattis, sed a rutrum accumsan sed. Suspendisse eu.</p>
+										<h3>Hallenplan</h3>
+										<p>Ihre Stallgemeinschaft kann Ihre Hallenpläne ganz einfach selbst verwalten.</p>
 									</div>
 								</div>
 							</section>
 							<section class="col-6 col-12-narrower">
 								<div class="box post">
-									<a href="#" class="image left"><img src="images/pic02.jpg" alt="" /></a>
+									<a href="#" class="image left"><img src="pictures/horse.jpg" alt="" /></a>
 									<div class="inner">
-										<h3>The Second Thing</h3>
-										<p>Duis neque nisi, dapibus sed mattis et quis, nibh. Sed et dapibus nisl amet mattis, sed a rutrum accumsan sed. Suspendisse eu.</p>
+										<h3>Pferdeverwaltung</h3>
+										<p>Reiter und Pferde können im System hinterlegt und Bearbeitet werden.</p>
 									</div>
 								</div>
 							</section>
@@ -129,19 +129,19 @@
 						<div class="row">
 							<section class="col-6 col-12-narrower">
 								<div class="box post">
-									<a href="#" class="image left"><img src="images/pic03.jpg" alt="" /></a>
+									<a href="#" class="image left"><img src="pictures/horseRider.png" alt="" /></a>
 									<div class="inner">
-										<h3>The Third Thing</h3>
-										<p>Duis neque nisi, dapibus sed mattis et quis, nibh. Sed et dapibus nisl amet mattis, sed a rutrum accumsan sed. Suspendisse eu.</p>
+										<h3>Reiterverwaltung</h3>
+										<p>Verwalten Sie Ihre aktiven und ehemaligen Reiter ganz einfach mit nur wenigen Klicks.</p>
 									</div>
 								</div>
 							</section>
 							<section class="col-6 col-12-narrower">
 								<div class="box post">
-									<a href="#" class="image left"><img src="images/pic04.jpg" alt="" /></a>
+									<a href="#" class="image left"><img src="pictures/infoIcon.png" alt="" /></a>
 									<div class="inner">
-										<h3>The Fourth Thing</h3>
-										<p>Duis neque nisi, dapibus sed mattis et quis, nibh. Sed et dapibus nisl amet mattis, sed a rutrum accumsan sed. Suspendisse eu.</p>
+										<h3>Wichtige Infos</h3>
+										<p>Machen Sie z.B. Mitteilungen an Ihre Stallgemeinschaft über kommende Hufschmied Besuche.</p>
 									</div>
 								</div>
 							</section>
@@ -189,7 +189,7 @@
 							</section>
 							<section class="col-6 col-12-narrower">
 								<h3>Get In Touch</h3>
-								<form>
+								<form class="form-horizontal" action="scripts/sendMail.php" method="post" enctype="multipart/form-data">
 									<div class="row gtr-50">
 										<div class="col-6 col-12-mobilep">
 											<input type="text" name="name" id="name" placeholder="Name" />
@@ -202,7 +202,7 @@
 										</div>
 										<div class="col-12">
 											<ul class="actions">
-												<li><input type="submit" class="button alt" value="Send Message" /></li>
+												<li><input name="submit" value="submit" type="submit" class="button alt" value="Send Message" /></li>
 											</ul>
 										</div>
 									</div>
