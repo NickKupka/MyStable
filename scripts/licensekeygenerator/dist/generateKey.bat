@@ -1,0 +1,38 @@
+::[Bat To Exe Converter]
+::
+::fBE1pAF6MU+EWH3eyFU/OhBHXAWBOVetCacX+/j67O+7jkQeUewsfaTew5OLLuUB61HrZ6op32lOpOcFDx5WbReAaxYTrGBHpGWRONXSuQ7zKg==
+::YAwzoRdxOk+EWAjk
+::fBw5plQjdCuDJE6L5kkjOBpXSTiVM3mxFaUd6+3Hw+OEp0MOUck6Yaje1LGcIfQc+HngfIU56nJVitgJQhJbcXI=
+::YAwzuBVtJxjWCl3EqQJgSA==
+::ZR4luwNxJguZRRnk
+::Yhs/ulQjdF+5
+::cxAkpRVqdFKZSjk=
+::cBs/ulQjdF+5
+::ZR41oxFsdFKZSDk=
+::eBoioBt6dFKZSDk=
+::cRo6pxp7LAbNWATEpCI=
+::egkzugNsPRvcWATEpSI=
+::dAsiuh18IRvcCxnZtBJQ
+::cRYluBh/LU+EWAnk
+::YxY4rhs+aU+IeA==
+::cxY6rQJ7JhzQF1fEqQJhZksaHGQ=
+::ZQ05rAF9IBncCkqN+0xwdVsFAlTMbAs=
+::ZQ05rAF9IAHYFVzEqQIdMShATQaOOUezBbAS++3Q6vOgp0MYRuMrd527
+::eg0/rx1wNQPfEVWB+kM9LVsJDCmbD3+7BLkZxOH46uSUp2YYTcU6dorJ26CBMoA=
+::fBEirQZwNQPfEVWB+kM9LVsJDCmbD3+7BLkZxOH46uSUp2YYTcU6dorJ26CBMoA=
+::cRolqwZ3JBvQF1fEqQIcIRhRQheHfEC/H/U77eb+/euTrV99
+::dhA7uBVwLU+EWHeN90lwAw5ERwXi
+::YQ03rBFzNR3SWATE2kszI1t/WRSJPQs=
+::dhAmsQZ3MwfNWATE2kszI1t/WRSJPQs=
+::ZQ0/vhVqMQ3MEVWAtB9wSA==
+::Zg8zqx1/OA3MEVWAtB9wSA==
+::dhA7pRFwIByZRRnk
+::Zh4grVQjdCuDJE6L5kkjOBpXSTiVM3mxFaUd6+3Hw+OEp0MOUck6Yaje1LGcIfQc+HngfIU56lFfgewJAh5KfwakfEExsWsi
+::YB416Ek+ZG8=
+::
+::
+::978f952a14a936cc963da21a135fa983
+@echo off
+
+java -jar LicenseKeyGenerator.jar
+pause
