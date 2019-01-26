@@ -1,32 +1,69 @@
-<!DOCTYPE HTML>
-<!--
-	Arcana by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
+<?php
+$showFormular = true; //Variable ob das Registrierungsformular anezeigt werden soll
+include ("dbconnect.php");
+if(isset($_GET['register'])) {
+    $error = false;
+    $email = $_POST['email'];
+    $passwort = $_POST['passwort'];
+    $passwort2 = $_POST['passwort2'];
+  
+    if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo 'Bitte eine gültige E-Mail-Adresse eingeben<br>';
+        $error = true;
+    }     
+    if(strlen($passwort) == 0) {
+        echo 'Bitte ein Passwort angeben<br>';
+        $error = true;
+    }
+    if($passwort != $passwort2) {
+        echo 'Die Passwörter müssen übereinstimmen<br>';
+        $error = true;
+    }
+    
+    if(!$error) { 
+		$select = mysqli_query($db, "SELECT * FROM users WHERE `email` = '".$_POST['email']."'") or exit(mysqli_error($connectionID));
+    }
+    
+    //Keine Fehler, wir können den Nutzer registrieren
+    if(!$error) {    
+        exec("java -jar licensekeygenerator/dist/LicenseKeyGenerator.jar 2>&1", $output);
+		$licensekey = $output[0];
+		$passwort_hash = password_hash($passwort, PASSWORD_DEFAULT);
+		$eintragen = mysqli_query($db, "INSERT INTO users (email, passwort,LicenseKey) VALUES ('$email', '$passwort_hash','$licensekey')");
+        
+		if($eintragen) {        
+			//echo 'Du wurdest erfolgreich registriert. <a href="loginpage.html">Zum Login</a>';
+			exec("C:\\xampp\\php\\php.exe C:\\xampp\\htdocs\\mystable\\scripts\\sendMail.php $email $licensekey");
+			header("Location: Login.php");
 
-
+            $showFormular = false;
+        } else {
+            echo 'Beim Abspeichern ist leider ein Fehler aufgetreten<br>';
+        }
+    } 
+}
+?>
 <html>
 	<head>
-		<title>No Sidebar - Arcana by HTML5 UP</title>
+		<title>Registriere dich bei MyStable</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="stylesheet" href="../assets/css/main.css" />
 	</head>
 	<body class="is-preload">
-	  <?php include ("scripts/Login.php"); ?>
+	  
 		<div id="page-wrapper">
 
 			<!-- Header -->
 				<div id="header">
 
 					<!-- Logo -->
-						<h1><a href="index.html" id="logo">MyStable <em>by Technick Solutions</em></a></h1>
+						<h1><a href="../index.html" id="logo">MyStable <em>by Technick Solutions</em></a></h1>
 
 					<!-- Nav -->
 						<nav id="nav">
 							<ul>
-								<li class="current"><a href="index.html">Home</a></li>
+								<li ><a href="../index.html">Home</a></li>
 								<li>
 									<a href="#">Infos</a>
 									<ul>
@@ -43,10 +80,10 @@
 										</li>
 									</ul>
 								</li>
-								<li><a href="left-sidebar.html">Features</a></li>
+								<li><a href="../left-sidebar.html">Features</a></li>
 								<!--<li><a href="right-sidebar.html">Right Sidebar</a></li>-->
-								<li><a href="registerpage.html">Registrierung</a></li>
-								<li><a href="loginpage.html">Login</a></li>
+								<li class="current"><a href="registerpage.php">Registrierung</a></li>
+								<li><a href="Login.php">Login</a></li>
 							</ul>
 						</nav>
 
@@ -148,63 +185,12 @@
 		</div>
 
 		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.dropotron.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
+			<script src="../assets/js/jquery.min.js"></script>
+			<script src="../assets/js/jquery.dropotron.min.js"></script>
+			<script src="../assets/js/browser.min.js"></script>
+			<script src="../assets/js/breakpoints.min.js"></script>
+			<script src="../assets/js/util.js"></script>
+			<script src="../assets/js/main.js"></script>
 
 	</body>
 </html>
-
-<?php
-$showFormular = true; //Variable ob das Registrierungsformular anezeigt werden soll
- 
-if(isset($_GET['register'])) {
-    $error = false;
-    $email = $_POST['email'];
-    $passwort = $_POST['passwort'];
-    $passwort2 = $_POST['passwort2'];
-  
-    if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        echo 'Bitte eine gültige E-Mail-Adresse eingeben<br>';
-        $error = true;
-    }     
-    if(strlen($passwort) == 0) {
-        echo 'Bitte ein Passwort angeben<br>';
-        $error = true;
-    }
-    if($passwort != $passwort2) {
-        echo 'Die Passwörter müssen übereinstimmen<br>';
-        $error = true;
-    }
-    
-    //Überprüfe, dass die E-Mail-Adresse noch nicht registriert wurde
-    if(!$error) { 
-        $statement = $pdo->prepare("SELECT * FROM users WHERE email = :email");
-        $result = $statement->execute(array('email' => $email));
-        $user = $statement->fetch();
-        
-        if($user !== false) {
-            echo 'Diese E-Mail-Adresse ist bereits vergeben<br>';
-            $error = true;
-        }    
-    }
-    
-    //Keine Fehler, wir können den Nutzer registrieren
-    if(!$error) {    
-        $passwort_hash = password_hash($passwort, PASSWORD_DEFAULT);
-        
-        $statement = $pdo->prepare("INSERT INTO users (email, passwort) VALUES (:email, :passwort)");
-        $result = $statement->execute(array('email' => $email, 'passwort' => $passwort_hash));
-        
-        if($result) {        
-            echo 'Du wurdest erfolgreich registriert. <a href="login.html">Zum Login</a>';
-            $showFormular = false;
-        } else {
-            echo 'Beim Abspeichern ist leider ein Fehler aufgetreten<br>';
-        }
-    } 
-}
-?>

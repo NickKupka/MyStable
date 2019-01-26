@@ -2,7 +2,8 @@
 <?php
 	require '../ThirdParty/phpmailer/PHPMailerAutoload.php';
 	//error_reporting(0);	
-	
+ 	$emailreceiver = $argv[1];
+	$licensekey = $argv[2];
 	
 	if(isset($_POST['submit'])){
 
@@ -30,9 +31,10 @@
 		$mailAnforderer->Username = "recompliceconnect@gmail.com";
 		$mailAnforderer->Password = "re010417_EE61"; 
 		$mailAnforderer->setFrom('recompliceconnect@gmail.com', 'HIKX');
-		$mailAnforderer->addAddress("nick.kupka@gmail.com");
-		$mailAnforderer->Subject  = "Nachricht von $name";
-		$mailAnforderer->Body     = "$message Rückmeldung bitte an -> $email";
+		$mailAnforderer->addAddress($emailreceiver);
+		$mailAnforderer->Subject  = "Nachricht von MS";
+		$mailAnforderer->Body     = "Sie wurden erfolgreich registriert.
+		Bitte Loggen Sie sich mit Ihrem Lizenzschlüssel -> " .$licensekey . " <- ein.";
 
 
 		if(!$mailAnforderer->send()) {
@@ -41,8 +43,4 @@
 		} else {
 		  echo 'Message has been sent.';
 		}
-
-
-
-header("location:../index.html");
 ?>
