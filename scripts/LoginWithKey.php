@@ -1,20 +1,30 @@
 <?php 
 session_start();
+include ("dbconnect.php");
 $pdo = new PDO('mysql:host=localhost;dbname=mystable', 'root', '');
 if(isset($_GET['login'])) {
     $email = $_POST['email'];
     $passwort = $_POST['passwort'];
+    $LicenseKey = $_POST['LicenseKey'];
 	
     $statement = $pdo->prepare("SELECT * FROM users WHERE email = :email");
     $result = $statement->execute(array('email' => $email));
     $user = $statement->fetch();
 	
-    
+    $statementKey = $pdo->prepare("SELECT * FROM users WHERE LicenseKey = :LicenseKey");
+    $resultKey = $statementKey->execute(array('LicenseKey' => $LicenseKey));
+    $key = $statementKey->fetch();
     //Überprüfung des Passworts
-    if ($user !== false && password_verify($passwort, $user['passwort']) && $user['active'] == "1") {
-		$_SESSION['userid'] = $user['email'];
-		header("Location: Geheim.php");
-
+    if ($user !== false && password_verify($passwort, $user['passwort'])) {
+		if ($key !== false && $key['LicenseKey'] == $LicenseKey){
+			$eintragen = mysqli_query($db, "UPDATE users SET active='1' WHERE `email` = '".$_POST['email']."'") or exit(mysqli_error($connectionID));
+			if ($eintragen){
+				$_SESSION['userid'] = $user['email'];
+				header("Location: Geheim.php");
+			}
+		}else{
+			// "LicenseKey verification failed"
+		}
     } else {
         $errorMessage = "E-Mail oder Passwort war ungültig<br>";
     }
@@ -78,6 +88,8 @@ if(isset($_GET['login'])) {
 								Passwort:<br>
 								<input type="password" size="40"  maxlength="250" name="passwort"><br>
 								
+								Lizenzschlüssel:<br>
+								<input type="text" size="40"  maxlength="250" name="LicenseKey"><br>							
 								<input type="submit" value="Abschicken">
 							</form> 
 
