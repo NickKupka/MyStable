@@ -19,7 +19,7 @@ if(isset($_GET['login'])) {
 		if ($key !== false && $key['LicenseKey'] == $LicenseKey){
 			$eintragen = mysqli_query($db, "UPDATE users SET active='1' WHERE `email` = '".$_POST['email']."'") or exit(mysqli_error($connectionID));
 			if ($eintragen){
-				$_SESSION['userid'] = $user['email'];
+				$_SESSION['userid'] = $user['vorname'] . " " . $user['nachname'];
 				header("Location: Geheim.php");
 			}
 		}else{

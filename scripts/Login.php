@@ -12,7 +12,7 @@ if(isset($_GET['login'])) {
     
     //Überprüfung des Passworts
     if ($user !== false && password_verify($passwort, $user['passwort']) && $user['active'] == "1") {
-		$_SESSION['userid'] = $user['email'];
+		$_SESSION['userid'] = $user['vorname'] ." ". $user['nachname'] ;
 		header("Location: Geheim.php");
 
     } else {
