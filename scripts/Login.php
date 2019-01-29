@@ -13,7 +13,7 @@ if(isset($_GET['login'])) {
     //Überprüfung des Passworts
     if ($user !== false && password_verify($passwort, $user['passwort']) && $user['active'] == "1") {
 		$_SESSION['userid'] = $user['vorname'] ." ". $user['nachname'] ;
-		header("Location: Geheim.php");
+		header ("Location: calendarview.php");
 
     } else {
         $errorMessage = "E-Mail oder Passwort war ungültig<br>";
