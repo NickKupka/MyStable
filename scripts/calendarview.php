@@ -9,22 +9,13 @@ $userid = $_SESSION['userid'];
 	<head>
 		<title>Verwalte deinen Stall</title>
 		<link rel="stylesheet" href="../assets/css/main.css" />
-		
-		
-		
-		
 	</head>
 	<body >
-
-
 		<div id="page-wrapper">
-
 			<!-- Header -->
 				<div id="header">
-
 					<!-- Logo -->
 						<h1><a href="../index.html" id="logo">MyStable <em>by Technick Solutions</em></a></h1>
-
 					<!-- Nav -->
 						<nav id="nav">
 							<ul>
@@ -45,6 +36,7 @@ $userid = $_SESSION['userid'];
 							<div class="container">
 								<div id="calendar" style="height: 800px;"></div>
 							</div>
+							 
 					</div>
 					</br>
 				</section>
@@ -128,31 +120,64 @@ $userid = $_SESSION['userid'];
 			<script src="../assets/js/breakpoints.min.js"></script>
 			<script src="../assets/js/util.js"></script>
 			<script src="../assets/js/main.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.css" />
-		  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.css" />
-		  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-		  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-		  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-		  <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
-			<script>
+		
+		
+		<link rel='stylesheet' href='fullcalendar/fullcalendar.css' />
+		<script src='fullcalendar/lib/jquery.min.js'></script>
+		<script src='fullcalendar/lib/moment.min.js'></script>
+		<script src='fullcalendar/fullcalendar.min.js'></script>
+		<script src='fullcalendar/locale/de.js'></script>
+		<script src="fcbasic.js"></script>
+		<style>
+			#calendar {
+			width: 100%;
+			height:60%;
+			display: block;
+			margin-left: auto;
+			margin-right: auto;
+			}
+
+			.centered {
+			text-align: center;
+			}
+			#calendar {
+			width: 70%;
+			height:30%;
+			display: block;
+			margin-left: auto;
+			margin-right: auto;
+			}
+
+			.centered {
+			text-align: center;
+			}
+
+		</style>
+		<script>
 				
    
 	  $(document).ready(function() {
+	   
+	   
 	   var calendar = $('#calendar').fullCalendar({
+	    
+		locale: 'de',
 		editable:true,
+		selectOverlap: false,
+		timeFormat: 'hh:mm',
 		header:{
 		 left:'prev,next today',
 		 center:'title',
-		 right:'month,agendaWeek,agendaDay'
+		 right:'agendaWeek,agendaDay'
 		},
 		events: 'load.php',
 		selectable:true,
 		selectHelper:true,
-		select: function(start, end, allDay)
-		{
-		 var title = prompt("Enter Event Title");
-		 if(title)
-		 {
+		select: function(start, end, allDay){
+			
+		 var title = prompt("Bitte gib den Namen deines Pferdes ein.");
+		 
+		 if(title){
 		  var start = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
 		  var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
 		  $.ajax({
@@ -161,8 +186,10 @@ $userid = $_SESSION['userid'];
 		   data:{title:title, start:start, end:end},
 		   success:function()
 		   {
+			location.reload();
 			calendar.fullCalendar('refetchEvents');
 			alert("Added Successfully");
+			
 		   }
 		  })
 		 }
@@ -179,6 +206,7 @@ $userid = $_SESSION['userid'];
 		  type:"POST",
 		  data:{title:title, start:start, end:end, id:id},
 		  success:function(){
+			location.reload();
 		   calendar.fullCalendar('refetchEvents');
 		   alert('Event Update');
 		  }
@@ -197,6 +225,7 @@ $userid = $_SESSION['userid'];
 		  data:{title:title, start:start, end:end, id:id},
 		  success:function()
 		  {
+			  location.reload();
 		   calendar.fullCalendar('refetchEvents');
 		   alert("Event Updated");
 		  }
@@ -214,6 +243,7 @@ $userid = $_SESSION['userid'];
 		   data:{id:id},
 		   success:function()
 		   {
+			   location.reload();
 			calendar.fullCalendar('refetchEvents');
 			alert("Event Removed");
 		   }
@@ -222,8 +252,14 @@ $userid = $_SESSION['userid'];
 		},
 
 	   });
+	   
+	   calendar = $('#calendar').fullCalendar('changeView', 'agendaWeek');
 	  });
 	   
+	   
+	
+	   
 	  </script>
+	  
 	</body>
 </html>
