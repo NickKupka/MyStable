@@ -33,6 +33,8 @@ $NameDesPferdes = $user['NameDesPferdes'];
 	<head>
 		<title>Verwalte deinen Stall</title>
 		<link rel="stylesheet" href="../assets/css/main.css" />
+		<link rel="shortcut icon" href="../pictures/favicon.ico" type="image/x-icon">
+		<link rel="icon" href="../pictures/favicon.ico" type="image/x-icon">
 	</head>
 	<body >
 		<div id="page-wrapper">
@@ -52,50 +54,28 @@ $NameDesPferdes = $user['NameDesPferdes'];
 				<section class="wrapper style1">
 					<div class="container">
 						<div id="content">
+							
 							<h2 align="center">Willkommen in deinem Bereich <?php echo "$userid";?></h2>
+							<h3 align="center">Reithallen-Plan für die Kolm-Ranch in Heigenkam</h3>
 						</div>
-						</br>
-						</br>
+						
+						<br/>
 						<!-- Calender integration -->
 						<div class="container">
 							<div id="calendar" style="height: 800px;"></div>
 						</div>
 					</div>
-					</br>
-					</br>
+					<br/>
+					<br/>
 				</section>
 				
 			<!-- Footer -->
-				<div id="footer">
-					<div class="container">
+				<div  id="footer">
+					<div  class="container">
 						<div class="row">
-							<section class="col-3 col-6-narrower col-12-mobilep">
-								<h3>Links to Stuff</h3>
-								<ul class="links">
-									<li><a href="#">Mattis et quis rutrum</a></li>
-									<li><a href="#">Suspendisse amet varius</a></li>
-									<li><a href="#">Sed et dapibus quis</a></li>
-									<li><a href="#">Rutrum accumsan dolor</a></li>
-									<li><a href="#">Mattis rutrum accumsan</a></li>
-									<li><a href="#">Suspendisse varius nibh</a></li>
-									<li><a href="#">Sed et dapibus mattis</a></li>
-								</ul>
-							</section>
-							<section class="col-3 col-6-narrower col-12-mobilep">
-								<h3>More Links to Stuff</h3>
-								<ul class="links">
-									<li><a href="#">Duis neque nisi dapibus</a></li>
-									<li><a href="#">Sed et dapibus quis</a></li>
-									<li><a href="#">Rutrum accumsan sed</a></li>
-									<li><a href="#">Mattis et sed accumsan</a></li>
-									<li><a href="#">Duis neque nisi sed</a></li>
-									<li><a href="#">Sed et dapibus quis</a></li>
-									<li><a href="#">Rutrum amet varius</a></li>
-								</ul>
-							</section>
 							<section class="col-6 col-12-narrower">
 								<h3>Get In Touch</h3>
-								<form>
+								<form class="form-horizontal" action="sendRequestMail.php" method="post" enctype="multipart/form-data">
 									<div class="row gtr-50">
 										<div class="col-6 col-12-mobilep">
 											<input type="text" name="name" id="name" placeholder="Name" />
@@ -104,11 +84,11 @@ $NameDesPferdes = $user['NameDesPferdes'];
 											<input type="email" name="email" id="email" placeholder="Email" />
 										</div>
 										<div class="col-12">
-											<textarea name="message" id="message" placeholder="Message" rows="5"></textarea>
+											<textarea name="message" id="message" placeholder="Nachricht" rows="5"></textarea>
 										</div>
 										<div class="col-12">
 											<ul class="actions">
-												<li><input type="submit" class="button alt" value="Send Message" /></li>
+												<li><input name="submit" value="Abfrage abschicken" type="submit" class="button alt" value="Send Message" /></li>
 											</ul>
 										</div>
 									</div>
@@ -118,18 +98,18 @@ $NameDesPferdes = $user['NameDesPferdes'];
 					</div>
 
 					<!-- Icons -->
-						<ul class="icons">
+						<!--<ul class="icons">
 							<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
 							<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
 							<li><a href="#" class="icon fa-github"><span class="label">GitHub</span></a></li>
 							<li><a href="#" class="icon fa-linkedin"><span class="label">LinkedIn</span></a></li>
 							<li><a href="#" class="icon fa-google-plus"><span class="label">Google+</span></a></li>
-						</ul>
+						</ul>-->
 
 					<!-- Copyright -->
 						<div class="copyright">
 							<ul class="menu">
-								<li>&copy; Untitled. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+								<li>&copy; Technick Solutions - My Stable Organizer. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
 							</ul>
 						</div>
 				</div>
@@ -194,6 +174,14 @@ $NameDesPferdes = $user['NameDesPferdes'];
 		 center:'title',
 		 right:'agendaWeek,agendaDay'
 		},
+		businessHours: {
+		  
+		  dow: [ 1, 2, 3, 4,5,6,0 ], 
+
+		  start: '07:00', 
+		  end: '21:00', 
+		},
+		eventConstraint: "businessHours",
 		events: 'load.php',
 		selectable:true,
 		selectHelper:true,
@@ -204,6 +192,7 @@ $NameDesPferdes = $user['NameDesPferdes'];
 		 if(eventName){
 		  var start = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
 		  var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
+		  
 		  eventName = eventName + ": " + username;
 		  $.ajax({		  
 		   url:"insert.php",

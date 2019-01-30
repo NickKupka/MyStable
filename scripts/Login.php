@@ -27,6 +27,8 @@ if(isset($_GET['login'])) {
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="../assets/css/main.css" />
+		<link rel="shortcut icon" href="../pictures/favicon.ico" type="image/x-icon">
+		<link rel="icon" href="../pictures/favicon.ico" type="image/x-icon">
 	</head>
 	<body class="is-preload">
 		<div id="page-wrapper">
@@ -47,18 +49,16 @@ if(isset($_GET['login'])) {
 										<li><a href="#">Was ist <em>MyStable</em></a></li>
 										<li><a href="#">Über uns</a></li>
 										<li><a href="#">Preise</a></li>
-										<li>
+										<!--<li>
 											<a href="#">Weitere Infos</a>
 											<ul>
 												<li><a href="#">Info1</a></li>
 												<li><a href="#">Info2</a></li>
 												<li><a href="#">Info3</a></li>
 											</ul>
-										</li>
+										</li>-->
 									</ul>
 								</li>
-								<li><a href="../left-sidebar.html">Features</a></li>
-								<!--<li><a href="right-sidebar.html">Right Sidebar</a></li>-->
 								<li><a href="registerpage.php">Registrierung</a></li>
 								<li class="current"><a href="Login.php">Login</a></li>
 							</ul>
@@ -91,13 +91,13 @@ if(isset($_GET['login'])) {
 				
 
 					<!-- Icons -->
-						<ul class="icons">
+						<!--<ul class="icons">
 							<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
 							<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
 							<li><a href="#" class="icon fa-github"><span class="label">GitHub</span></a></li>
 							<li><a href="#" class="icon fa-linkedin"><span class="label">LinkedIn</span></a></li>
 							<li><a href="#" class="icon fa-google-plus"><span class="label">Google+</span></a></li>
-						</ul>
+						</ul>-->
 
 					<!-- Copyright -->
 						<div class="copyright">

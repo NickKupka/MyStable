@@ -62,6 +62,8 @@ if(isset($_GET['register'])) {
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="../assets/css/main.css" />
+		<link rel="shortcut icon" href="../pictures/favicon.ico" type="image/x-icon">
+		<link rel="icon" href="../pictures/favicon.ico" type="image/x-icon">
 	</head>
 	<body class="is-preload">
 	  
@@ -83,18 +85,16 @@ if(isset($_GET['register'])) {
 										<li><a href="#">Was ist <em>MyStable</em></a></li>
 										<li><a href="#">Über uns</a></li>
 										<li><a href="#">Preise</a></li>
-										<li>
+										<!--<li>
 											<a href="#">Weitere Infos</a>
 											<ul>
 												<li><a href="#">Info1</a></li>
 												<li><a href="#">Info2</a></li>
 												<li><a href="#">Info3</a></li>
 											</ul>
-										</li>
+										</li>-->
 									</ul>
 								</li>
-								<li><a href="../left-sidebar.html">Features</a></li>
-								<!--<li><a href="right-sidebar.html">Right Sidebar</a></li>-->
 								<li class="current"><a href="registerpage.php">Registrierung</a></li>
 								<li><a href="Login.php">Login</a></li>
 							</ul>
@@ -139,33 +139,10 @@ if(isset($_GET['register'])) {
 				<div id="footer">
 					<div class="container">
 						<div class="row">
-							<section class="col-3 col-6-narrower col-12-mobilep">
-								<h3>Links to Stuff</h3>
-								<ul class="links">
-									<li><a href="#">Mattis et quis rutrum</a></li>
-									<li><a href="#">Suspendisse amet varius</a></li>
-									<li><a href="#">Sed et dapibus quis</a></li>
-									<li><a href="#">Rutrum accumsan dolor</a></li>
-									<li><a href="#">Mattis rutrum accumsan</a></li>
-									<li><a href="#">Suspendisse varius nibh</a></li>
-									<li><a href="#">Sed et dapibus mattis</a></li>
-								</ul>
-							</section>
-							<section class="col-3 col-6-narrower col-12-mobilep">
-								<h3>More Links to Stuff</h3>
-								<ul class="links">
-									<li><a href="#">Duis neque nisi dapibus</a></li>
-									<li><a href="#">Sed et dapibus quis</a></li>
-									<li><a href="#">Rutrum accumsan sed</a></li>
-									<li><a href="#">Mattis et sed accumsan</a></li>
-									<li><a href="#">Duis neque nisi sed</a></li>
-									<li><a href="#">Sed et dapibus quis</a></li>
-									<li><a href="#">Rutrum amet varius</a></li>
-								</ul>
-							</section>
+							
 							<section class="col-6 col-12-narrower">
 								<h3>Get In Touch</h3>
-								<form>
+								<form class="form-horizontal" action="sendRequestMail.php" method="post" enctype="multipart/form-data">
 									<div class="row gtr-50">
 										<div class="col-6 col-12-mobilep">
 											<input type="text" name="name" id="name" placeholder="Name" />
@@ -174,11 +151,11 @@ if(isset($_GET['register'])) {
 											<input type="email" name="email" id="email" placeholder="Email" />
 										</div>
 										<div class="col-12">
-											<textarea name="message" id="message" placeholder="Message" rows="5"></textarea>
+											<textarea name="message" id="message" placeholder="Nachricht" rows="5"></textarea>
 										</div>
 										<div class="col-12">
 											<ul class="actions">
-												<li><input type="submit" class="button alt" value="Send Message" /></li>
+												<li><input name="submit" value="Abfrage abschicken" type="submit" class="button alt" value="Send Message" /></li>
 											</ul>
 										</div>
 									</div>
@@ -188,18 +165,18 @@ if(isset($_GET['register'])) {
 					</div>
 
 					<!-- Icons -->
-						<ul class="icons">
+					<!--<ul class="icons">
 							<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
 							<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
 							<li><a href="#" class="icon fa-github"><span class="label">GitHub</span></a></li>
 							<li><a href="#" class="icon fa-linkedin"><span class="label">LinkedIn</span></a></li>
 							<li><a href="#" class="icon fa-google-plus"><span class="label">Google+</span></a></li>
-						</ul>
+						</ul>-->
 
 					<!-- Copyright -->
 						<div class="copyright">
 							<ul class="menu">
-								<li>&copy; Untitled. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+								<li>&copy; Technick Solutions - My Stable Organizer. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
 							</ul>
 						</div>
 
