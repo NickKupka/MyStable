@@ -4,6 +4,17 @@ if(!isset($_SESSION['userid'])) {
     die('Bitte zuerst <a href="login.php">einloggen</a>');
 } 
 $userid = $_SESSION['userid'];
+$session_value=(isset($_SESSION['userid']))?$_SESSION['userid']:''; 
+/*$sessionIDSPlitted = explode(" ", $session_value);
+$vorname = sessionIDSPlitted[0]; // vorname aus session id
+$nachname = sessionIDSPlitted[1]; // nachname aus session id
+$NameDesPferdes = "";
+
+$result = $statement->execute(array('NameDesPferdes' => $NameDesPferdes));
+$user = $statement->fetch();
+
+$NameDesPferdes = $user['NameDesPferdes'];
+*/
 ?>
 <html>
 	<head>
@@ -19,13 +30,11 @@ $userid = $_SESSION['userid'];
 					<!-- Nav -->
 						<nav id="nav">
 							<ul>
-								<li ><a href="../index.html">Home</a></li>
-								<li ><a href="../index.html">Irgendein Feature</a></li>
+								<li ><a href="calendarview.php">Home</a></li>
 								<li><a href="Logout.php">Logout</a></li>
 							</ul>
 						</nav>
 				</div>
-
 			<!-- Main -->
 				<section class="wrapper style1">
 					<div class="container">
@@ -33,11 +42,13 @@ $userid = $_SESSION['userid'];
 							<h2 align="center">Willkommen in deinem Bereich <?php echo "$userid";?></h2>
 						</div>
 						</br>
-							<div class="container">
-								<div id="calendar" style="height: 800px;"></div>
-							</div>
-							 
+						</br>
+						<!-- Calender integration -->
+						<div class="container">
+							<div id="calendar" style="height: 800px;"></div>
+						</div>
 					</div>
+					</br>
 					</br>
 				</section>
 				
@@ -108,9 +119,7 @@ $userid = $_SESSION['userid'];
 								<li>&copy; Untitled. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
 							</ul>
 						</div>
-
 				</div>
-
 		</div>
 
 		<!-- Scripts -->
@@ -155,8 +164,10 @@ $userid = $_SESSION['userid'];
 		</style>
 		<script>
 				
-   
-	  $(document).ready(function() {
+		 var username='<?php echo $session_value;?>';
+		 
+		 
+		$(document).ready(function() {
 	   
 	   
 	   var calendar = $('#calendar').fullCalendar({
@@ -174,16 +185,17 @@ $userid = $_SESSION['userid'];
 		selectable:true,
 		selectHelper:true,
 		select: function(start, end, allDay){
-			
-		 var title = prompt("Bitte gib den Namen deines Pferdes ein.");
+			//  var title = <?php $userid; ?>;
+		 var eventName = prompt("Bitte gib den Namen deines Pferdes ein.");
 		 
-		 if(title){
+		 if(eventName){
 		  var start = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
 		  var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
-		  $.ajax({
+		  eventName = eventName + ": " + username;
+		  $.ajax({		  
 		   url:"insert.php",
 		   type:"POST",
-		   data:{title:title, start:start, end:end},
+		   data:{title:eventName, start:start, end:end},
 		   success:function()
 		   {
 			location.reload();
@@ -232,23 +244,29 @@ $userid = $_SESSION['userid'];
 		 });
 		},
 
-		eventClick:function(event)
-		{
-		 if(confirm("Are you sure you want to remove it?"))
-		 {
-		  var id = event.id;
+		eventClick:function(event){
+		var id = event.id;
+		var eventTitle = event.title;
+		var isUserAllowedToDelete = eventTitle.includes(username);
+		if (isUserAllowedToDelete){
+			// darf event löschen
+			if(confirm("Are you sure you want to remove it?")){
+		  //var id = event.id;
 		  $.ajax({
 		   url:"delete.php",
 		   type:"POST",
 		   data:{id:id},
-		   success:function()
-		   {
+		   success:function(){
 			   location.reload();
 			calendar.fullCalendar('refetchEvents');
 			alert("Event Removed");
 		   }
 		  })
 		 }
+		}else{
+			window.alert("Dieses event gehört " + eventTitle + " - du bist nicht berechtigt es zu löschen.");
+		}
+		
 		},
 
 	   });

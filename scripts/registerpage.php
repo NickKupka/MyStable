@@ -8,7 +8,11 @@ if(isset($_GET['register'])) {
 	$email = $_POST['email'];
     $passwort = $_POST['passwort'];
     $passwort2 = $_POST['passwort2'];
-	
+	$NameDesPferdes =$_POST['NameDesPferdes'];
+	echo $vorname ;
+	echo $nachname ;
+	echo $email ;
+	echo $passwort;
   
     if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = true;
@@ -25,28 +29,34 @@ if(isset($_GET['register'])) {
     if($passwort != $passwort2) {
         $error = true;
     }
+	/*if(strlen($NameDesPferdes) == 0) {
+        $error = true;
+    }*/
     
     if(!$error) { 
 		$select = mysqli_query($db, "SELECT * FROM users WHERE `email` = '".$_POST['email']."'") or exit(mysqli_error($connectionID));
-    }
+    }else{
+		echo "error occured";
+	}
     
     //Keine Fehler, wir können den Nutzer registrieren
     if(!$error) {    
         exec("java -jar licensekeygenerator/dist/LicenseKeyGenerator.jar 2>&1", $output);
 		$licensekey = $output[0];
+		echo $licensekey;
 		$passwort_hash = password_hash($passwort, PASSWORD_DEFAULT);
-		$eintragen = mysqli_query($db, "INSERT INTO users (vorname, nachname, email, passwort,LicenseKey) VALUES ('$vorname', '$nachname', '$email', '$passwort_hash','$licensekey')");
-        
+		echo $passwort_hash;
+		$eintragen = mysqli_query($db, "INSERT INTO users (vorname, nachname, email, passwort, LicenseKey, NameDesPferdes) VALUES ('$vorname', '$nachname', '$email', '$passwort_hash','$licensekey','$NameDesPferdes')");
 		if($eintragen) {        
-			//echo 'Du wurdest erfolgreich registriert. <a href="loginpage.html">Zum Login</a>';
 			exec("C:\\xampp\\php\\php.exe C:\\xampp\\htdocs\\mystable\\scripts\\sendMail.php $email $licensekey");
-			header("Location: Login.php");
-
+			header("Location: LoginWithKey.php");
             $showFormular = false;
         } else {
             echo 'Beim Abspeichern ist leider ein Fehler aufgetreten<br>';
         }
-    } 
+    }else{
+		echo "can't do anything";
+	}		
 }
 ?>
 <html>
@@ -100,22 +110,26 @@ if(isset($_GET['register'])) {
 					<div class="container">
 						<div id="content">
 							<form action="?register=1" method="post">
-							Vorname: *<br>
-							<input type="text" size="40" maxlength="250" name="vorname"><br><br>
-							
-							Nachname: *<br>
-							<input type="text" size="40" maxlength="250" name="nachname"><br><br>
-							
-							E-Mail: *<br>
-							<input type="email" size="40" maxlength="250" name="email"><br><br>
-							 
-							Dein Passwort: *<br>
-							<input type="password" size="40"  maxlength="250" name="passwort"><br>
-							 
-							Passwort wiederholen: *<br>
-							<input type="password" size="40" maxlength="250" name="passwort2"><br><br>
-							 
-							<input type="submit" value="Abschicken">
+								Vorname: *<br>
+								<input type="text" size="40" maxlength="250" name="vorname" required><br><br>
+								
+								Nachname: *<br>
+								<input type="text" size="40" maxlength="250" name="nachname" required><br><br>
+								
+								E-Mail: *<br>
+								<input type="email" size="40" maxlength="250" name="email" required><br><br>
+								
+								Bitte gebe den Namen deines Pferdes ein:*<br>
+								<input id="NameDesPferdes" type="text" name="NameDesPferdes" />
+								
+								<br>
+								Dein Passwort: *<br>
+								<input type="password" size="40"  maxlength="250" name="passwort" required><br>
+								 
+								Passwort wiederholen: *<br>
+								<input type="password" size="40" maxlength="250" name="passwort2" required><br><br>
+								 
+								<input type="submit" value="Abschicken">
 							</form>
 							 
 
@@ -195,7 +209,21 @@ if(isset($_GET['register'])) {
 				</div>
 
 		</div>
-
+			<script>
+				/*
+				Unhide custom textfield if custom is used and restrict nr for intervals to 1
+				*/
+				 $("#inputHorseName1").hide();
+				$( "#anzahlDerPferde" ).change(function () {
+				if($( "option:selected", this ).text()=="1"){
+				   $("#inputHorseName1").show();
+				   
+				}else{
+				   $("#inputHorseName1").hide();        
+				   
+				}
+			});
+			</script>
 		<!-- Scripts -->
 			<script src="../assets/js/jquery.min.js"></script>
 			<script src="../assets/js/jquery.dropotron.min.js"></script>
