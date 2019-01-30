@@ -13,6 +13,7 @@ $now = new DateTime();
 if($date < $now) {
 	//echo 'date is in the past';
 	// Location -> your licence has expired - you can't login anymore.
+	header("Location:licenceexpired.php");
 }else{
 	//echo "date is ok";
 }

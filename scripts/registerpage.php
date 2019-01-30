@@ -9,10 +9,7 @@ if(isset($_GET['register'])) {
     $passwort = $_POST['passwort'];
     $passwort2 = $_POST['passwort2'];
 	$NameDesPferdes =$_POST['NameDesPferdes'];
-	echo $vorname ;
-	echo $nachname ;
-	echo $email ;
-	echo $passwort;
+
   
     if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = true;
