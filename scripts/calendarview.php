@@ -5,6 +5,18 @@ if(!isset($_SESSION['userid'])) {
 } 
 $userid = $_SESSION['userid'];
 $session_value=(isset($_SESSION['userid']))?$_SESSION['userid']:''; 
+$expireDate = $_SESSION['expiryDate'];
+
+$date = new DateTime($expireDate);
+$now = new DateTime();
+
+if($date < $now) {
+	//echo 'date is in the past';
+	// Location -> your licence has expired - you can't login anymore.
+}else{
+	//echo "date is ok";
+}
+
 /*$sessionIDSPlitted = explode(" ", $session_value);
 $vorname = sessionIDSPlitted[0]; // vorname aus session id
 $nachname = sessionIDSPlitted[1]; // nachname aus session id
@@ -250,7 +262,7 @@ $NameDesPferdes = $user['NameDesPferdes'];
 		var isUserAllowedToDelete = eventTitle.includes(username);
 		if (isUserAllowedToDelete){
 			// darf event löschen
-			if(confirm("Are you sure you want to remove it?")){
+			if(confirm("Bist du dir sicher, dass du deinen Eintrag löschen möchtest?")){
 		  //var id = event.id;
 		  $.ajax({
 		   url:"delete.php",

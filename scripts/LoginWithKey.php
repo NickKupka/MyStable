@@ -13,13 +13,19 @@ if(isset($_GET['login'])) {
 	
     $statementKey = $pdo->prepare("SELECT * FROM users WHERE LicenseKey = :LicenseKey");
     $resultKey = $statementKey->execute(array('LicenseKey' => $LicenseKey));
-    $key = $statementKey->fetch();
+	$key = $statementKey->fetch();
+	$date = date("Y-m-d");
+	$date = strtotime(date("Y-m-d", strtotime($date)) . " +6 month");
+	$date = date("Y-m-d",$date);
+
     //Überprüfung des Passworts
     if ($user !== false && password_verify($passwort, $user['passwort'])) {
 		if ($key !== false && $key['LicenseKey'] == $LicenseKey){
-			$eintragen = mysqli_query($db, "UPDATE users SET active='1' WHERE `email` = '".$_POST['email']."'") or exit(mysqli_error($connectionID));
+			//toll
+			$eintragen = mysqli_query($db, "UPDATE users SET active='1', ExpiryDate='$date' WHERE `email` = '".$_POST['email']."'") or exit(mysqli_error($connectionID));
 			if ($eintragen){
 				$_SESSION['userid'] = $user['vorname'] . " " . $user['nachname'];
+				$_SESSION['expiryDate'] = $date;
 				header("Location: calendarview.php");
 			}
 		}else{

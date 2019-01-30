@@ -13,6 +13,7 @@ if(isset($_GET['login'])) {
     //Überprüfung des Passworts
     if ($user !== false && password_verify($passwort, $user['passwort']) && $user['active'] == "1") {
 		$_SESSION['userid'] = $user['vorname'] ." ". $user['nachname'] ;
+		$_SESSION['expiryDate'] = $user['ExpiryDate'];
 		header ("Location: calendarview.php");
 
     } else {
