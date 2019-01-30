@@ -41,7 +41,7 @@ if(isset($_GET['register'])) {
     
     //Keine Fehler, wir können den Nutzer registrieren
     if(!$error) {    
-        exec("java -jar licensekeygenerator/dist/LicenseKeyGenerator.jar 2>&1", $output);
+		exec("java -jar licensekeygenerator/dist/LicenseKeyGenerator.jar 2>&1", $output);
 		$licensekey = $output[0];
 		echo $licensekey;
 		$passwort_hash = password_hash($passwort, PASSWORD_DEFAULT);
