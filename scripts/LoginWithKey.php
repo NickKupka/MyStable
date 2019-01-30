@@ -76,6 +76,7 @@ if(isset($_GET['login'])) {
 								</li>
 								<li><a href="registerpage.php">Registrierung</a></li>
 								<li class="current"><a href="Login.php">Login</a></li>
+								<li><a href="../impressum.html">Impressum</a></li>
 							</ul>
 						</nav>
 

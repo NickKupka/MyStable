@@ -28,6 +28,8 @@ $user = $statement->fetch();
 
 $NameDesPferdes = $user['NameDesPferdes'];
 */
+
+	
 ?>
 <html>
 	<head>
@@ -47,6 +49,7 @@ $NameDesPferdes = $user['NameDesPferdes'];
 							<ul>
 								<li ><a href="calendarview.php">Home</a></li>
 								<li><a href="Logout.php">Logout</a></li>
+								<li><a href="impressum.html">Impressum</a></li>
 							</ul>
 						</nav>
 				</div>
@@ -75,7 +78,7 @@ $NameDesPferdes = $user['NameDesPferdes'];
 						<div class="row">
 							<section class="col-6 col-12-narrower">
 								<h3>Get In Touch</h3>
-								<form class="form-horizontal" action="sendRequestMail.php" method="post" enctype="multipart/form-data">
+								<form class="form-horizontal" action="sendRequestMailInSystem.php" method="post" enctype="multipart/form-data">
 									<div class="row gtr-50">
 										<div class="col-6 col-12-mobilep">
 											<input type="text" name="name" id="name" placeholder="Name" />
