@@ -1,88 +1,59 @@
 
 <?php
 
-	require '../ThirdParty/phpmailer/PHPMailerAutoload.php';
-	//error_reporting(0);	
+require '../ThirdParty/phpmailer/PHPMailerAutoload.php';
+//error_reporting(0);	
 
- 	$emailreceiver = $argv[1];
-	$licensekey = $argv[2];
-/*	
-	if(isset($_POST['submit'])){
+$emailreceiver = $argv[1];
+$licensekey = $argv[2];
+$vorname = $argv[3];
+$nachname = $argv[4];
+$NameDesPferdes = $argv[5];
 
-		//read data from form
-		//$name = mysqli_real_escape_string($_POST["name"]);
-		//$email = mysqli_real_escape_string($_POST["email"]);
-		//$message = mysqli_real_escape_string($_POST["message"]);
-		
-		$name = filter_input(INPUT_POST, "name");
-		$email = filter_input(INPUT_POST, "email");
-		$message = filter_input(INPUT_POST, "message");
-	
-	
+if(isset($_POST['submit'])){
+	$name = filter_input(INPUT_POST, "name");
+	$email = filter_input(INPUT_POST, "email");
+	$message = filter_input(INPUT_POST, "message");
 }		 
-	
-		
-     	#################### MailVersand an Softwareentwicklung ################
-		//For Mail Function
-		$mailAnforderer = new PHPMailer;
-		$mailAnforderer->IsSMTP();
-		$mailAnforderer->SMTPAuth = true;
-		$mailAnforderer->Host = 'smtp.gmail.com';
-		$mailAnforderer->CharSet = 'utf-8';   
-		$mailAnforderer->Port= 587;
-		$mailAnforderer->Username = "recompliceconnect@gmail.com";
-		$mailAnforderer->Password = "re010417_EE61"; 
-		$mailAnforderer->setFrom('recompliceconnect@gmail.com', 'HIKX');
-		$mailAnforderer->addAddress($emailreceiver);
-		$mailAnforderer->Subject  = "Nachricht von MS";
-		$mailAnforderer->Body     = "Sie wurden erfolgreich registriert.
-		Bitte Loggen Sie sich mit Ihrem Lizenzschlüssel -> " .$licensekey . " <- ein.";
+
+$mailAnforderer = new PHPMailer;
+$mailAnforderer->IsSMTP();
+$mailAnforderer->SMTPAuth = true;
+$mailAnforderer->Host = 'smtp.gmail.com';
+$mailAnforderer->CharSet = 'utf-8';   
+$mailAnforderer->Port= 587;
+$mailAnforderer->Username = "mystableorganizer@gmail.com";
+$mailAnforderer->Password = "Nick&Alex2019"; 
+$mailAnforderer->setFrom('mystableorganizer@gmail.com', 'My Stable Organizer');
+$mailAnforderer->addAddress($emailreceiver);
+$mailAnforderer->isHTML(true);                                  
+$mailAnforderer->Subject  = "Nachricht von My Stable";
+$mailAnforderer->Body     = "<h2>Hallo " . $vorname . " " .$nachname . ",</h2>
+
+<p>Vielen Dank für Ihre Registrierung bei MyStable, Ihrem persönlichen Stallorganisierer.</p>
+<p>Wir wollen Dich und dein Pferd <strong>" . $NameDesPferdes . " </strong> bei uns willkommen heißen.
+
+<p>Ihr persönlicher Lizenzschlüssel: $licensekey</p>
+
+<p>Bitte Loggen Sie sich mit Ihrem Lizenzschlüssel unter " . "http://localhost:8080/mystable/scripts/LoginWithKey.php" . " ein.</p>
+<p>Ihr Team von MyStable by Technick Solutions.<br/>
+ 
+MyStable by Technik Solutions<br/>
+Vertreten durch <br/>
+Dominik Kupka und Alexander Freitag<br/>
+München, Deutschland<br/>
+Infos unter <a target='_blank' rel='noopener noreferrer' href='http://www.my-stable.de/index.html'>www.my-stable.de</a><br/>
+oder einfach per Mail an <a href='mailto:mystableorganizer@gmail.com'>MyStable</a>.</p>";
 
 
-		if(!$mailAnforderer->send()) {
-		  echo 'Message was not sent.';
-		  echo 'Mailer error: ' . $mailAnforderer->ErrorInfo;
-		} else {
-		  echo 'Message has been sent.';
-		}
-		*/
-		
-		if(isset($_POST['submit'])){
 
-		//read data from form
-		//$name = mysqli_real_escape_string($_POST["name"]);
-		//$email = mysqli_real_escape_string($_POST["email"]);
-		//$message = mysqli_real_escape_string($_POST["message"]);
-		
-		$name = filter_input(INPUT_POST, "name");
-		$email = filter_input(INPUT_POST, "email");
-		$message = filter_input(INPUT_POST, "message");
-	
-	
-}		 
-	
-		
-     	#################### MailVersand an Softwareentwicklung ################
-		//For Mail Function
-		$mailAnforderer = new PHPMailer;
-		$mailAnforderer->IsSMTP();
-		$mailAnforderer->SMTPAuth = true;
-		$mailAnforderer->Host = 'smtp.gmail.com';
-		$mailAnforderer->CharSet = 'utf-8';   
-		$mailAnforderer->Port= 587;
-		$mailAnforderer->Username = "mystableorganizer@gmail.com";
-		$mailAnforderer->Password = "Nick&Alex2019"; 
-		$mailAnforderer->setFrom('mystableorganizer@gmail.com', 'My Stable Organizer');
-		$mailAnforderer->addAddress($emailreceiver);
-		$mailAnforderer->Subject  = "Nachricht von My Stable";
-		$mailAnforderer->Body     = "Sie wurden erfolgreich registriert.
-		Bitte Loggen Sie sich mit Ihrem Lizenzschlüssel -> " .$licensekey . " unter " . "http://localhost:8080/mystable/scripts/LoginWithKey.php" . " ein.";
+if(!$mailAnforderer->send()) {
+	echo 'Message was not sent.';
+	echo 'Mailer error: ' . $mailAnforderer->ErrorInfo;
+} else {
+	echo 'Message has been sent.';
+}
 
 
-		if(!$mailAnforderer->send()) {
-		  echo 'Message was not sent.';
-		  echo 'Mailer error: ' . $mailAnforderer->ErrorInfo;
-		} else {
-		  echo 'Message has been sent.';
-		}
+
 ?>

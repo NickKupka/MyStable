@@ -45,7 +45,7 @@ if(isset($_GET['register'])) {
 		echo $passwort_hash;
 		$eintragen = mysqli_query($db, "INSERT INTO users (vorname, nachname, email, passwort, LicenseKey, NameDesPferdes) VALUES ('$vorname', '$nachname', '$email', '$passwort_hash','$licensekey','$NameDesPferdes')");
 		if($eintragen) {        
-			exec("C:\\xampp\\php\\php.exe C:\\xampp\\htdocs\\mystable\\scripts\\sendMail.php $email $licensekey");
+			exec("C:\\xampp\\php\\php.exe C:\\xampp\\htdocs\\mystable\\scripts\\sendMail.php $email $licensekey $vorname $nachname $NameDesPferdes");
 			header("Location: LoginWithKey.php");
             $showFormular = false;
         } else {
