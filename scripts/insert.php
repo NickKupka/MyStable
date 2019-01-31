@@ -2,7 +2,7 @@
 
 //insert.php
 
-$connect = new PDO('mysql:host=localhost;dbname=mystable', 'root', '');
+$connect = new PDO('mysql:host=localhost;dbname=mystable', 'MyStableDBRoot', 'Nick&Alex2019');
 
 if(isset($_POST["title"]))
 {

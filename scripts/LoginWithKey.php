@@ -1,7 +1,7 @@
 <?php 
 session_start();
 include ("dbconnect.php");
-$pdo = new PDO('mysql:host=localhost;dbname=mystable', 'root', '');
+$pdo = new PDO('mysql:host=localhost;dbname=mystable', 'MyStableDBRoot', 'Nick&Alex2019');
 if(isset($_GET['login'])) {
     $email = $_POST['email'];
     $passwort = $_POST['passwort'];
@@ -86,6 +86,7 @@ if(isset($_GET['login'])) {
 				<section class="wrapper style1">
 					<div class="container">
 						<div id="content">
+							<h2 style="color: green">Die Registrierung hat funktioniert.<br/> Wir haben Ihnen eine E-Mail mit einem Lizenzschlüssel zugesendet.</h2>
 
 							<!-- Content -->
 							<form action="?login=1" method="post">

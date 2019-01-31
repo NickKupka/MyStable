@@ -47,9 +47,8 @@ $NameDesPferdes = $user['NameDesPferdes'];
 					<!-- Nav -->
 						<nav id="nav">
 							<ul>
-							<li ><a href="calendarview.php">Home</a></li>
+								<li ><a href="calendarview.php">Home</a></li>
 								<li><a href="Logout.php">Logout</a></li>
-								
 								<li><a href="impressum.html">Impressum</a></li>
 							</ul>
 						</nav>
@@ -98,10 +97,19 @@ $NameDesPferdes = $user['NameDesPferdes'];
 									</div>
 								</form>
 							</section>
-							<section >
-							<br/><br/>
-								<img align="center" src="../pictures/logoPNG.png"/>
+							
+							<section class="col-6 col-12-narrower">
+								<br/><br/>
+								<img src="../pictures/logoPNG.png"/>
 							</section>
+						</div>
+							
+						</div>
+						<!-- Copyright -->
+						<div class="copyright">
+							<ul class="menu">
+								<li>&copy; Technick Solutions - My Stable Organizer. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+							</ul>
 						</div>
 					</div>
 
@@ -114,13 +122,8 @@ $NameDesPferdes = $user['NameDesPferdes'];
 							<li><a href="#" class="icon fa-google-plus"><span class="label">Google+</span></a></li>
 						</ul>-->
 
-					<!-- Copyright -->
-						<div class="copyright">
-							<ul class="menu">
-								<li>&copy; Technick Solutions - My Stable Organizer. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-							</ul>
-						</div>
-				</div>
+					
+				
 		</div>
 
 		<!-- Scripts -->
@@ -244,11 +247,8 @@ $NameDesPferdes = $user['NameDesPferdes'];
 		 })
 		},
 
-		eventDrop:function(event){
-		var id = event.id;
-		var eventTitle = event.title;
-		var isUserAllowedToUpdate = eventTitle.includes(username);
-		if (isUserAllowedToUpdate){
+		eventDrop:function(event)
+		{
 		 var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
 		 var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
 		 var title = event.title;
@@ -264,11 +264,6 @@ $NameDesPferdes = $user['NameDesPferdes'];
 		   alert("Event Updated");
 		  }
 		 });
-		}else{
-						location.reload()
-						window.alert("Dieses event gehört " + eventTitle + " - du bist nicht berechtigt es zu ändern.");
-
-		}
 		},
 
 		eventClick:function(event){
