@@ -10,6 +10,9 @@ $vorname = $argv[3];
 $nachname = $argv[4];
 $NameDesPferdes = $argv[5];
 
+
+$ini = parse_ini_file('../my_stable_config.ini');
+
 if(isset($_POST['submit'])){
 	$name = filter_input(INPUT_POST, "name");
 	$email = filter_input(INPUT_POST, "email");
@@ -19,12 +22,13 @@ if(isset($_POST['submit'])){
 $mailAnforderer = new PHPMailer;
 $mailAnforderer->IsSMTP();
 $mailAnforderer->SMTPAuth = true;
-$mailAnforderer->Host = 'smtp.gmail.com';
-$mailAnforderer->CharSet = 'utf-8';   
-$mailAnforderer->Port= 587;
-$mailAnforderer->Username = "mystableorganizer@gmail.com";
-$mailAnforderer->Password = "Nick&Alex2019"; 
-$mailAnforderer->setFrom('mystableorganizer@gmail.com', 'My Stable Organizer');
+$mailAnforderer->SMTPAuth = true;
+$mailAnforderer->Host = $ini["smtp_host"];
+$mailAnforderer->CharSet = $ini["smtp_charset"];   
+$mailAnforderer->Port= $ini["smtp_port"];
+$mailAnforderer->Username = $ini["smtp_user"];
+$mailAnforderer->Password = $ini["smtp_password"]; 
+$mailAnforderer->setFrom($ini["smtp_fromAdress"], $ini["smtp_fromName"]);
 $mailAnforderer->addAddress($emailreceiver);
 $mailAnforderer->isHTML(true);                                  
 $mailAnforderer->Subject  = "Nachricht von My Stable";

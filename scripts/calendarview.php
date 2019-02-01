@@ -181,7 +181,7 @@ $NameDesPferdes = $user['NameDesPferdes'];
 		header:{
 		 left:'prev,next today',
 		 center:'title',
-		 right:'agendaDay, agendaWeek'
+		 right:'agendaDay,agendaWeek'
 		},
 		  
 

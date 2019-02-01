@@ -1,6 +1,8 @@
 <?php
 $showFormular = true; //Variable ob das Registrierungsformular anezeigt werden soll
 include ("dbconnect.php");
+$ini = parse_ini_file('../my_stable_config.ini');
+
 if(isset($_GET['register'])) {
     $error = false;
     $vorname = $_POST['vorname'];
@@ -45,8 +47,9 @@ if(isset($_GET['register'])) {
 		$passwort_hash = password_hash($passwort, PASSWORD_DEFAULT);
 		echo $passwort_hash;
 		$eintragen = mysqli_query($db, "INSERT INTO users (vorname, nachname, email, passwort, LicenseKey, NameDesPferdes) VALUES ('$vorname', '$nachname', '$email', '$passwort_hash','$licensekey','$NameDesPferdes')");
-		if($eintragen) {        
-			exec("C:\\xampp\\php\\php.exe C:\\xampp\\htdocs\\mystable\\scripts\\sendMail.php $email $licensekey $vorname $nachname $NameDesPferdes");
+		if($eintragen) {     
+			$php = $ini["php_path"];
+			exec("$php C:\\xampp\\htdocs\\mystable\\scripts\\sendMail.php $email $licensekey $vorname $nachname $NameDesPferdes");
 			header("Location: LoginWithKey.php");
             $showFormular = false;
         } else {
