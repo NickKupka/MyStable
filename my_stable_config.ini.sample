@@ -3,10 +3,8 @@
 
 ; In this section are all required data for the connection to a database 
 [mySQL]
-
 ; name of the server
 db_servername = 
-
 ; name of the mySQL database
 db_name =  
 
@@ -14,6 +12,36 @@ db_name =
 db_user = 
 
 ; password for the connection to mySQL
-db_password = 
+db_password =  
+
+[PHP]
+; path to the php.exe 
+php_path = 
+
+[SMTP]
+; path to the sendmail script
+; smtp_mailer_path = 
+
+; charset of the smtp host
+smtp_charset = 
+
+; name of the smtp host
+smtp_host = 
+
+; port of the smtp
+smtp_port = 
+
+; username/email address of the smtp user
+smtp_user = 
+
+; password of the smtp user
+smtp_password = 
+
+; adress and visible name which are set as the "FROM"
+smtp_fromAdress = 
+smtp_fromName = 
+
+; email to which Request from the website should be sent
+smtp_answerAdress = 
 
 
