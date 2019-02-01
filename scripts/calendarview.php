@@ -47,8 +47,9 @@ $NameDesPferdes = $user['NameDesPferdes'];
 					<!-- Nav -->
 						<nav id="nav">
 							<ul>
-								<li ><a href="calendarview.php">Home</a></li>
+							<li ><a href="calendarview.php">Home</a></li>
 								<li><a href="Logout.php">Logout</a></li>
+								
 								<li><a href="impressum.html">Impressum</a></li>
 							</ul>
 						</nav>
@@ -96,6 +97,10 @@ $NameDesPferdes = $user['NameDesPferdes'];
 										</div>
 									</div>
 								</form>
+							</section>
+							<section >
+							<br/><br/>
+								<img align="center" src="../pictures/logoPNG.png"/>
 							</section>
 						</div>
 					</div>
@@ -167,7 +172,8 @@ $NameDesPferdes = $user['NameDesPferdes'];
 	   
 	   
 	   var calendar = $('#calendar').fullCalendar({
-	    
+
+    
 		locale: 'de',
 		editable:true,
 		selectOverlap: false,
@@ -177,6 +183,8 @@ $NameDesPferdes = $user['NameDesPferdes'];
 		 center:'title',
 		 right:'agendaDay, agendaWeek'
 		},
+		  
+
 		businessHours: {
 		  
 		  dow: [ 1, 2, 3, 4,5,6,0 ], 
@@ -184,10 +192,15 @@ $NameDesPferdes = $user['NameDesPferdes'];
 		  start: '07:00', 
 		  end: '21:00', 
 		},
-		eventConstraint: "businessHours",
-		events: 'load.php',
+		
 		selectable:true,
 		selectHelper:true,
+		
+		eventConstraint: "businessHours",
+		events: 'load.php',
+						
+
+		
 		select: function(start, end, allDay){
 			//  var title = <?php $userid; ?>;
 		 var eventName = prompt("Bitte gib den Namen deines Pferdes ein.");
@@ -211,6 +224,7 @@ $NameDesPferdes = $user['NameDesPferdes'];
 		  })
 		 }
 		},
+
 		editable:true,
 		eventResize:function(event)
 		{
@@ -230,8 +244,11 @@ $NameDesPferdes = $user['NameDesPferdes'];
 		 })
 		},
 
-		eventDrop:function(event)
-		{
+		eventDrop:function(event){
+		var id = event.id;
+		var eventTitle = event.title;
+		var isUserAllowedToUpdate = eventTitle.includes(username);
+		if (isUserAllowedToUpdate){
 		 var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
 		 var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
 		 var title = event.title;
@@ -247,6 +264,11 @@ $NameDesPferdes = $user['NameDesPferdes'];
 		   alert("Event Updated");
 		  }
 		 });
+		}else{
+						location.reload()
+						window.alert("Dieses event gehört " + eventTitle + " - du bist nicht berechtigt es zu ändern.");
+
+		}
 		},
 
 		eventClick:function(event){
@@ -271,17 +293,10 @@ $NameDesPferdes = $user['NameDesPferdes'];
 		}else{
 			window.alert("Dieses event gehört " + eventTitle + " - du bist nicht berechtigt es zu löschen.");
 		}
-		
-		},
-
-	   });
-	   
+		},		
+	   });	   
 	   calendar = $('#calendar').fullCalendar('changeView', 'agendaWeek');
 	  });
-	   
-	   
-	
-	   
 	  </script>
 	  
 	</body>

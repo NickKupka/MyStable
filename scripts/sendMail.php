@@ -31,18 +31,18 @@ $mailAnforderer->Subject  = "Nachricht von My Stable";
 $mailAnforderer->Body     = "<h2>Hallo " . $vorname . " " .$nachname . ",</h2>
 
 <p>Vielen Dank für Ihre Registrierung bei MyStable, Ihrem persönlichen Stallorganisierer.</p>
-<p>Wir wollen Dich und dein Pferd <strong>" . $NameDesPferdes . " </strong> bei uns willkommen heißen.
+<p>Wir wollen Dich und dein Pferd <strong>" . $NameDesPferdes . " </strong> bei uns willkommen heißen.</p>
 
-<p>Ihr persönlicher Lizenzschlüssel: $licensekey</p>
+<p>Ihr persönlicher Lizenzschlüssel: <strong>$licensekey</strong></p>
 
-<p>Bitte Loggen Sie sich mit Ihrem Lizenzschlüssel unter " . "http://localhost:8080/mystable/scripts/LoginWithKey.php" . " ein.</p>
+<p>Bitte Loggen Sie sich mit Ihrem Lizenzschlüssel unter " . "https://www.my-stable.de/scripts/LoginWithKey.php" . " ein.</p>
 <p>Ihr Team von MyStable by Technick Solutions.<br/>
  
-MyStable by Technik Solutions<br/>
+MyStable by Technick Solutions<br/>
 Vertreten durch <br/>
 Dominik Kupka und Alexander Freitag<br/>
 München, Deutschland<br/>
-Infos unter <a target='_blank' rel='noopener noreferrer' href='http://www.my-stable.de/index.html'>www.my-stable.de</a><br/>
+Infos unter <a target='_blank' rel='noopener noreferrer' href='https://www.my-stable.de/index.html'>www.my-stable.de</a><br/>
 oder einfach per Mail an <a href='mailto:mystableorganizer@gmail.com'>MyStable</a>.</p>";
 
 

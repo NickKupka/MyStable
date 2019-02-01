@@ -38,8 +38,9 @@ if(isset($_GET['register'])) {
     
     //Keine Fehler, wir können den Nutzer registrieren
     if(!$error) {    
-		exec("java -jar licensekeygenerator/dist/LicenseKeyGenerator.jar 2>&1", $output);
-		$licensekey = $output[0];
+		//exec("java -jar licensekeygenerator/dist/LicenseKeyGenerator.jar 2>&1", $output);
+		//$licensekey = $output[0];
+		$licensekey = generateLicenceKey();
 		echo $licensekey;
 		$passwort_hash = password_hash($passwort, PASSWORD_DEFAULT);
 		echo $passwort_hash;
@@ -55,6 +56,27 @@ if(isset($_GET['register'])) {
 		echo "can't do anything";
 	}		
 }
+
+function generateLicenceKey() {
+$length = 19;
+$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+$charactersLength = strlen($characters);
+$trenner ="-";
+$randomString = '';
+$counterForTrenner = 0;
+for ($i = 0; $i < $length; $i++) {
+	if ($counterForTrenner == 4){
+		$counterForTrenner = 0;
+		$randomString .= $trenner;
+	}else{
+		$randomString .= $characters[rand(0, $charactersLength - 1)];
+		$counterForTrenner = $counterForTrenner+1;
+	}
+}
+//echo $randomString;
+return $randomString;
+}
+
 ?>
 <html>
 	<head>
@@ -161,6 +183,10 @@ if(isset($_GET['register'])) {
 										</div>
 									</div>
 								</form>
+							</section>
+							<section >
+							<br/><br/>
+								<img align="center" src="../pictures/logoPNG.png"/>
 							</section>
 						</div>
 					</div>
