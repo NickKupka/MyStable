@@ -4,5 +4,8 @@ $servername="localhost";
 $benutzername="root";
 $passwort="";
 $dbname="mystable";
-$db = new mysqli($servername, $benutzername, $passwort, $dbname) or die ("Verbindungsfehler: " . $db->error);
+
+$ini = parse_ini_file('../my_stable_config.ini');
+
+$db = new mysqli($ini['db_servername'], $ini['db_user'], $ini['db_password'], $ini['db_name']) or die ("Verbindungsfehler: " . $db->error);
 ?>
