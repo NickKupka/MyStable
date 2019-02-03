@@ -1,6 +1,7 @@
 <?php 
 session_start();
 $pdo = new PDO('mysql:host=localhost;dbname=mystable', 'MyStableDBRoot', 'Nick&Alex2019');
+
 if(isset($_GET['login'])) {
     $email = $_POST['email'];
     $passwort = $_POST['passwort'];
@@ -46,8 +47,8 @@ if(isset($_GET['login'])) {
 								<li>
 									<a href="#">Infos</a>
 									<ul>
-										<li><a href="#">Was ist <em>MyStable</em></a></li>
-										<li><a href="#">Über uns</a></li>
+										<li><a href="../aboutmystable.html">Was ist <em>MyStable</em></a></li>
+										<li><a href="../ueberuns.html">Über uns</a></li>
 										<li><a href="#">Preise</a></li>
 										<!--<li>
 											<a href="#">Weitere Infos</a>

@@ -12,24 +12,10 @@ $now = new DateTime();
 
 if($date < $now) {
 	//echo 'date is in the past';
-	// Location -> your licence has expired - you can't login anymore.
 	header("Location:licenceexpired.php");
 }else{
 	//echo "date is ok";
-}
-
-/*$sessionIDSPlitted = explode(" ", $session_value);
-$vorname = sessionIDSPlitted[0]; // vorname aus session id
-$nachname = sessionIDSPlitted[1]; // nachname aus session id
-$NameDesPferdes = "";
-
-$result = $statement->execute(array('NameDesPferdes' => $NameDesPferdes));
-$user = $statement->fetch();
-
-$NameDesPferdes = $user['NameDesPferdes'];
-*/
-
-	
+}	
 ?>
 <html>
 	<head>
@@ -43,7 +29,7 @@ $NameDesPferdes = $user['NameDesPferdes'];
 			<!-- Header -->
 				<div id="header">
 					<!-- Logo -->
-						<h1><a href="../index.html" id="logo">MyStable <em>by Technick Solutions</em></a></h1>
+						<h1><a id="logo">MyStable <em>by Technick Solutions</em></a></h1>
 					<!-- Nav -->
 						<nav id="nav">
 							<ul>
@@ -77,8 +63,8 @@ $NameDesPferdes = $user['NameDesPferdes'];
 				<div  id="footer">
 					<div  class="container">
 						<div class="row">
-							<section class="col-6 col-12-narrower">
-								<h3>Get In Touch</h3>
+							<section  class="col-6 col-12-narrower">
+								<h3>Schreiben Sie uns eine Nachricht</h3>
 								<form class="form-horizontal" action="sendRequestMailInSystem.php" method="post" enctype="multipart/form-data">
 									<div class="row gtr-50">
 										<div class="col-6 col-12-mobilep">
@@ -163,8 +149,9 @@ $NameDesPferdes = $user['NameDesPferdes'];
 			}
 
 		</style>
+   
 		<script>
-				
+					
 		 var username='<?php echo $session_value;?>';
 		 
 		 
@@ -173,7 +160,6 @@ $NameDesPferdes = $user['NameDesPferdes'];
 	   
 	   var calendar = $('#calendar').fullCalendar({
 
-    
 		locale: 'de',
 		editable:true,
 		selectOverlap: false,
@@ -182,6 +168,13 @@ $NameDesPferdes = $user['NameDesPferdes'];
 		 left:'prev,next today',
 		 center:'title',
 		 right:'agendaWeek,agendaDay'
+		},
+		/*
+		max reservation time set to one hour : 02.02.2019
+		*/
+		selectAllow: function(selectInfo) { 
+			 var duration = moment.duration(selectInfo.end.diff(selectInfo.start));
+			 return duration.asHours() <= 1;
 		},
 		  
 

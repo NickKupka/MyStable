@@ -3,7 +3,6 @@
 //update.php
 
 $connect = new PDO('mysql:host=localhost;dbname=mystable', 'MyStableDBRoot', 'Nick&ALex2019');
-
 if(isset($_POST["id"]))
 {
  $query = "
