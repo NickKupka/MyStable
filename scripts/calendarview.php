@@ -1,7 +1,7 @@
 <?php
 session_start();
 if(!isset($_SESSION['userid'])) {
-    die('Bitte zuerst <a href="login.php">einloggen</a>');
+    die('Bitte zuerst <a href="Login.php">einloggen</a>');
 } 
 $userid = $_SESSION['userid'];
 $session_value=(isset($_SESSION['userid']))?$_SESSION['userid']:''; 
@@ -12,24 +12,10 @@ $now = new DateTime();
 
 if($date < $now) {
 	//echo 'date is in the past';
-	// Location -> your licence has expired - you can't login anymore.
 	header("Location:licenceexpired.php");
 }else{
 	//echo "date is ok";
-}
-
-/*$sessionIDSPlitted = explode(" ", $session_value);
-$vorname = sessionIDSPlitted[0]; // vorname aus session id
-$nachname = sessionIDSPlitted[1]; // nachname aus session id
-$NameDesPferdes = "";
-
-$result = $statement->execute(array('NameDesPferdes' => $NameDesPferdes));
-$user = $statement->fetch();
-
-$NameDesPferdes = $user['NameDesPferdes'];
-*/
-
-	
+}	
 ?>
 <html>
 	<head>
@@ -163,8 +149,22 @@ $NameDesPferdes = $user['NameDesPferdes'];
 			}
 
 		</style>
+		<script type = "text/javascript">
+         <!--
+            function getConfirmation() {
+               var retVal = confirm("Do you want to continue ?");
+               if( retVal == true ) {
+                  document.write ("User wants to continue!");
+                  return true;
+               } else {
+                  document.write ("User does not want to continue!");
+                  return false;
+               }
+            }
+         //-->
+      </script>     
 		<script>
-				
+					
 		 var username='<?php echo $session_value;?>';
 		 
 		 
@@ -173,15 +173,36 @@ $NameDesPferdes = $user['NameDesPferdes'];
 	   
 	   var calendar = $('#calendar').fullCalendar({
 
-    
+
 		locale: 'de',
 		editable:true,
 		selectOverlap: false,
 		timeFormat: 'hh:mm',
+		 customButtons: {
+			myCustomButton: {
+			  text: '30 Minuten ',
+			  click: function() {
+				alert('clicked the 30 min button!');
+			  }
+			},
+			myCustomButton2:{
+			  text: '60 Minuten ',
+			  click: function() {
+				alert('clicked the 30 min button!');
+			  }
+			}
+		  },
 		header:{
 		 left:'prev,next today',
 		 center:'title',
-		 right:'agendaDay,agendaWeek'
+		 right:'agendaWeek,agendaDay'
+		},
+		/*
+		max reservation time set to one hour : 02.02.2019
+		*/
+		selectAllow: function(selectInfo) { 
+			 var duration = moment.duration(selectInfo.end.diff(selectInfo.start));
+			 return duration.asHours() <= 1;
 		},
 		  
 

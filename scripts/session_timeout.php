@@ -1,6 +1,6 @@
 <?php
 // Session expired
-$expireAfter = 30; // Session timeout in minutes - Changeable
+$expireAfter = 1; // Session timeout in minutes - Changeable
 error_reporting(0);
 if(isset($_SESSION['last_action'])){
     $secondsInactive = time() - $_SESSION['last_action'];
@@ -8,7 +8,7 @@ if(isset($_SESSION['last_action'])){
     if($secondsInactive >= $expireAfterSeconds){
         session_unset();
         session_destroy();
-		header("Location:session_timeout_tl.php");
+		header("Location:timeout.php");
     }
 }
 $_SESSION['last_action'] = time();
