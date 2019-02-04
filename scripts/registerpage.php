@@ -49,7 +49,7 @@ if(isset($_GET['register'])) {
 		$eintragen = mysqli_query($db, "INSERT INTO users (vorname, nachname, email, passwort, LicenseKey, NameDesPferdes) VALUES ('$vorname', '$nachname', '$email', '$passwort_hash','$licensekey','$NameDesPferdes')");
 		if($eintragen) {     
 			$php = $ini["php_path"];
-			exec("$php C:\\xampp\\htdocs\\mystable\\scripts\\sendMail.php $email $licensekey $vorname $nachname $NameDesPferdes");
+			exec("$php sendMail.php $email $licensekey $vorname $nachname $NameDesPferdes");
 			header("Location: LoginWithKey.php");
             $showFormular = false;
         } else {
@@ -107,8 +107,8 @@ return $randomString;
 								<li>
 									<a href="#">Infos</a>
 									<ul>
-										<li><a href="#">Was ist <em>MyStable</em></a></li>
-										<li><a href="#">Über uns</a></li>
+										<li><a href="../aboutmystable.html">Was ist <em>MyStable</em></a></li>
+										<li><a href="../ueberuns.html">Über uns</a></li>
 										<li><a href="#">Preise</a></li>
 										<!--<li>
 											<a href="#">Weitere Infos</a>
@@ -166,9 +166,9 @@ return $randomString;
 					<div class="container">
 						<div class="row">
 							
-							<section class="col-6 col-12-narrower">
-								<h3>Get In Touch</h3>
-								<form class="form-horizontal" action="sendRequestMail.php" method="post" enctype="multipart/form-data">
+							<section  class="col-6 col-12-narrower">
+								<h3>Schreiben Sie uns eine Nachricht</h3>
+								<form class="form-horizontal" action="scripts/sendRequestMail.php" method="post" enctype="multipart/form-data">
 									<div class="row gtr-50">
 										<div class="col-6 col-12-mobilep">
 											<input type="text" name="name" id="name" placeholder="Name" />
