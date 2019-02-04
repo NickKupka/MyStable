@@ -1,6 +1,8 @@
 <?php
 $showFormular = true; //Variable ob das Registrierungsformular anezeigt werden soll
 include ("dbconnect.php");
+$ini = parse_ini_file('../my_stable_config.ini');
+
 if(isset($_GET['register'])) {
     $error = false;
     $vorname = $_POST['vorname'];
@@ -45,8 +47,9 @@ if(isset($_GET['register'])) {
 		$passwort_hash = password_hash($passwort, PASSWORD_DEFAULT);
 		echo $passwort_hash;
 		$eintragen = mysqli_query($db, "INSERT INTO users (vorname, nachname, email, passwort, LicenseKey, NameDesPferdes) VALUES ('$vorname', '$nachname', '$email', '$passwort_hash','$licensekey','$NameDesPferdes')");
-		if($eintragen) {        
-			exec("php sendMail.php $email $licensekey $vorname $nachname $NameDesPferdes");
+		if($eintragen) {     
+			$php = $ini["php_path"];
+			exec("$php sendMail.php $email $licensekey $vorname $nachname $NameDesPferdes");
 			header("Location: LoginWithKey.php");
             $showFormular = false;
         } else {
@@ -139,11 +142,11 @@ return $randomString;
 								E-Mail: *<br>
 								<input type="email" size="40" maxlength="250" name="email" required><br><br>
 								
-								Bitte gebe den Namen deines Pferdes ein:*<br>
+								Bitte geben Sie den Namen Ihres Pferdes ein:*<br>
 								<input id="NameDesPferdes" type="text" name="NameDesPferdes" />
 								
 								<br>
-								Dein Passwort: *<br>
+								Passwort: *<br>
 								<input type="password" size="40"  maxlength="250" name="passwort" required><br>
 								 
 								Passwort wiederholen: *<br>

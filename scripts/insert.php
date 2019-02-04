@@ -1,8 +1,14 @@
 <?php
 
 //insert.php
+$ini = parse_ini_file('../my_stable_config.ini');
+$host = $ini["db_servername"];
+$db = $ini['db_name'];
 
-$connect = new PDO('mysql:host=localhost;dbname=mystable', 'MyStableDBRoot', 'Nick&Alex2019');
+$dsn = "mysql:host=$host;dbname=$db";
+$connect = new PDO($dsn, $ini['db_user'], $ini['db_password']);
+
+
 if(isset($_POST["title"]))
 {
  $query = "

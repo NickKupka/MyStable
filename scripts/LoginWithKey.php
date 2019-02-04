@@ -1,7 +1,14 @@
 <?php 
 session_start();
 include ("dbconnect.php");
+
+//$ini = parse_ini_file('../my_stable_config.ini');
+//$host = $ini["db_servername"];
+//$db = $ini['db_name'];
+//$dsn = "mysql:host=$host;dbname=$db";
+//$pdo = new PDO($dsn, $ini['db_user'], $ini['db_password']);
 $pdo = new PDO('mysql:host=localhost;dbname=mystable', 'MyStableDBRoot', 'Nick&Alex2019');
+
 
 if(isset($_GET['login'])) {
     $email = $_POST['email'];
@@ -18,7 +25,6 @@ if(isset($_GET['login'])) {
 	$date = date("Y-m-d");
 	$date = strtotime(date("Y-m-d", strtotime($date)) . " +6 month");
 	$date = date("Y-m-d",$date);
-
     //Überprüfung des Passworts
     if ($user !== false && password_verify($passwort, $user['passwort'])) {
 		if ($key !== false && $key['LicenseKey'] == $LicenseKey){
@@ -28,6 +34,7 @@ if(isset($_GET['login'])) {
 				$_SESSION['userid'] = $user['vorname'] . " " . $user['nachname'];
 				$_SESSION['expiryDate'] = $date;
 				header("Location: calendarview.php");
+			}else{
 			}
 		}else{
 			// "LicenseKey verification failed"

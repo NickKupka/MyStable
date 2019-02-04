@@ -8,7 +8,7 @@ if(isset($_SESSION['last_action'])){
     if($secondsInactive >= $expireAfterSeconds){
         session_unset();
         session_destroy();
-		header("Location:session_timeout_tl.php");
+		header("Location:timeout.php");
     }
 }
 $_SESSION['last_action'] = time();

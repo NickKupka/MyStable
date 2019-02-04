@@ -47,6 +47,7 @@ if($date < $now) {
 							
 							<h2 align="center">Willkommen in deinem Bereich <?php echo "$userid";?></h2>
 							<h3 align="center">Reithallen-Plan für die Kolm-Ranch in Heigenkam</h3>
+							<h4 style="color: red" align="center">Hinweis: Aktuell kann maximal 1 Stunde am Stück gebucht werden.<br/>Längere Zeiten sind derzeit nur über mehrere Buchung verfügbar.</h4>
 						</div>
 						
 						<br/>
@@ -245,7 +246,7 @@ if($date < $now) {
 		 var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
 		 var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
 		 var title = event.title;
-		 var id = event.id;
+		 //var id = event.id;
 		 $.ajax({
 		  url:"update.php",
 		  type:"POST",
