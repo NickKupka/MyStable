@@ -3,6 +3,7 @@
 
 	require '../ThirdParty/phpmailer/PHPMailerAutoload.php';
 	//error_reporting(0);	
+	session_start();
 
 	$ini = parse_ini_file('../my_stable_config.ini');
  	
