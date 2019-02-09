@@ -37,11 +37,11 @@ if($date < $now) {
 					<!-- Nav -->
 						<nav id="nav">
 							<ul>
-							<li ><a href="calendarview.php">Home</a></li>
-								<li><a href="Logout.php">Logout</a></li>
-								
+							<li class="current"><a href="calendarview.php">Mein Kalendar</a></li>
+								<li><a href="users/edituser.php">Meine Daten</a></li>
+							
 								<li><a href="impressum.php">Impressum</a></li>
-		
+		<li><a href="Logout.php">Logout</a></li>
 					</ul>
 						</nav>
 				</div>
