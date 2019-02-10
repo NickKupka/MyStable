@@ -1,0 +1,484 @@
+<?php
+session_start();
+
+if(!isset($_SESSION['userid'])) {
+    die('Bitte zuerst <a href="../Login.php">einloggen</a>');
+}
+include("../dbconnect.php");
+$ini = parse_ini_file('../../my_stable_config.ini');
+$host = $ini["db_servername"];
+$db = $ini['db_name'];
+
+$dsn = "mysql:host=$host;dbname=$db";
+$pdo = new PDO($dsn, $ini['db_user'], $ini['db_password']);
+$dbUser = $ini['db_user'];
+$dbPWD = $ini['db_password'];
+
+$userid = $_SESSION['userid'];
+$session_value=(isset($_SESSION['userid']))?$_SESSION['userid']:''; 
+$expireDate = $_SESSION['expiryDate'];
+
+$date = new DateTime($expireDate);
+$now = new DateTime();
+
+if($date < $now) {
+	// your licence has expired - you can't login anymore.
+	header("Location:licenceexpired.php");
+}else{
+	//Licence is active
+}
+
+$sessionIDSPlitted = explode(" ", $session_value);
+$vorname = $sessionIDSPlitted[0]; // vorname aus session id
+$nachname = $sessionIDSPlitted[1]; // nachname aus session id
+
+
+$con=mysqli_connect($host,$dbUser,$dbPWD,$db);
+// Check connection
+if (mysqli_connect_errno()){
+	echo "Failed to connect to MySQL: " . mysqli_connect_error();
+}
+    
+?>
+<html>
+	<head>
+		<title>Ihre Kalendereinträge (My-Stable)</title>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+		<link rel="stylesheet" type="text/css" href="/Content/font-awesome/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../../assets/css/main.css" />
+		<link rel="shortcut icon" href="../../pictures/favicon.ico" type="image/x-icon">
+		<link rel="icon" href="../../pictures/favicon.ico" type="image/x-icon">
+
+		
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+
+		<!-- jQuery library -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+		<!-- Popper JS -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+		<!-- Latest compiled JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
+	</head>
+	<body class="is-preload">
+		<div id="page-wrapper" style="width: 100%" align="center">
+			<!-- Header -->
+				<div id="header">
+					<!-- Logo -->
+						<h1><a href="../../index.html" id="logo">MyStable <em>by Technick Solutions</em></a></h1>
+					<!-- Nav -->
+						<nav id="nav">
+							<ul>
+							<li ><a href="../calendarview.php">Mein Kalendar</a></li>
+							<li ><a href="../users/edituser.php">Meine Daten</a></li>
+							<?php 
+															/*
+								Check if current user is admin - otherwise page can not be visited
+								*/
+								$con=mysqli_connect($host,$dbUser,$dbPWD,$db);
+
+								$result = mysqli_query($con,"SELECT * FROM `users` WHERE `nachname` LIKE '%{$nachname}%' AND `vorname` LIKE '%{$vorname}%'");
+								$row = mysqli_fetch_array($result);
+
+								if ($row['adminAllowed'] == "1") {
+									echo "<li><a href='../users/alluser.php'>Nutzer</a></li>";
+								}
+							?>
+							<li class="current"><a >Meine Einträge</a></li>
+							<li><a href="../impressum.php">Impressum</a></li>
+							<li><a href="../Logout.php">Logout</a></li>					
+					</ul>
+						</nav>
+				</div>
+			<!-- Main -->
+				<section style="width: 80%" align="center">
+					<div style="width: 100%">
+					<br/><br/>
+					<h2>Hier sehen Sie Ihre zukünftigen Reservierungen</h2><br/><br/>
+					<div style="width: 100%; height: 300px; overflow-y: scroll;">
+					 <!--<button id="exportButton" class="btn btn-lg btn-danger clearfix"><span class="fa fa-file-pdf-o"></span>Export PDF</button>-->
+
+					<?php 
+						$result = mysqli_query($con,"SELECT * FROM `events` WHERE `title` LIKE '%{$nachname}%' AND `title` LIKE '%{$vorname}%'");
+						$count = 1;
+						echo "<table id='exportTable' class='table'><thead><tr>";
+						echo"<th scope='col'><b>Nr.</b></th><th scope='col'><b>Wochentag</b></th><th scope='col'><b>Datum</b></th><th scope='col'><b>Startzeit</b></th><th scope='col'><b>Endzeit</b></th><th scope='col'><b>Name des Events</b></th></tr></thead><tbody>";
+						$date = date('d-m-Y H:i');
+						while($row = mysqli_fetch_array($result)){
+							setlocale(LC_TIME, 'de_DE', 'deu_deu');
+
+							$eventStartTime = $row['start_event'];
+							$eventEndTime = $row['end_event'];
+							
+							$dateOfEvent = strtotime($eventStartTime);
+							$EnddateOfEvent = strtotime($eventEndTime);
+
+							//Convert the date string into a unix timestamp.
+							$unixTimestamp = strtotime($eventStartTime);
+
+							//Get the day of the week using PHP's date function.
+							$dayOfWeek = date("l", $unixTimestamp);
+
+							//Print out the day that our date fell on.
+							switch ($dayOfWeek) {
+								case "Sunday":
+									$dayOfWeek = "Sonntag";
+								break;
+								case "Monday":
+									$dayOfWeek = "Montag";
+								break;
+								case "Tueday":
+									$dayOfWeek = "Dienstag";
+									break;
+								case "Wednesday":
+									$dayOfWeek = "Mittwoch";
+									break;
+								case "Thursday":
+									$dayOfWeek = "Donnerstag";
+									break;
+								case "Friday":
+									$dayOfWeek = "Freitag";
+									break;
+								case "Saturday":
+									$dayOfWeek = "Samstag";
+									break;
+								default:
+									break;
+							};
+
+							if ($date > date('d-m-Y H:i', $dateOfEvent)) {
+								# current time is greater than 2010-05-15 16:00:00
+								# in other words, 2010-05-15 16:00:00 has passed
+							}else{							
+								$eventTitle = $row['title'];
+								echo " <th scope='row'><b>".$count."</b></th>  <th scope='row'>".$dayOfWeek  ."</th>  <th scope='col'>".date('d-m-Y', $dateOfEvent)."</th> <td>" . date('H:i', $dateOfEvent)."</td><td>".date('H:i', $EnddateOfEvent)."</td><td>".$eventTitle."</td></tr>";
+								$count = $count + 1;
+							}
+						}
+						echo "</tbody></table>";
+						  //echo "Start: " . $row['start_event'] . " Ende : " . $row['end_event'] . " " . $row['title'] ; //these are the fields that you have stored in your database table employee
+						  //echo "<br />";
+						?>"
+					</div>
+					<!--<link rel="stylesheet" type="text/css" href="http://www.shieldui.com/shared/components/latest/css/light/all.min.css" />
+					<script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
+					<script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/jszip.min.js"></script>
+
+					<script type="text/javascript">
+						jQuery(function ($) {
+							$("#exportButton").click(function () {
+								// parse the HTML table element having an id=exportTable
+								var dataSource = shield.DataSource.create({
+									data: "#exportTable",
+									schema: {
+										type: "table",
+										fields: {
+											Nr.: { type: String },
+											Wochentag: { type: String },
+											Datum: { type: String }
+											Startzeit: { type: String }
+											Endzeit: { type: String }
+											Name des Events: { type: String }
+										}
+									}
+								});
+
+								// when parsing is done, export the data to PDF
+								dataSource.read().then(function (data) {
+									var pdf = new shield.exp.PDFDocument({
+										author: "My Stable",
+										created: new Date()
+									});
+
+									pdf.addPage("a4", "portrait");
+
+									pdf.table(
+										50,
+										50,
+										data,
+										[						
+											{ field: "Nr.", title: "Nr", width: 50 },
+											{ field: "Wochentag", title: "Wochentag", width: 150 },
+											{ field: "Datum", title: "Datum", width: 100 }
+											{ field: "Startzeit", title: "Beginn", width: 100 }
+											{ field: "Endzeit", title: "Ende", width: 100 }
+											{ field: "Name des Events", title: "Name des Events", width: 100 }
+											],
+										{
+											margins: {
+												top: 50,
+												left: 50
+											}
+										}
+									);
+
+									pdf.saveAs({
+										fileName: "MeineStallTermine"
+									});
+								});
+							});
+						});
+					</script>-->
+					<br/><br/><br/><br/>
+					<h2>Hier sehen Sie Ihre vergangenen Reservierungen</h2><br/><br/>
+					<div style="width: 100%; height: 300px; overflow-y: scroll;">
+					<?php 
+						$result = mysqli_query($con,"SELECT * FROM `events` WHERE `title` LIKE '%{$nachname}%' AND `title` LIKE '%{$vorname}%'");
+						$count = 1;
+						echo "<table class='table'><thead><tr>";
+						echo"<th scope='col'><b>#</b></th><th scope='col'><b>Wochentag</b></th><th scope='col'><b>Datum</b></th><th scope='col'><b>Startzeit</b></th><th scope='col'><b>Endzeit</b></th><th scope='col'><b>Name des Events</b></th></tr></thead><tbody>";
+						$date = date('d-m-Y H:i');
+						while($row = mysqli_fetch_array($result)){
+							setlocale(LC_TIME, 'de_DE', 'deu_deu');
+
+							$eventStartTime = $row['start_event'];
+							$eventEndTime = $row['end_event'];
+							
+							$dateOfEvent = strtotime($eventStartTime);
+							$EnddateOfEvent = strtotime($eventEndTime);
+
+							//Convert the date string into a unix timestamp.
+							$unixTimestamp = strtotime($eventStartTime);
+
+							//Get the day of the week using PHP's date function.
+							$dayOfWeek = date("l", $unixTimestamp);
+
+							//Print out the day that our date fell on.
+							switch ($dayOfWeek) {
+								case "Sunday":
+									$dayOfWeek = "Sonntag";
+								break;
+								case "Monday":
+									$dayOfWeek = "Montag";
+								break;
+								case "Tueday":
+									$dayOfWeek = "Dienstag";
+									break;
+								case "Wednesday":
+									$dayOfWeek = "Mittwoch";
+									break;
+								case "Thursday":
+									$dayOfWeek = "Donnerstag";
+									break;
+								case "Friday":
+									$dayOfWeek = "Freitag";
+									break;
+								case "Saturday":
+									$dayOfWeek = "Samstag";
+									break;
+								default:
+									break;
+							};
+
+							if ($date > date('d-m-Y H:i', $dateOfEvent)) {
+								$eventTitle = $row['title'];
+								echo " <th scope='row'><b>".$count."</b></th>  <th scope='row'>".$dayOfWeek  ."</th>  <th scope='col'>".date('d-m-Y', $dateOfEvent)."</th> <td>" . date('H:i', $dateOfEvent)."</td><td>".date('H:i', $EnddateOfEvent)."</td><td>".$eventTitle."</td></tr>";
+								$count = $count + 1;
+							}else{							
+								
+							}
+						}
+						echo "</tbody></table>";
+						  //echo "Start: " . $row['start_event'] . " Ende : " . $row['end_event'] . " " . $row['title'] ; //these are the fields that you have stored in your database table employee
+						  //echo "<br />";
+						mysqli_close($con);?>"
+					</div>
+						
+					</div>
+					<br/>
+					<br/>
+				</section>
+				
+			<!-- Footer -->
+				<div  id="footer">
+					
+					<!-- Copyright -->
+						<div class="copyright">
+							<ul class="menu">
+							<li><img  src="../../pictures/logoPNG.png"/></li><br/>
+								<li>&copy; Technick Solutions - My Stable Organizer. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+							</ul>
+						</div>
+				</div>
+		</div>
+
+		<!-- Scripts -->
+			<script src="../assets/js/jquery.min.js"></script>
+			<script src="../assets/js/jquery.dropotron.min.js"></script>
+			<script src="../assets/js/browser.min.js"></script>
+			<script src="../assets/js/breakpoints.min.js"></script>
+			<script src="../assets/js/util.js"></script>
+			<script src="../assets/js/main.js"></script>
+		
+		
+		<link rel='stylesheet' href='fullcalendar/fullcalendar.css' />
+		<script src='fullcalendar/lib/jquery.min.js'></script>
+		<script src='fullcalendar/lib/moment.min.js'></script>
+		<script src='fullcalendar/fullcalendar.min.js'></script>
+		<script src='fullcalendar/locale/de.js'></script>
+		<script src="fcbasic.js"></script>
+		<style>
+			#calendar {
+			width: 100%;
+			height:60%;
+			display: block;
+			margin-left: auto;
+			margin-right: auto;
+			}
+
+			.centered {
+			text-align: center;
+			}
+			#calendar {
+			width: 70%;
+			height:30%;
+			display: block;
+			margin-left: auto;
+			margin-right: auto;
+			}
+
+			.centered {
+			text-align: center;
+			}
+
+		</style>
+		<script>
+				
+		 var username='<?php echo $session_value;?>';
+		 
+		 
+		$(document).ready(function() {
+	   
+	   
+	   var calendar = $('#calendar').fullCalendar({
+
+    
+		locale: 'de',
+		editable:true,
+		selectOverlap: false,
+		timeFormat: 'hh:mm',
+		header:{
+		 left:'prev,next today',
+		 center:'title',
+		 right:'agendaDay,agendaWeek'
+		},
+		  
+
+		businessHours: {
+		  
+		  dow: [ 1, 2, 3, 4,5,6,0 ], 
+
+		  start: '07:00', 
+		  end: '21:00', 
+		},
+		
+		selectable:true,
+		selectHelper:true,
+		
+		eventConstraint: "businessHours",
+		events: 'load.php',
+						
+
+		
+		select: function(start, end, allDay){
+			//  var title = <?php $userid; ?>;
+		 var eventName = prompt("Bitte gib den Namen deines Pferdes ein.");
+		 
+		 if(eventName){
+		  var start = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
+		  var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
+		  
+		  eventName = eventName + ": " + username;
+		  $.ajax({		  
+		   url:"insert.php",
+		   type:"POST",
+		   data:{title:eventName, start:start, end:end},
+		   success:function()
+		   {
+			location.reload();
+			calendar.fullCalendar('refetchEvents');
+			alert("Added Successfully");
+			
+		   }
+		  })
+		 }
+		},
+
+		editable:true,
+		eventResize:function(event)
+		{
+		 var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
+		 var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
+		 var title = event.title;
+		 var id = event.id;
+		 $.ajax({
+		  url:"update.php",
+		  type:"POST",
+		  data:{title:title, start:start, end:end, id:id},
+		  success:function(){
+			location.reload();
+		   calendar.fullCalendar('refetchEvents');
+		   alert('Event Update');
+		  }
+		 })
+		},
+
+		eventDrop:function(event){
+		var id = event.id;
+		var eventTitle = event.title;
+		var isUserAllowedToUpdate = eventTitle.includes(username);
+		if (isUserAllowedToUpdate){
+		 var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
+		 var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
+		 var title = event.title;
+		 var id = event.id;
+		 $.ajax({
+		  url:"update.php",
+		  type:"POST",
+		  data:{title:title, start:start, end:end, id:id},
+		  success:function()
+		  {
+			  location.reload();
+		   calendar.fullCalendar('refetchEvents');
+		   alert("Event Updated");
+		  }
+		 });
+		}else{
+						location.reload()
+						window.alert("Dieses event gehört " + eventTitle + " - du bist nicht berechtigt es zu ändern.");
+
+		}
+		},
+
+		eventClick:function(event){
+		var id = event.id;
+		var eventTitle = event.title;
+		var isUserAllowedToDelete = eventTitle.includes(username);
+		if (isUserAllowedToDelete){
+			// darf event löschen
+			if(confirm("Bist du dir sicher, dass du deinen Eintrag löschen möchtest?")){
+		  //var id = event.id;
+		  $.ajax({
+		   url:"delete.php",
+		   type:"POST",
+		   data:{id:id},
+		   success:function(){
+			   location.reload();
+			calendar.fullCalendar('refetchEvents');
+			alert("Event Removed");
+		   }
+		  })
+		 }
+		}else{
+			window.alert("Dieses event gehört " + eventTitle + " - du bist nicht berechtigt es zu löschen.");
+		}
+		},		
+	   });	   
+	   calendar = $('#calendar').fullCalendar('changeView', 'agendaWeek');
+	  });
+	  </script>
+	  
+	</body>
+</html>

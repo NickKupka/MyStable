@@ -1,14 +1,23 @@
 <?php
 session_start();
-include("session_timeout.php");
+
 if(!isset($_SESSION['userid'])) {
-    die('Bitte zuerst <a href="Login.php">einloggen</a>');
-} 
+    die('Bitte zuerst <a href="login.php">einloggen</a>');
+}
+include("dbconnect.php");
+$ini = parse_ini_file('../my_stable_config.ini');
+$host = $ini["db_servername"];
+$db = $ini['db_name'];
+
+$dsn = "mysql:host=$host;dbname=$db";
+$pdo = new PDO($dsn, $ini['db_user'], $ini['db_password']);
+$dbUser = $ini['db_user'];
+$dbPWD = $ini['db_password'];
+
+$expireDate = $_SESSION['expiryDate'];
 
 $userid = $_SESSION['userid'];
 $session_value=(isset($_SESSION['userid']))?$_SESSION['userid']:''; 
-$name = $_SESSION['userid'];
-
 $expireDate = $_SESSION['expiryDate'];
 
 $date = new DateTime($expireDate);
@@ -18,7 +27,11 @@ if($date < $now) {
 	header("Location:licenceexpired.php");
 }else{
 	//echo "date is ok";
-}	
+}
+$sessionIDSPlitted = explode(" ", $session_value);
+$vorname = $sessionIDSPlitted[0]; // vorname aus session id
+$nachname = $sessionIDSPlitted[1]; // nachname aus session id
+	
 ?>
 <html>
 	<head>
@@ -41,7 +54,20 @@ if($date < $now) {
 							<ul>
 								<li ><a href="calendarview.php">Mein Kalendar</a></li>
 								<li ><a href="users/edituser.php">Meine Daten</a></li>
-								
+								<?php 
+									/*
+									Check if current user is admin - otherwise page can not be visited
+									*/
+									$con=mysqli_connect($host,$dbUser,$dbPWD,$db);
+
+									$result = mysqli_query($con,"SELECT * FROM `users` WHERE `nachname` LIKE '%{$nachname}%' AND `vorname` LIKE '%{$vorname}%'");
+									$row = mysqli_fetch_array($result);
+
+									if ($row['adminAllowed'] == "1") {
+										echo "<li><a href='users/alluser.php'>Nutzer</a></li>";
+									 }
+								?>
+								<li><a href="events/myentries.php">Meine Einträge</a></li>
 								<li class="current"><a href="impressum.php">Impressum</a></li>
 								<li><a href="Logout.php">Logout</a></li>
 							</ul>

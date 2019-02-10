@@ -32,63 +32,15 @@ $sessionIDSPlitted = explode(" ", $session_value);
 $vorname = $sessionIDSPlitted[0]; // vorname aus session id
 $nachname = $sessionIDSPlitted[1]; // nachname aus session id
 
+/*
+Check if current user is admin
+*/
 
-$statement = $pdo->prepare("SELECT * FROM users WHERE vorname = :vorname AND nachname = :nachname");
-$statement->execute(array(':vorname' => $vorname, ':nachname' => $nachname));   
-$user = $statement->fetch();
-
-$userEMail = $user['email'];
-$userAktiv = $user['active'];
-$userPferd = $user['NameDesPferdes'];
-$userAngelegtAm = $user['created_at'];
-$userLaueftAusAm = $user['ExpiryDate'];
-
-if(isset($_GET['editUser'])) {
-    $error = false;
-	$vorname =  $_POST['vorname'];
-	$nachname = $_POST['nachname'];
-	$email = $_POST['email'];
-	$NameDesPferdes =$_POST['namedespferdes'];
-	
-  
-    if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $error = true;
-    }     
-	if(strlen($nachname) == 0) {
-        $error = true;
-    }
-	
-	if(strlen($NameDesPferdes) == 0) {
-        $error = true;
-    }
-    
-	if(!$error) { 
-		$statementCheckUser = $pdo->prepare("SELECT * FROM users WHERE email = :email");
-		$statementCheckUser->execute(array(':vorname' => $vorname, ':nachname' => $nachname));   
-		$userCheck = $statementCheckUser->fetch();
-    }else{
-		echo "error occured";
-	}
-    
-    if(!$error) {    
-		$statementUpdateUser = $pdo->prepare("UPDATE users (nachname, email, NameDesPferdes) VALUES ('$nachname', '$email', '$NameDesPferdes') WHERE `email` = :email");
-		$statementUpdateUser->execute(array(':vorname' => $vorname, ':nachname' => $nachname));   
-		$userUpdate = $statementUpdateUser->fetch();
-		
-		if($userUpdate != false) {     
-			// update hat funktioniert
-			header("Location: edituser.php");
-        } else {
-            echo 'Beim Abspeichern ist leider ein Fehler aufgetreten<br>';
-        }
-    }else{
-		echo "can't do anything";
-	}		
-}
-
-?><html>
+?>
+<html>
 	<head>
-		<title>Ihre Nutzerdaten (My-Stable)</title>
+		<title>Alle Nutzer (My-Stable)</title>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 		<link rel="stylesheet" href="../../assets/css/main.css" />
 		<link rel="shortcut icon" href="../../pictures/favicon.ico" type="image/x-icon">
 		<link rel="icon" href="../../pictures/favicon.ico" type="image/x-icon">
@@ -107,7 +59,7 @@ if(isset($_GET['editUser'])) {
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
 	</head>
 	<body class="is-preload">
-		<div id="page-wrapper">
+		<div id="page-wrapper" style="width: 100%" align="center">
 			<!-- Header -->
 				<div id="header">
 					<!-- Logo -->
@@ -116,9 +68,10 @@ if(isset($_GET['editUser'])) {
 						<nav id="nav">
 							<ul>
 							<li ><a href="../calendarview.php">Mein Kalendar</a></li>
-							<li class="current"><a >Meine Daten</a></li>
+							<li ><a href="edituser.php">Meine Daten</a></li>
+							
 							<?php 
-															/*
+								/*
 								Check if current user is admin - otherwise page can not be visited
 								*/
 								$con=mysqli_connect($host,$dbUser,$dbPWD,$db);
@@ -127,100 +80,61 @@ if(isset($_GET['editUser'])) {
 								$row = mysqli_fetch_array($result);
 
 								if ($row['adminAllowed'] == "1") {
-									echo "<li><a href='alluser.php'>Nutzer</a></li>";
-								}
+									echo "<li class='current'><a>Nutzer</a></li>";
+								 } else {
+								 }
 							?>
-							<li><a href="../events/myentries.php">Meine Einträge</a></li>
+						
+							
+							<li ><a href="../events/myentries.php">Meine Einträge</a></li>
 							<li><a href="../impressum.php">Impressum</a></li>
 							<li><a href="../Logout.php">Logout</a></li>					
 					</ul>
 						</nav>
 				</div>
 			<!-- Main -->
-				<section class="wrapper style1">
-					<div align="center" class="container">
-						<form class="form-horizontal" action="?editUser=1" method="post">
-								<fieldset>
+				<section style="width: 80%" align="center">
+					<div style="width: 100%">
+					<br/><br/>
+					<h2>Hier sehen Sie alle Nutzer Ihres Stalls</h2><br/><br/>
+					<div style="width: 100%; height: 400px; overflow-y: scroll;">
+						
+					<?php 
+						$result = mysqli_query($con,"SELECT * FROM `users`");
+						$count = 1;
+						echo "<table class='table' ><thead><tr>";
+						echo"<th scope='col'><b>#</b></th><th scope='col'><b>Vorname</b></th><th scope='col'><b>Nachname</b></th><th scope='col'><b>Name des Pferdes</b></th><th scope='col'><b>Aktiv seit</b></th><th scope='col'><b>Lizenz bis</b></th><th scope='col'><b>Reiter aktiv</b></th></tr></thead><tbody>";
+						$date = date('d-m-Y H:i');
+						while($row = mysqli_fetch_array($result)){
+							setlocale(LC_TIME, 'de_DE', 'deu_deu');
 
-								<!-- Form Name -->
-								<legend>Hier sehen Sie Ihre hinterlegten Daten.</legend>
-
-								<!-- Text input-->
-								<div class="form-group">
-								  <label class="col-md-4 control-label" for="Vorname">Vorname</label>  
-								  <div class="col-md-4">
-								  <input id="vorname" name="vorname" type="text" size="100" value="<?php echo $vorname;?>" placeholder="" class="form-control input-lg" readonly></input>
-								  </div>
-								</div>
-
-								<!-- Text input-->
-								<div class="form-group">
-								  <label class="col-md-4 control-label" for="nachname">Nachname</label>  
-								  <div class="col-md-4">
-								  <input id="nachname" name="nachname" type="text"  value="<?php echo $nachname;?>" placeholder="" class="form-control input-md" readonly> 
-									
-								  </div>
-								</div>
-
-								<!-- Text input-->
-								<div class="form-group">
-								  <label class="col-md-4 control-label" for="namedespferdes">Name des Pferdes</label>  
-								  <div class="col-md-4">
-								  <input id="namedespferdes" name="namedespferdes" type="text" value="<?php echo $userPferd;?>" placeholder="" class="form-control input-md" readonly>
-									
-								  </div>
-								</div>
-
-								<!-- Text input-->
-								<div class="form-group">
-								  <label class="col-md-4 control-label" for="email">E-Mail Adresse</label>  
-								  <div class="col-md-4">
-								  <input id="email" name="email" type="text"value="<?php echo $userEMail;?>"  placeholder="" class="form-control input-md" readonly>
-									
-								  </div>
-								</div>
-
-								<!-- Text input-->
-								<div class="form-group">
-								  <label class="col-md-4 control-label" for="aktivseit">Registriert seit</label>  
-								  <div class="col-md-4">
-								  <input id="aktivseit" name="aktivseit" type="text" value="<?php echo $userAngelegtAm;?>" placeholder="" class="form-control input-md" readonly>
-									
-								  </div>
-								</div>
-
-								<!-- Text input-->
-								<div class="form-group">
-								  <label class="col-md-4 control-label" for="lizenzlaeuftbis">Lizenz läuft bis zum</label>  
-								  <div class="col-md-4">
-								  <input id="lizenzlaeuftbis" name="lizenzlaeuftbis" type="text" value="<?php echo $userLaueftAusAm;?>" placeholder="" class="form-control input-md" readonly>
-									
-								  </div>
-								</div>
-
-								<!-- Select Basic -->
-								<div class="form-group">
-								  <label class="col-md-4 control-label" for="dropdownuseractive">Nutzerdaten</label>
-								  <div class="col-md-4">
-									<select id="dropdownuseractive" name="dropdownuseractive" class="form-control" readonly>
-									  <option value="aktiv">Reiter aktiv</option>
-									  <option value="nichtaktiv">Reiter nicht mehr in Stall</option>
-									</select>
-								  </div>
-								</div>
-
-
-								<!-- Button -->
-								<!--<div class="form-group">
-								  <label class="col-md-4 control-label" for="speicherButton"></label>
-								  <div class="col-md-4">
-									<button id="speicherButton" name="speicherButton" class="btn btn-primary">Speichern</button>
-								  </div>
-								</div>-->
-
-								</fieldset>
-								</form>
-
+							$vornameDB = $row['vorname'];
+							$nachnameDB = $row['nachname'];
+							$NameDesPferdesDB = $row['NameDesPferdes'];
+							$aktivSeitDB = $row['created_at'];
+							$lizenzBisDB = $row['ExpiryDate'];
+							$nutzerAktivDB = $row['active'];			
+							switch ($nutzerAktivDB) {
+								case "1":
+									$nutzerAktivDB = "Aktiver Reiter";
+									break;
+								case "0":
+									$nutzerAktivDB = "Inaktiv";
+									break;
+								default:
+								break;
+							}
+							echo " <th scope='row'><b>".$count."</b></th>  <th scope='row'>".$vornameDB  ."</th><th scope='row'>".$nachnameDB  ."</th><th scope='row'>".$NameDesPferdesDB  ."</th>  <th scope='col'>". $aktivSeitDB."</th> <td>". $lizenzBisDB."</td><td>".$nutzerAktivDB."</td></tr>";
+							$count = $count + 1;
+							
+						}
+						echo "</tbody></table>";
+						  //echo "Start: " . $row['start_event'] . " Ende : " . $row['end_event'] . " " . $row['title'] ; //these are the fields that you have stored in your database table employee
+						  //echo "<br />";
+							mysqli_close($con);?>"
+					</div>
+					
+						
 					</div>
 					<br/>
 					<br/>
