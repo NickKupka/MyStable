@@ -11,11 +11,7 @@ $connect = new PDO($dsn, $ini['db_user'], $ini['db_password']);
 
 if(isset($_POST["title"]))
 {
- $query = "
- INSERT INTO events 
- (title, start_event, end_event) 
- VALUES (:title, :start_event, :end_event)
- ";
+ $query = "INSERT INTO events (title, start_event, end_event)  VALUES (:title, :start_event, :end_event)";
  $statement = $connect->prepare($query);
  $statement->execute(
   array(
@@ -24,7 +20,20 @@ if(isset($_POST["title"]))
    ':end_event' => $_POST['end']
   )
  );
-}
+ $id = $connect->lastInsertId();
+
+ $queryLogging = "INSERT INTO logging (action, starttime, endtime, eventid, user)  VALUES (:action, :start_event, :end_event, :id, :title)";
+ $statementLogging = $connect->prepare($queryLogging);
+ $statementLogging->execute(
+  array(
+   ':action' => "INSERT",
+   ':start_event' => $_POST['start'],
+   ':end_event' => $_POST['end'],
+   ':id' => $id,
+  ':title'  => $_POST['title'],
+  )
+ );
+ }
 
 
 ?>

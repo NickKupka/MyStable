@@ -1,0 +1,5 @@
+My-Stable.de
+
+Database
+User: MyStableDBRoot
+PWD: Nick&Alex2019
