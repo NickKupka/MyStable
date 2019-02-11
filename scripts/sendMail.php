@@ -35,7 +35,7 @@ $mailAnforderer->Subject  = "Nachricht von My Stable";
 $mailAnforderer->Body     = "<h2>Hallo " . $vorname . " " .$nachname . ",</h2>
 
 <p>Vielen Dank für Ihre Registrierung bei MyStable, Ihrem persönlichen Stallorganisierer.</p>
-<p>Wir wollen Dich und dein Pferd <strong>" . $NameDesPferdes . " </strong> bei uns willkommen heißen.</p>
+<p>Wir wollen Sie und Ihr Pferd <strong>" . $NameDesPferdes . " </strong> bei uns willkommen heißen.</p>
 
 <p>Ihr persönlicher Lizenzschlüssel: <strong>$licensekey</strong></p>
 

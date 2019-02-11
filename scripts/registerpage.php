@@ -43,9 +43,9 @@ if(isset($_GET['register'])) {
 		//exec("java -jar licensekeygenerator/dist/LicenseKeyGenerator.jar 2>&1", $output);
 		//$licensekey = $output[0];
 		$licensekey = generateLicenceKey();
-		echo $licensekey;
+		//echo $licensekey;
 		$passwort_hash = password_hash($passwort, PASSWORD_DEFAULT);
-		echo $passwort_hash;
+		//echo $passwort_hash;
 		$eintragen = mysqli_query($db, "INSERT INTO users (vorname, nachname, email, passwort, LicenseKey, NameDesPferdes) VALUES ('$vorname', '$nachname', '$email', '$passwort_hash','$licensekey','$NameDesPferdes')");
 		if($eintragen) {     
 			$php = $ini["php_path"];
@@ -132,7 +132,7 @@ return $randomString;
 				<section class="wrapper style1">
 					<div class="container">
 						<div id="content">
-							<form action="?register=1" method="post">
+							<form action="?register=1" method="post" accept-charset="utf-8">
 								Vorname: *<br>
 								<input type="text" size="40" maxlength="250" name="vorname" required><br><br>
 								
@@ -142,11 +142,11 @@ return $randomString;
 								E-Mail: *<br>
 								<input type="email" size="40" maxlength="250" name="email" required><br><br>
 								
-								Bitte gebe den Namen deines Pferdes ein:*<br>
+								Bitte geben Sie den Namen Ihres Pferdes ein:*<br>
 								<input id="NameDesPferdes" type="text" name="NameDesPferdes" />
 								
 								<br>
-								Dein Passwort: *<br>
+								Passwort: *<br>
 								<input type="password" size="40"  maxlength="250" name="passwort" required><br>
 								 
 								Passwort wiederholen: *<br>

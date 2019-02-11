@@ -11,6 +11,7 @@ $connect = new PDO($dsn, $ini['db_user'], $ini['db_password']);
 
 if(isset($_POST["id"]))
 {
+
  $query = "
  DELETE from events WHERE id=:id
  ";

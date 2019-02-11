@@ -1,9 +1,8 @@
 <?php
 session_start();
 if(!isset($_SESSION['userid'])) {
-    die('Bitte zuerst <a href="Login.php">einloggen</a>');
+    die('Bitte zuerst <a href="login.php">einloggen</a>');
 } 
-header('Content-Type: text/html; charset=utf-8');
 $userid = $_SESSION['userid'];
 $session_value=(isset($_SESSION['userid']))?$_SESSION['userid']:''; 
 $expireDate = $_SESSION['expiryDate'];
@@ -13,10 +12,24 @@ $now = new DateTime();
 
 if($date < $now) {
 	//echo 'date is in the past';
+	// Location -> your licence has expired - you can't login anymore.
 	header("Location:licenceexpired.php");
 }else{
 	//echo "date is ok";
-}	
+}
+
+/*$sessionIDSPlitted = explode(" ", $session_value);
+$vorname = sessionIDSPlitted[0]; // vorname aus session id
+$nachname = sessionIDSPlitted[1]; // nachname aus session id
+$NameDesPferdes = "";
+
+$result = $statement->execute(array('NameDesPferdes' => $NameDesPferdes));
+$user = $statement->fetch();
+
+$NameDesPferdes = $user['NameDesPferdes'];
+*/
+
+	
 ?>
 <html>
 	<head>
@@ -30,13 +43,12 @@ if($date < $now) {
 			<!-- Header -->
 				<div id="header">
 					<!-- Logo -->
-						<h1><a id="logo">MyStable <em>by Technick Solutions</em></a></h1>
+						<h1><a href="../index.html" id="logo">MyStable <em>by Technick Solutions</em></a></h1>
 					<!-- Nav -->
 						<nav id="nav">
 							<ul>
-							<li ><a href="calendarview.php">Home</a></li>
+								<li ><a href="calendarview.php">Home</a></li>
 								<li><a href="Logout.php">Logout</a></li>
-								
 								<li><a href="impressum.html">Impressum</a></li>
 							</ul>
 						</nav>
@@ -48,7 +60,6 @@ if($date < $now) {
 							
 							<h2 align="center">Willkommen in deinem Bereich <?php echo "$userid";?></h2>
 							<h3 align="center">Reithallen-Plan für die Kolm-Ranch in Heigenkam</h3>
-							<h4 style="color: red" align="center">Hinweis: Aktuell kann maximal 1 Stunde am Stück gebucht werden.<br/>Längere Zeiten sind derzeit nur über mehrere Buchung verfügbar.</h4>
 						</div>
 						
 						<br/>
@@ -65,8 +76,8 @@ if($date < $now) {
 				<div  id="footer">
 					<div  class="container">
 						<div class="row">
-							<section  class="col-6 col-12-narrower">
-								<h3>Schreiben Sie uns eine Nachricht</h3>
+							<section class="col-6 col-12-narrower">
+								<h3>Get In Touch</h3>
 								<form class="form-horizontal" action="sendRequestMailInSystem.php" method="post" enctype="multipart/form-data">
 									<div class="row gtr-50">
 										<div class="col-6 col-12-mobilep">
@@ -86,10 +97,19 @@ if($date < $now) {
 									</div>
 								</form>
 							</section>
-							<section >
-							<br/><br/>
-								<img align="center" src="../pictures/logoPNG.png"/>
+							
+							<section class="col-6 col-12-narrower">
+								<br/><br/>
+								<img src="../pictures/logoPNG.png"/>
 							</section>
+						</div>
+							
+						</div>
+						<!-- Copyright -->
+						<div class="copyright">
+							<ul class="menu">
+								<li>&copy; Technick Solutions - My Stable Organizer. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+							</ul>
 						</div>
 					</div>
 
@@ -102,13 +122,8 @@ if($date < $now) {
 							<li><a href="#" class="icon fa-google-plus"><span class="label">Google+</span></a></li>
 						</ul>-->
 
-					<!-- Copyright -->
-						<div class="copyright">
-							<ul class="menu">
-								<li>&copy; Technick Solutions - My Stable Organizer. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-							</ul>
-						</div>
-				</div>
+					
+				
 		</div>
 
 		<!-- Scripts -->
@@ -151,22 +166,8 @@ if($date < $now) {
 			}
 
 		</style>
-		<script type = "text/javascript">
-         <!--
-            function getConfirmation() {
-               var retVal = confirm("Do you want to continue ?");
-               if( retVal == true ) {
-                  document.write ("User wants to continue!");
-                  return true;
-               } else {
-                  document.write ("User does not want to continue!");
-                  return false;
-               }
-            }
-         //-->
-      </script>     
 		<script>
-					
+				
 		 var username='<?php echo $session_value;?>';
 		 
 		 
@@ -175,36 +176,15 @@ if($date < $now) {
 	   
 	   var calendar = $('#calendar').fullCalendar({
 
-
+    
 		locale: 'de',
 		editable:true,
 		selectOverlap: false,
-		timeFormat: 'HH:mm',
-		 customButtons: {
-			myCustomButton: {
-			  text: '30 Minuten ',
-			  click: function() {
-				alert('clicked the 30 min button!');
-			  }
-			},
-			myCustomButton2:{
-			  text: '60 Minuten ',
-			  click: function() {
-				alert('clicked the 30 min button!');
-			  }
-			}
-		  },
+		timeFormat: 'hh:mm',
 		header:{
 		 left:'prev,next today',
 		 center:'title',
 		 right:'agendaWeek,agendaDay'
-		},
-		/*
-		max reservation time set to one hour : 02.02.2019
-		*/
-		selectAllow: function(selectInfo) { 
-			 var duration = moment.duration(selectInfo.end.diff(selectInfo.start));
-			 return duration.asHours() <= 1;
 		},
 		  
 
@@ -267,15 +247,12 @@ if($date < $now) {
 		 })
 		},
 
-		eventDrop:function(event){
-		var id = event.id;
-		var eventTitle = event.title;
-		var isUserAllowedToUpdate = eventTitle.includes(username);
-		if (isUserAllowedToUpdate){
+		eventDrop:function(event)
+		{
 		 var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
 		 var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
 		 var title = event.title;
-		 //var id = event.id;
+		 var id = event.id;
 		 $.ajax({
 		  url:"update.php",
 		  type:"POST",
@@ -287,11 +264,6 @@ if($date < $now) {
 		   alert("Event Updated");
 		  }
 		 });
-		}else{
-						location.reload()
-						window.alert("Dieses event gehört " + eventTitle + " - du bist nicht berechtigt es zu ändern.");
-
-		}
 		},
 
 		eventClick:function(event){

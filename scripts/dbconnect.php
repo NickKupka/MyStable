@@ -1,11 +1,10 @@
 <?php
 header('Content-Type: text/html; charset=utf-8');
-$servername="localhost";
-$benutzername="root";
+$servername="";
+$benutzername="";
 $passwort="";
-$dbname="mystable";
+$dbname="";
 
-//$ini = parse_ini_file("../my_stable_config.ini");
-$ini = parse_ini_file(dirname( dirname(__FILE__)) . '\my_stable_config.ini');
+$ini = parse_ini_file("../my_stable_config.ini");
 $db = new mysqli($ini['db_servername'], $ini['db_user'], $ini['db_password'], $ini['db_name']) or die ("Verbindungsfehler: " . $db->error);
 ?>

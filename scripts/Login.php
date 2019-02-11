@@ -80,7 +80,7 @@ if(isset($_GET['login'])) {
 						<div id="content">
 
 							<!-- Content -->
-							<form action="?login=1" method="post">
+							<form action="?login=1" method="post" accept-charset="utf-8">
 								E-Mail:<br>
 								<input type="email" size="40" maxlength="250" name="email"><br><br>
 								 
