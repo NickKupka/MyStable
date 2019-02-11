@@ -4,7 +4,7 @@ session_start();
 if(!isset($_SESSION['userid'])) {
     die('Bitte zuerst <a href="../Login.php">einloggen</a>');
 }
-include("../dbconnect.php");
+//include('../dbconnect.php'); entweder direkt die ini-Datei ODER die dbconnect
 $ini = parse_ini_file('../../my_stable_config.ini');
 $host = $ini["db_servername"];
 $db = $ini['db_name'];
@@ -37,18 +37,24 @@ $statement = $pdo->prepare("SELECT * FROM users WHERE vorname = :vorname AND nac
 $statement->execute(array(':vorname' => $vorname, ':nachname' => $nachname));   
 $user = $statement->fetch();
 
+$id = $user['id'];
 $userEMail = $user['email'];
-$userAktiv = $user['active'];
+if($user['active'] =='1'){
+	$userAktiv = "Reiter aktiv";
+} else {
+	$userAktiv = "Reiter nicht mehr in Stall";
+}
 $userPferd = $user['NameDesPferdes'];
 $userAngelegtAm = $user['created_at'];
 $userLaueftAusAm = $user['ExpiryDate'];
 
-if(isset($_GET['editUser'])) {
-    $error = false;
+if (isset($_POST['submit'])) {
+  $error = false;
 	$vorname =  $_POST['vorname'];
 	$nachname = $_POST['nachname'];
-	$email = $_POST['email'];
+	$email = $_POST['Email'];
 	$NameDesPferdes =$_POST['namedespferdes'];
+	$aktiv = $_POST['dropdownuseractive'];
 	
   
     if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -63,7 +69,7 @@ if(isset($_GET['editUser'])) {
     }
     
 	if(!$error) { 
-		$statementCheckUser = $pdo->prepare("SELECT * FROM users WHERE email = :email");
+		$statementCheckUser = $pdo->prepare("SELECT * FROM users WHERE id = '$id'");
 		$statementCheckUser->execute(array(':vorname' => $vorname, ':nachname' => $nachname));   
 		$userCheck = $statementCheckUser->fetch();
     }else{
@@ -71,16 +77,24 @@ if(isset($_GET['editUser'])) {
 	}
     
     if(!$error) {    
-		$statementUpdateUser = $pdo->prepare("UPDATE users (nachname, email, NameDesPferdes) VALUES ('$nachname', '$email', '$NameDesPferdes') WHERE `email` = :email");
-		$statementUpdateUser->execute(array(':vorname' => $vorname, ':nachname' => $nachname));   
-		$userUpdate = $statementUpdateUser->fetch();
-		
-		if($userUpdate != false) {     
-			// update hat funktioniert
+		$statementUpdateUser = $pdo->prepare("UPDATE users SET vorname = :vorname_neu, nachname = :nachname_neu, email = :email_neu, NameDesPferdes = :NameDesPferdes_neu, active= :aktiv_neu WHERE id = '$id'");
+		$statementUpdateUser->execute(array(':vorname_neu' => $vorname, ':nachname_neu' => $nachname, ':email_neu' => $email, ':NameDesPferdes_neu' => $NameDesPferdes, ':aktiv_neu' => $aktiv));   
+		$count = $statementUpdateUser->rowCount();
+
+		if($count == '0'){
+			"Beim Aktualisieren Ihrer Daten ist ein Fehler aufgetreten";
+		} else {
+			"Aktualisieren erfolgreich";
 			header("Location: edituser.php");
+		}
+		
+		/* if($userUpdate != false) {     
+			// update hat funktioniert
+			
         } else {
-            echo 'Beim Abspeichern ist leider ein Fehler aufgetreten<br>';
-        }
+						echo 'Beim Abspeichern ist leider ein Fehler aufgetreten<br>';
+						var_dump($userUpdate);
+        } */
     }else{
 		echo "can't do anything";
 	}		
@@ -127,7 +141,7 @@ if(isset($_GET['editUser'])) {
 								$row = mysqli_fetch_array($result);
 
 								if ($row['adminAllowed'] == "1") {
-									echo "<li><a href='alluser.php'>Nutzer</a></li>";
+									echo "<li><a href='alluser.php'>Nutzerübersicht</a></li>";
 								}
 							?>
 							<li><a href="../events/myentries.php">Meine Einträge</a></li>
@@ -139,7 +153,7 @@ if(isset($_GET['editUser'])) {
 			<!-- Main -->
 				<section class="wrapper style1">
 					<div align="center" class="container">
-						<form class="form-horizontal" action="?editUser=1" method="post">
+						<form class="form-horizontal" action="#" method="POST"> <!--?editUser=1 -->
 								<fieldset>
 
 								<!-- Form Name -->
@@ -149,7 +163,7 @@ if(isset($_GET['editUser'])) {
 								<div class="form-group">
 								  <label class="col-md-4 control-label" for="Vorname">Vorname</label>  
 								  <div class="col-md-4">
-								  <input id="vorname" name="vorname" type="text" size="100" value="<?php echo $vorname;?>" placeholder="" class="form-control input-lg" readonly></input>
+								  <input id="vorname" name="vorname" type="text" size="100" value="<?php echo $vorname;?>" class="form-control input-lg" readonly>
 								  </div>
 								</div>
 
@@ -157,7 +171,7 @@ if(isset($_GET['editUser'])) {
 								<div class="form-group">
 								  <label class="col-md-4 control-label" for="nachname">Nachname</label>  
 								  <div class="col-md-4">
-								  <input id="nachname" name="nachname" type="text"  value="<?php echo $nachname;?>" placeholder="" class="form-control input-md" readonly> 
+								  <input id="nachname" name="nachname" type="text"  value="<?php echo $nachname;?>" class="form-control input-md" readonly> 
 									
 								  </div>
 								</div>
@@ -166,7 +180,7 @@ if(isset($_GET['editUser'])) {
 								<div class="form-group">
 								  <label class="col-md-4 control-label" for="namedespferdes">Name des Pferdes</label>  
 								  <div class="col-md-4">
-								  <input id="namedespferdes" name="namedespferdes" type="text" value="<?php echo $userPferd;?>" placeholder="" class="form-control input-md" readonly>
+								  <input id="namedespferdes" name="namedespferdes" type="text" value="<?php echo $userPferd;?>" class="form-control input-md" >
 									
 								  </div>
 								</div>
@@ -175,7 +189,7 @@ if(isset($_GET['editUser'])) {
 								<div class="form-group">
 								  <label class="col-md-4 control-label" for="email">E-Mail Adresse</label>  
 								  <div class="col-md-4">
-								  <input id="email" name="email" type="text"value="<?php echo $userEMail;?>"  placeholder="" class="form-control input-md" readonly>
+								  <input id="email" name="Email" type="text"value="<?php echo $userEMail;?>" class="form-control input-md" >
 									
 								  </div>
 								</div>
@@ -184,7 +198,7 @@ if(isset($_GET['editUser'])) {
 								<div class="form-group">
 								  <label class="col-md-4 control-label" for="aktivseit">Registriert seit</label>  
 								  <div class="col-md-4">
-								  <input id="aktivseit" name="aktivseit" type="text" value="<?php echo $userAngelegtAm;?>" placeholder="" class="form-control input-md" readonly>
+								  <input id="aktivseit" name="aktivseit" type="text" value="<?php echo date('d.m.Y  H:i:s', strtotime($userAngelegtAm));?>" class="form-control input-md" readonly>
 									
 								  </div>
 								</div>
@@ -193,7 +207,7 @@ if(isset($_GET['editUser'])) {
 								<div class="form-group">
 								  <label class="col-md-4 control-label" for="lizenzlaeuftbis">Lizenz läuft bis zum</label>  
 								  <div class="col-md-4">
-								  <input id="lizenzlaeuftbis" name="lizenzlaeuftbis" type="text" value="<?php echo $userLaueftAusAm;?>" placeholder="" class="form-control input-md" readonly>
+								  <input id="lizenzlaeuftbis" name="lizenzlaeuftbis" type="text" value="<?php echo date('d.m.Y', strtotime($userLaueftAusAm));?>" class="form-control input-md" readonly>
 									
 								  </div>
 								</div>
@@ -202,21 +216,22 @@ if(isset($_GET['editUser'])) {
 								<div class="form-group">
 								  <label class="col-md-4 control-label" for="dropdownuseractive">Nutzerdaten</label>
 								  <div class="col-md-4">
-									<select id="dropdownuseractive" name="dropdownuseractive" class="form-control" readonly>
-									  <option value="aktiv">Reiter aktiv</option>
-									  <option value="nichtaktiv">Reiter nicht mehr in Stall</option>
+									<select id="dropdownuseractive" name="dropdownuseractive" class="form-control">
+										<option selected hidden="true"><?php echo $userAktiv;?></option>
+									  <option value="1">Reiter aktiv</option>
+									  <option value="0">Reiter nicht mehr in Stall</option>
 									</select>
 								  </div>
 								</div>
 
 
 								<!-- Button -->
-								<!--<div class="form-group">
+								<div class="form-group">
 								  <label class="col-md-4 control-label" for="speicherButton"></label>
 								  <div class="col-md-4">
-									<button id="speicherButton" name="speicherButton" class="btn btn-primary">Speichern</button>
+									<input type="submit" name="submit" class="btn btn-primary" id="speichern" value="Speichern" />
 								  </div>
-								</div>-->
+								</div>
 
 								</fieldset>
 								</form>
@@ -246,174 +261,6 @@ if(isset($_GET['editUser'])) {
 			<script src="../assets/js/breakpoints.min.js"></script>
 			<script src="../assets/js/util.js"></script>
 			<script src="../assets/js/main.js"></script>
-		
-		
-		<link rel='stylesheet' href='fullcalendar/fullcalendar.css' />
-		<script src='fullcalendar/lib/jquery.min.js'></script>
-		<script src='fullcalendar/lib/moment.min.js'></script>
-		<script src='fullcalendar/fullcalendar.min.js'></script>
-		<script src='fullcalendar/locale/de.js'></script>
-		<script src="fcbasic.js"></script>
-		<style>
-			#calendar {
-			width: 100%;
-			height:60%;
-			display: block;
-			margin-left: auto;
-			margin-right: auto;
-			}
-
-			.centered {
-			text-align: center;
-			}
-			#calendar {
-			width: 70%;
-			height:30%;
-			display: block;
-			margin-left: auto;
-			margin-right: auto;
-			}
-
-			.centered {
-			text-align: center;
-			}
-
-		</style>
-		<script>
-				
-		 var username='<?php echo $session_value;?>';
-		 
-		 
-		$(document).ready(function() {
-	   
-	   
-	   var calendar = $('#calendar').fullCalendar({
-
-    
-		locale: 'de',
-		editable:true,
-		selectOverlap: false,
-		timeFormat: 'hh:mm',
-		header:{
-		 left:'prev,next today',
-		 center:'title',
-		 right:'agendaDay,agendaWeek'
-		},
-		  
-
-		businessHours: {
-		  
-		  dow: [ 1, 2, 3, 4,5,6,0 ], 
-
-		  start: '07:00', 
-		  end: '21:00', 
-		},
-		
-		selectable:true,
-		selectHelper:true,
-		
-		eventConstraint: "businessHours",
-		events: 'load.php',
-						
-
-		
-		select: function(start, end, allDay){
-			//  var title = <?php $userid; ?>;
-		 var eventName = prompt("Bitte gib den Namen deines Pferdes ein.");
-		 
-		 if(eventName){
-		  var start = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
-		  var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
-		  
-		  eventName = eventName + ": " + username;
-		  $.ajax({		  
-		   url:"insert.php",
-		   type:"POST",
-		   data:{title:eventName, start:start, end:end},
-		   success:function()
-		   {
-			location.reload();
-			calendar.fullCalendar('refetchEvents');
-			alert("Added Successfully");
-			
-		   }
-		  })
-		 }
-		},
-
-		editable:true,
-		eventResize:function(event)
-		{
-		 var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
-		 var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
-		 var title = event.title;
-		 var id = event.id;
-		 $.ajax({
-		  url:"update.php",
-		  type:"POST",
-		  data:{title:title, start:start, end:end, id:id},
-		  success:function(){
-			location.reload();
-		   calendar.fullCalendar('refetchEvents');
-		   alert('Event Update');
-		  }
-		 })
-		},
-
-		eventDrop:function(event){
-		var id = event.id;
-		var eventTitle = event.title;
-		var isUserAllowedToUpdate = eventTitle.includes(username);
-		if (isUserAllowedToUpdate){
-		 var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
-		 var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
-		 var title = event.title;
-		 var id = event.id;
-		 $.ajax({
-		  url:"update.php",
-		  type:"POST",
-		  data:{title:title, start:start, end:end, id:id},
-		  success:function()
-		  {
-			  location.reload();
-		   calendar.fullCalendar('refetchEvents');
-		   alert("Event Updated");
-		  }
-		 });
-		}else{
-						location.reload()
-						window.alert("Dieses event gehört " + eventTitle + " - du bist nicht berechtigt es zu ändern.");
-
-		}
-		},
-
-		eventClick:function(event){
-		var id = event.id;
-		var eventTitle = event.title;
-		var isUserAllowedToDelete = eventTitle.includes(username);
-		if (isUserAllowedToDelete){
-			// darf event löschen
-			if(confirm("Bist du dir sicher, dass du deinen Eintrag löschen möchtest?")){
-		  //var id = event.id;
-		  $.ajax({
-		   url:"delete.php",
-		   type:"POST",
-		   data:{id:id},
-		   success:function(){
-			   location.reload();
-			calendar.fullCalendar('refetchEvents');
-			alert("Event Removed");
-		   }
-		  })
-		 }
-		}else{
-			window.alert("Dieses event gehört " + eventTitle + " - du bist nicht berechtigt es zu löschen.");
-		}
-		},		
-	   });	   
-	   calendar = $('#calendar').fullCalendar('changeView', 'agendaWeek');
-	  });
-	  </script>
-	  
+			  
 	</body>
 </html>

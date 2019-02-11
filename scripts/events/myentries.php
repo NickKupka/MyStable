@@ -4,7 +4,7 @@ session_start();
 if(!isset($_SESSION['userid'])) {
     die('Bitte zuerst <a href="../Login.php">einloggen</a>');
 }
-include("../dbconnect.php");
+//include("../dbconnect.php");
 $ini = parse_ini_file('../../my_stable_config.ini');
 $host = $ini["db_servername"];
 $db = $ini['db_name'];
@@ -45,6 +45,7 @@ if (mysqli_connect_errno()){
 		<title>Ihre Kalendereinträge (My-Stable)</title>
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 		<link rel="stylesheet" type="text/css" href="/Content/font-awesome/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 		<link rel="stylesheet" href="../../assets/css/main.css" />
 		<link rel="shortcut icon" href="../../pictures/favicon.ico" type="image/x-icon">
 		<link rel="icon" href="../../pictures/favicon.ico" type="image/x-icon">
@@ -83,7 +84,7 @@ if (mysqli_connect_errno()){
 								$row = mysqli_fetch_array($result);
 
 								if ($row['adminAllowed'] == "1") {
-									echo "<li><a href='../users/alluser.php'>Nutzer</a></li>";
+									echo "<li><a href='../users/alluser.php'>Nutzerübersicht</a></li>";
 								}
 							?>
 							<li class="current"><a >Meine Einträge</a></li>
@@ -98,7 +99,10 @@ if (mysqli_connect_errno()){
 					<br/><br/>
 					<h2>Hier sehen Sie Ihre zukünftigen Reservierungen</h2><br/><br/>
 					<div style="width: 100%; height: 300px; overflow-y: scroll;">
-					 <!--<button id="exportButton" class="btn btn-lg btn-danger clearfix"><span class="fa fa-file-pdf-o"></span>Export PDF</button>-->
+					<!-- <button id="exportButton" class="btn btn-lg btn-danger clearfix"><span class="fa fa-file-pdf-o"></span>Export PDF</button> -->
+						<a href="#" class="exportBtn btn btn-info" id="btnExportToXLSNew" onClick ="$('#exportTable').tableExport({type:'pdf',escape:'false'});"><span class="far fa-file-excel"> Excel</a>
+					<!--	<a href="#" class="exportBtn btn btn-info" id="btnExportToPDFNew"><span class="fa fa-file-pdf-o"> PDF</a>
+						<a href="#" class="exportBtn btn btn-info" id="btnPrintNew" ><span class="fas fa-print"> Print</a>  -->
 
 					<?php 
 						$result = mysqli_query($con,"SELECT * FROM `events` WHERE `title` LIKE '%{$nachname}%' AND `title` LIKE '%{$vorname}%'");
@@ -224,6 +228,9 @@ if (mysqli_connect_errno()){
 					<br/><br/><br/><br/>
 					<h2>Hier sehen Sie Ihre vergangenen Reservierungen</h2><br/><br/>
 					<div style="width: 100%; height: 300px; overflow-y: scroll;">
+						<a href="#" class="exportBtn btn btn-info" id="btnExportToXLSOld"><span class="far fa-file-excel"> Excel</a>
+						<a href="#" class="exportBtn btn btn-info" id="btnExportToPDFOld"><span class="fa fa-file-pdf-o"> PDF</a>
+						<a href="#" class="exportBtn btn btn-info" id="btnPrintOld" ><span class="fas fa-print"> Print</a> 
 					<?php 
 						$result = mysqli_query($con,"SELECT * FROM `events` WHERE `title` LIKE '%{$nachname}%' AND `title` LIKE '%{$vorname}%'");
 						$count = 1;
@@ -311,174 +318,13 @@ if (mysqli_connect_errno()){
 			<script src="../assets/js/breakpoints.min.js"></script>
 			<script src="../assets/js/util.js"></script>
 			<script src="../assets/js/main.js"></script>
-		
-		
-		<link rel='stylesheet' href='fullcalendar/fullcalendar.css' />
-		<script src='fullcalendar/lib/jquery.min.js'></script>
-		<script src='fullcalendar/lib/moment.min.js'></script>
-		<script src='fullcalendar/fullcalendar.min.js'></script>
-		<script src='fullcalendar/locale/de.js'></script>
-		<script src="fcbasic.js"></script>
-		<style>
-			#calendar {
-			width: 100%;
-			height:60%;
-			display: block;
-			margin-left: auto;
-			margin-right: auto;
-			}
 
-			.centered {
-			text-align: center;
-			}
-			#calendar {
-			width: 70%;
-			height:30%;
-			display: block;
-			margin-left: auto;
-			margin-right: auto;
-			}
+			<script type="text/javascript" src="tableExport.js">
+			<script type="text/javascript" src="jquery.base64.js">	
+			<script type="text/javascript" src="jspdf/libs/sprintf.js">
+			<script type="text/javascript" src="jspdf/jspdf.js">
+			<script type="text/javascript" src="jspdf/libs/base64.js">
 
-			.centered {
-			text-align: center;
-			}
-
-		</style>
-		<script>
-				
-		 var username='<?php echo $session_value;?>';
-		 
-		 
-		$(document).ready(function() {
-	   
-	   
-	   var calendar = $('#calendar').fullCalendar({
-
-    
-		locale: 'de',
-		editable:true,
-		selectOverlap: false,
-		timeFormat: 'hh:mm',
-		header:{
-		 left:'prev,next today',
-		 center:'title',
-		 right:'agendaDay,agendaWeek'
-		},
-		  
-
-		businessHours: {
-		  
-		  dow: [ 1, 2, 3, 4,5,6,0 ], 
-
-		  start: '07:00', 
-		  end: '21:00', 
-		},
-		
-		selectable:true,
-		selectHelper:true,
-		
-		eventConstraint: "businessHours",
-		events: 'load.php',
-						
-
-		
-		select: function(start, end, allDay){
-			//  var title = <?php $userid; ?>;
-		 var eventName = prompt("Bitte gib den Namen deines Pferdes ein.");
-		 
-		 if(eventName){
-		  var start = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
-		  var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
-		  
-		  eventName = eventName + ": " + username;
-		  $.ajax({		  
-		   url:"insert.php",
-		   type:"POST",
-		   data:{title:eventName, start:start, end:end},
-		   success:function()
-		   {
-			location.reload();
-			calendar.fullCalendar('refetchEvents');
-			alert("Added Successfully");
-			
-		   }
-		  })
-		 }
-		},
-
-		editable:true,
-		eventResize:function(event)
-		{
-		 var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
-		 var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
-		 var title = event.title;
-		 var id = event.id;
-		 $.ajax({
-		  url:"update.php",
-		  type:"POST",
-		  data:{title:title, start:start, end:end, id:id},
-		  success:function(){
-			location.reload();
-		   calendar.fullCalendar('refetchEvents');
-		   alert('Event Update');
-		  }
-		 })
-		},
-
-		eventDrop:function(event){
-		var id = event.id;
-		var eventTitle = event.title;
-		var isUserAllowedToUpdate = eventTitle.includes(username);
-		if (isUserAllowedToUpdate){
-		 var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
-		 var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
-		 var title = event.title;
-		 var id = event.id;
-		 $.ajax({
-		  url:"update.php",
-		  type:"POST",
-		  data:{title:title, start:start, end:end, id:id},
-		  success:function()
-		  {
-			  location.reload();
-		   calendar.fullCalendar('refetchEvents');
-		   alert("Event Updated");
-		  }
-		 });
-		}else{
-						location.reload()
-						window.alert("Dieses event gehört " + eventTitle + " - du bist nicht berechtigt es zu ändern.");
-
-		}
-		},
-
-		eventClick:function(event){
-		var id = event.id;
-		var eventTitle = event.title;
-		var isUserAllowedToDelete = eventTitle.includes(username);
-		if (isUserAllowedToDelete){
-			// darf event löschen
-			if(confirm("Bist du dir sicher, dass du deinen Eintrag löschen möchtest?")){
-		  //var id = event.id;
-		  $.ajax({
-		   url:"delete.php",
-		   type:"POST",
-		   data:{id:id},
-		   success:function(){
-			   location.reload();
-			calendar.fullCalendar('refetchEvents');
-			alert("Event Removed");
-		   }
-		  })
-		 }
-		}else{
-			window.alert("Dieses event gehört " + eventTitle + " - du bist nicht berechtigt es zu löschen.");
-		}
-		},		
-	   });	   
-	   calendar = $('#calendar').fullCalendar('changeView', 'agendaWeek');
-	  });
-	  </script>
 	  
 	</body>
 </html>

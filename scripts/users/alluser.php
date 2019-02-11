@@ -4,7 +4,7 @@ session_start();
 if(!isset($_SESSION['userid'])) {
     die('Bitte zuerst <a href="../Login.php">einloggen</a>');
 }
-include("../dbconnect.php");
+//include("../dbconnect.php");
 $ini = parse_ini_file('../../my_stable_config.ini');
 $host = $ini["db_servername"];
 $db = $ini['db_name'];
@@ -80,7 +80,7 @@ Check if current user is admin
 								$row = mysqli_fetch_array($result);
 
 								if ($row['adminAllowed'] == "1") {
-									echo "<li class='current'><a>Nutzer</a></li>";
+									echo "<li class='current'><a>Nutzerübersicht</a></li>";
 								 } else {
 								 }
 							?>

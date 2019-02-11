@@ -29,7 +29,26 @@ article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
 	display: block;}
 	
-
+.exportBtn{
+	float:right;
+	background-color:#FFFFFF;
+	text-decoration:none;
+	color:#555;
+	padding:8px 12px 8px 12px;
+	border-radius:5px;
+	border:1px solid #ccc;
+	font-size:12px;
+	margin-right:5px;
+	margin-top:4px;
+}
+.exportBtn:hover{
+	border:1px solid gray;
+	text-decoration:none;
+	color:#555;
+}
+.exportBtn:active{
+	background-color:#74c8f9;
+}
 	
 
 body {
