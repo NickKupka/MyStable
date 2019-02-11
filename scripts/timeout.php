@@ -65,10 +65,6 @@
 		
 		
 		<link rel='stylesheet' href='fullcalendar/fullcalendar.css' />
-		<script src='fullcalendar/lib/jquery.min.js'></script>
-		<script src='fullcalendar/lib/moment.min.js'></script>
-		<script src='fullcalendar/fullcalendar.min.js'></script>
-		<script src='fullcalendar/locale/de.js'></script>
 		<script src="fcbasic.js"></script>
 		<style>
 			#calendar {
