@@ -116,15 +116,15 @@ Check if current user is admin
 							$nutzerAktivDB = $row['active'];			
 							switch ($nutzerAktivDB) {
 								case "1":
-									$nutzerAktivDB = "Aktiver Reiter";
+									$nutzerAktivDB = "Reiter aktiv";
 									break;
 								case "0":
-									$nutzerAktivDB = "Inaktiv";
+									$nutzerAktivDB = "Reiter nicht aktiv";
 									break;
 								default:
 								break;
 							}
-							echo " <th scope='row'><b>".$count."</b></th>  <th scope='row'>".$vornameDB  ."</th><th scope='row'>".$nachnameDB  ."</th><th scope='row'>".$NameDesPferdesDB  ."</th>  <th scope='col'>". $aktivSeitDB."</th> <td>". $lizenzBisDB."</td><td>".$nutzerAktivDB."</td></tr>";
+							echo " <th scope='row'><b>".$count."</b></th>  <th scope='row'>".$vornameDB  ."</th><th scope='row'>".$nachnameDB  ."</th><th scope='row'>".$NameDesPferdesDB  ."</th>  <th scope='col'>". date('d.m.Y  H:i:s', strtotime($aktivSeitDB))."</th> <td>".  date('d.m.Y', strtotime($lizenzBisDB))."</td><td>".$nutzerAktivDB."</td></tr>";
 							$count = $count + 1;
 							
 						}

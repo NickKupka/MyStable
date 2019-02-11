@@ -42,7 +42,7 @@ $userEMail = $user['email'];
 if($user['active'] =='1'){
 	$userAktiv = "Reiter aktiv";
 } else {
-	$userAktiv = "Reiter nicht mehr in Stall";
+	$userAktiv = "Reiter nicht aktiv";
 }
 $userPferd = $user['NameDesPferdes'];
 $userAngelegtAm = $user['created_at'];
