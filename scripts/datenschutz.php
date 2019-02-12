@@ -23,7 +23,7 @@
 					<!-- Nav -->
 					<nav id="nav">
 							<ul>
-							<li class="current"><a href="calendarview.php">Mein Kalendar</a></li>
+							<li ><a href="calendarview.php">Mein Kalendar</a></li>
 								<li><a href="users/edituser.php">Meine Daten</a></li>
 								<?php 
 /*
@@ -42,7 +42,7 @@
 								<li><a href="events/myentries.php">Meine Einträge</a></li>
 								
 								<li><a href="impressum.php">Impressum</a></li>
-								<li><a href="datenschutz.html">Datenschutz</a></li>
+								<li class="current"><a href="datenschutz.php">Datenschutz</a></li>
 								<li><a href="Logout.php">Logout</a></li>
 					</ul>
 						</nav>
