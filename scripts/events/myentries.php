@@ -104,43 +104,7 @@ if (mysqli_connect_errno()){
 									//Get the day of the week using PHP's date function.
 									$dayOfWeek = date("l", $unixTimestamp);
 								}
-								//Create ical-file
-							$kb_start = $eventStartTime; //'20161028T130000';
-							$kb_end = $eventStartTime; //'20161028T143000';
-							$kb_current_time = '20161026T130000';
-							$kb_title = html_entity_decode('Dein Termin', ENT_COMPAT, 'UTF-8');
-							$kb_location = preg_replace('/([\,;])/','\\\$1','Location'); 
-							$kb_description = html_entity_decode('Beschreibung zum Termin', ENT_COMPAT, 'UTF-8');
-							$kb_url = 'https://kulturbanause.de';
-							$kb_file_name = 'termin';
-							$eol = "\r\n";
-
-
-						$kb_ical = fopen('../'.$kb_file_name.'.ics', 'w') or die('Datei kann nicht gespeichert werden!'); 
-
-						$eol = "\r\n";
-						$kb_ics_content =
-						'BEGIN:VCALENDAR'.$eol.
-						'VERSION:2.0'.$eol.
-						'PRODID:-//kulturbanause//kulturbanause.de//DE'.$eol.
-						'CALSCALE:GREGORIAN'.$eol.
-						'BEGIN:VEVENT'.$eol.
-						'DTSTART:'.$kb_start.$eol.
-						'DTEND:'.$kb_end.$eol.
-						'LOCATION:'.$kb_location.$eol.
-						'DTSTAMP:'.$kb_current_time.$eol.
-						'SUMMARY:'.$kb_title.$eol.
-						'URL;VALUE=URI:'.$kb_url.$eol.
-						'DESCRIPTION:'.$kb_description.$eol.
-						'UID:'.$kb_current_time.'-'.$kb_start.'-'.$kb_end.$eol.
-						'END:VEVENT'.$eol.
-						'END:VCALENDAR';
-						fwrite($kb_ical, $kb_ics_content);
-
-						fclose($kb_ical);
-
-
-
+							
 							?>
 							<li class="current"><a >Meine Einträge</a></li>
 							<li><a href="../impressum.php">Impressum</a></li>
@@ -156,10 +120,10 @@ if (mysqli_connect_errno()){
 					<h2>Hier sehen Sie Ihre zukünftigen Reservierungen</h2><br/><br/>
 					<div style="width: 100%; height: 300px; overflow-y: scroll;">
 					<!-- <button id="exportButton" class="btn btn-lg btn-danger clearfix"><span class="fa fa-file-pdf-o"></span>Export PDF</button> -->
-						<a href="#" class="exportBtn btn btn-info" id="btnExportToXLSNew" onClick ="$('#exportTable').tableExport({type:'pdf',escape:'false'});"><span class="far fa-file-excel"> Excel</a>
+					<!--	<a href="#" class="exportBtn btn btn-info" id="btnExportToXLSNew" onClick ="$('#exportTable').tableExport({type:'pdf',escape:'false'});"><span class="far fa-file-excel"> Excel</a> -->
 					<!--	<a href="#" class="exportBtn btn btn-info" id="btnExportToPDFNew"><span class="fa fa-file-pdf-o"> PDF</a>
 						<a href="#" class="exportBtn btn btn-info" id="btnPrintNew" ><span class="fas fa-print"> Print</a>  -->
-					<a href="./../<?php echo $kb_file_name; ?>.ics" title="»<?php echo $kb_title; ?>« exportieren">Termin in Kalender speichern</a>;
+				
 
 					<?php 
 						$result = mysqli_query($con,"SELECT * FROM `events` WHERE `title` LIKE '%{$nachname}%' AND `title` LIKE '%{$vorname}%'");
@@ -288,9 +252,9 @@ if (mysqli_connect_errno()){
 					<br/><br/><br/><br/>
 					<h2>Hier sehen Sie Ihre vergangenen Reservierungen</h2><br/><br/>
 					<div style="width: 100%; height: 300px; overflow-y: scroll;">
-						<a href="#" class="exportBtn btn btn-info" id="btnExportToXLSOld"><span class="far fa-file-excel"> Excel</a>
+					<!-- 	<a href="#" class="exportBtn btn btn-info" id="btnExportToXLSOld"><span class="far fa-file-excel"> Excel</a>
 						<a href="#" class="exportBtn btn btn-info" id="btnExportToPDFOld"><span class="fa fa-file-pdf-o"> PDF</a>
-						<a href="#" class="exportBtn btn btn-info" id="btnPrintOld" ><span class="fas fa-print"> Print</a> 
+						<a href="#" class="exportBtn btn btn-info" id="btnPrintOld" ><span class="fas fa-print"> Print</a>  -->
 					<?php 
 						$result = mysqli_query($con,"SELECT * FROM `events` WHERE `title` LIKE '%{$nachname}%' AND `title` LIKE '%{$vorname}%'");
 						$count = 1;
