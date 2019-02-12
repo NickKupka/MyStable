@@ -21,7 +21,7 @@
 				<section class="wrapper style1">
 					<div class="container">
 						<div id="content">
-							<h2 color="red" align="center">Deine Lizenz ist abgelaufen. Du kannst das System nicht mehr verwenden.</h2>
+							<h2 color="red" align="center">Deine Lizenz ist abgelaufen. Du kannst das System nicht mehr verwenden. Bitte verlängere deine Lizenz.</h2>
 						</div>
 						
 					</div>

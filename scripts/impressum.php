@@ -69,6 +69,7 @@ $nachname = $sessionIDSPlitted[1]; // nachname aus session id
 								?>
 								<li><a href="events/myentries.php">Meine Einträge</a></li>
 								<li class="current"><a href="impressum.php">Impressum</a></li>
+								<li><a href="datenschutz.html">Datenschutz</a></li>
 								<li><a href="Logout.php">Logout</a></li>
 							</ul>
 						</nav>

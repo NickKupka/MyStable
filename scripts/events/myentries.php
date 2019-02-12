@@ -86,9 +86,65 @@ if (mysqli_connect_errno()){
 								if ($row['adminAllowed'] == "1") {
 									echo "<li><a href='../users/alluser.php'>Nutzerübersicht</a></li>";
 								}
+
+								$result = mysqli_query($con,"SELECT * FROM `events` WHERE `title` LIKE '%{$nachname}%' AND `title` LIKE '%{$vorname}%'");
+								$date = date('d-m-Y H:i');
+								while($row = mysqli_fetch_array($result)){
+									setlocale(LC_TIME, 'de_DE', 'deu_deu');
+		
+									$eventStartTime = $row['start_event'];
+									$eventEndTime = $row['end_event'];
+									
+									$dateOfEvent = strtotime($eventStartTime);
+									$EnddateOfEvent = strtotime($eventEndTime);
+		
+									//Convert the date string into a unix timestamp.
+									$unixTimestamp = strtotime($eventStartTime);
+		
+									//Get the day of the week using PHP's date function.
+									$dayOfWeek = date("l", $unixTimestamp);
+								}
+								//Create ical-file
+							$kb_start = $eventStartTime; //'20161028T130000';
+							$kb_end = $eventStartTime; //'20161028T143000';
+							$kb_current_time = '20161026T130000';
+							$kb_title = html_entity_decode('Dein Termin', ENT_COMPAT, 'UTF-8');
+							$kb_location = preg_replace('/([\,;])/','\\\$1','Location'); 
+							$kb_description = html_entity_decode('Beschreibung zum Termin', ENT_COMPAT, 'UTF-8');
+							$kb_url = 'https://kulturbanause.de';
+							$kb_file_name = 'termin';
+							$eol = "\r\n";
+
+
+						$kb_ical = fopen('../'.$kb_file_name.'.ics', 'w') or die('Datei kann nicht gespeichert werden!'); 
+
+						$eol = "\r\n";
+						$kb_ics_content =
+						'BEGIN:VCALENDAR'.$eol.
+						'VERSION:2.0'.$eol.
+						'PRODID:-//kulturbanause//kulturbanause.de//DE'.$eol.
+						'CALSCALE:GREGORIAN'.$eol.
+						'BEGIN:VEVENT'.$eol.
+						'DTSTART:'.$kb_start.$eol.
+						'DTEND:'.$kb_end.$eol.
+						'LOCATION:'.$kb_location.$eol.
+						'DTSTAMP:'.$kb_current_time.$eol.
+						'SUMMARY:'.$kb_title.$eol.
+						'URL;VALUE=URI:'.$kb_url.$eol.
+						'DESCRIPTION:'.$kb_description.$eol.
+						'UID:'.$kb_current_time.'-'.$kb_start.'-'.$kb_end.$eol.
+						'END:VEVENT'.$eol.
+						'END:VCALENDAR';
+						fwrite($kb_ical, $kb_ics_content);
+
+						fclose($kb_ical);
+
+
+
 							?>
 							<li class="current"><a >Meine Einträge</a></li>
 							<li><a href="../impressum.php">Impressum</a></li>
+							<li><a href="datenschutz.php">Datenschutz</a></li>
 							<li><a href="../Logout.php">Logout</a></li>					
 					</ul>
 						</nav>
@@ -103,6 +159,7 @@ if (mysqli_connect_errno()){
 						<a href="#" class="exportBtn btn btn-info" id="btnExportToXLSNew" onClick ="$('#exportTable').tableExport({type:'pdf',escape:'false'});"><span class="far fa-file-excel"> Excel</a>
 					<!--	<a href="#" class="exportBtn btn btn-info" id="btnExportToPDFNew"><span class="fa fa-file-pdf-o"> PDF</a>
 						<a href="#" class="exportBtn btn btn-info" id="btnPrintNew" ><span class="fas fa-print"> Print</a>  -->
+					<a href="./../<?php echo $kb_file_name; ?>.ics" title="»<?php echo $kb_title; ?>« exportieren">Termin in Kalender speichern</a>;
 
 					<?php 
 						$result = mysqli_query($con,"SELECT * FROM `events` WHERE `title` LIKE '%{$nachname}%' AND `title` LIKE '%{$vorname}%'");
@@ -152,12 +209,15 @@ if (mysqli_connect_errno()){
 									break;
 							};
 
+							
+							
+
 							if ($date > date('d-m-Y H:i', $dateOfEvent)) {
 								# current time is greater than 2010-05-15 16:00:00
 								# in other words, 2010-05-15 16:00:00 has passed
 							}else{							
 								$eventTitle = $row['title'];
-								echo " <th scope='row'><b>".$count."</b></th>  <th scope='row'>".$dayOfWeek  ."</th>  <th scope='col'>".date('d-m-Y', $dateOfEvent)."</th> <td>" . date('H:i', $dateOfEvent)."</td><td>".date('H:i', $EnddateOfEvent)."</td><td>".$eventTitle."</td></tr>";
+								echo " <th scope='row'><b>".$count."</b></th>  <th scope='row'>".$dayOfWeek  ."</th>  <th scope='col'>".date('d.m.Y', $dateOfEvent)."</th> <td>" . date('H:i', $dateOfEvent)."</td><td>".date('H:i', $EnddateOfEvent)."</td><td>".$eventTitle."</td></tr>";
 								$count = $count + 1;
 							}
 						}

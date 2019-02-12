@@ -80,6 +80,7 @@ if(isset($_GET['login'])) {
 								<li><a href="registerpage.php">Registrierung</a></li>
 								<li class="current"><a href="Login.php">Login</a></li>
 								<li><a href="../impressum.html">Impressum</a></li>
+								<li><a href="../datenschutz.html">Datenschutz</a></li>
 							</ul>
 						</nav>
 

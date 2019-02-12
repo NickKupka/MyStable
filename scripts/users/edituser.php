@@ -146,6 +146,7 @@ if (isset($_POST['submit'])) {
 							?>
 							<li><a href="../events/myentries.php">Meine Einträge</a></li>
 							<li><a href="../impressum.php">Impressum</a></li>
+							<li><a href="datenschutz.php">Datenschutz</a></li>
 							<li><a href="../Logout.php">Logout</a></li>					
 					</ul>
 						</nav>
