@@ -1,8 +1,16 @@
 <?php 
 session_start();
-include ("dbconnect.php");
+//include ("dbconnect.php");
 
-$pdo = new PDO('mysql:host=localhost;dbname=mystable', 'MyStableDBRoot', 'Nick&Alex2019');
+
+$ini = parse_ini_file('../my_stable_config.ini');
+$host = $ini["db_servername"];
+$db = $ini['db_name'];
+
+$dsn = "mysql:host=$host;dbname=$db";
+$pdo = new PDO($dsn, $ini['db_user'], $ini['db_password']);
+//$pdo = new PDO('mysql:host=localhost;dbname=mystable', 'MyStableDBRoot', 'Nick&Alex2019');
+$checkLogin=true;
 
 
 if(isset($_GET['login'])) {
@@ -24,18 +32,26 @@ if(isset($_GET['login'])) {
     if ($user !== false && password_verify($passwort, $user['passwort'])) {
 		if ($key !== false && $key['LicenseKey'] == $LicenseKey){
 			//toll
+			$db = new mysqli($ini['db_servername'], $ini['db_user'], $ini['db_password'], $ini['db_name']) or die ("Verbindungsfehler: " . $db->error);
 			$eintragen = mysqli_query($db, "UPDATE users SET active='1', ExpiryDate='$date' WHERE `email` = '".$_POST['email']."'") or exit(mysqli_error($connectionID));
 			if ($eintragen){
 				$_SESSION['userid'] = $user['vorname'] . " " . $user['nachname'];
 				$_SESSION['expiryDate'] = $date;
+				$checkLogin= true;
+				$_SESSION['message'] = "Die Eingabe war erfolgreich<br>";
 				header("Location: calendarview.php");
 			}else{
+				$checkLogin = false;
+			$_SESSION['message'] = "Bei der Eingabe ist leider einer unerwarteter Fehler aufgetreten. Bitte versuchen Sie es erneut.<br>";
 			}
 		}else{
 			// "LicenseKey verification failed"
+			$checkLogin = false;
+			$_SESSION['message'] = "Der eingegebene Lizenzschlüssel ist nicht korrekt<br>";
 		}
     } else {
-        $errorMessage = "E-Mail oder Passwort war ungültig<br>";
+		$checkLogin = false;
+		$_SESSION['message'] = "E-Mail oder Passwort ist ungültig<br>";
     }
 }
 ?>
@@ -44,6 +60,7 @@ if(isset($_GET['login'])) {
 		<title>MyStable Login</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
 		<link rel="stylesheet" href="../assets/css/main.css" />
 		<link rel="shortcut icon" href="../pictures/favicon.ico" type="image/x-icon">
 		<link rel="icon" href="../pictures/favicon.ico" type="image/x-icon">
@@ -88,6 +105,29 @@ if(isset($_GET['login'])) {
 
 			<!-- Main -->
 				<section class="wrapper style1">
+				<?php
+				if($checkLogin == false){
+					?>
+					<div class="container">
+						<div class="panel-group">
+							<div class="panel panel-danger">
+							<div class="panel-heading">Es ist ein Fehler aufgetreten</div>
+								<div class="panel-body"> <?php if(isset($_SESSION["message"])) echo $_SESSION["message"]; ?> </div>
+							</div>
+
+						</div>
+					</div>
+				<?php	
+				} else {
+					?>
+				<div class="container">
+				
+				</div>
+				<?php
+				}
+				
+				?>
+
 					<div class="container">
 						<div id="content">
 							<h2 style="color: green">Die Registrierung hat funktioniert.<br/> Wir haben Ihnen eine E-Mail mit einem Lizenzschlüssel zugesendet.</h2>

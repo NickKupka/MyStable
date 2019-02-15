@@ -2,6 +2,7 @@
 $showFormular = true; //Variable ob das Registrierungsformular anezeigt werden soll
 include ("dbconnect.php");
 $ini = parse_ini_file('../my_stable_config.ini');
+$checkLogin= true;
 
 if(isset($_GET['register'])) {
     $error = false;
@@ -35,7 +36,7 @@ if(isset($_GET['register'])) {
     if(!$error) { 
 		$select = mysqli_query($db, "SELECT * FROM users WHERE `email` = '".$_POST['email']."'") or exit(mysqli_error($connectionID));
     }else{
-		echo "error occured";
+		$_SESSION['message'] = "error occured";
 	}
     
     //Keine Fehler, wir können den Nutzer registrieren
@@ -49,14 +50,17 @@ if(isset($_GET['register'])) {
 		$eintragen = mysqli_query($db, "INSERT INTO users (vorname, nachname, email, passwort, LicenseKey, NameDesPferdes) VALUES ('$vorname', '$nachname', '$email', '$passwort_hash','$licensekey','$NameDesPferdes')");
 		if($eintragen) {     
 			$php = $ini["php_path"];
+			$checkLogin= true;
+			$_SESSION['message'] = "Die Eingabe war erfolgreich<br>";
 			exec("$php sendMail.php $email $licensekey $vorname $nachname $NameDesPferdes");
 			header("Location: LoginWithKey.php");
             $showFormular = false;
         } else {
-            echo 'Beim Abspeichern ist leider ein Fehler aufgetreten<br>';
+			$checkLogin= false;
+			$_SESSION['message'] = "Bei der Eingabe ist leider einer unerwarteter Fehler aufgetreten. Bitte versuchen Sie es erneut.<br>";
         }
     }else{
-		echo "can't do anything";
+		$_SESSION['message'] = "can't do anything";
 	}		
 }
 
@@ -131,6 +135,30 @@ return $randomString;
 
 			<!-- Main -->
 				<section class="wrapper style1">
+
+				<?php
+				if($checkLogin == false){
+					?>
+					<div class="container">
+						<div class="panel-group">
+							<div class="panel panel-danger">
+							<div class="panel-heading">Es ist ein Fehler aufgetreten</div>
+								<div class="panel-body"> <?php if(isset($_SESSION["message"])) echo $_SESSION["message"]; ?> </div>
+							</div>
+
+						</div>
+					</div>
+				<?php	
+				} else {
+					?>
+				<div class="container">
+				
+				</div>
+				<?php
+				}
+				
+				?>
+
 					<div class="container">
 						<div id="content">
 							<form action="?register=1" method="post" accept-charset="utf-8">
