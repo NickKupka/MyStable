@@ -77,8 +77,8 @@ if (isset($_POST['submit'])) {
 	}
     
     if(!$error) {    
-		$statementUpdateUser = $pdo->prepare("UPDATE users SET vorname = :vorname_neu, nachname = :nachname_neu, email = :email_neu, NameDesPferdes = :NameDesPferdes_neu, active= :aktiv_neu WHERE id = '$id'");
-		$statementUpdateUser->execute(array(':vorname_neu' => $vorname, ':nachname_neu' => $nachname, ':email_neu' => $email, ':NameDesPferdes_neu' => $NameDesPferdes, ':aktiv_neu' => $aktiv));   
+		$statementUpdateUser = $pdo->prepare("UPDATE users SET vorname = :vorname_neu, nachname = :nachname_neu, email = :email_neu, NameDesPferdes = :NameDesPferdes_neu WHERE id = '$id'");
+		$statementUpdateUser->execute(array(':vorname_neu' => $vorname, ':nachname_neu' => $nachname, ':email_neu' => $email, ':NameDesPferdes_neu' => $NameDesPferdes));   
 		$count = $statementUpdateUser->rowCount();
 
 		if($count == '0'){
@@ -146,7 +146,7 @@ if (isset($_POST['submit'])) {
 							?>
 							<li><a href="../events/myentries.php">Meine Einträge</a></li>
 							<li><a href="../impressum.php">Impressum</a></li>
-							<li><a href="datenschutz.php">Datenschutz</a></li>
+							<li><a href="../datenschutz.php">Datenschutz</a></li>
 							<li><a href="../Logout.php">Logout</a></li>					
 					</ul>
 						</nav>
@@ -217,7 +217,7 @@ if (isset($_POST['submit'])) {
 								<div class="form-group">
 								  <label class="col-md-4 control-label" for="dropdownuseractive">Nutzerdaten</label>
 								  <div class="col-md-4">
-									<select id="dropdownuseractive" name="dropdownuseractive" class="form-control">
+									<select id="dropdownuseractive" name="dropdownuseractive" class="form-control" readonly>
 										<option selected hidden="true"><?php echo $userAktiv;?></option>
 									  <option value="1">Reiter aktiv</option>
 									  <option value="0">Reiter nicht mehr in Stall</option>

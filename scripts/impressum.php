@@ -64,7 +64,7 @@ $nachname = $sessionIDSPlitted[1]; // nachname aus session id
 									$row = mysqli_fetch_array($result);
 
 									if ($row['adminAllowed'] == "1") {
-										echo "<li><a href='users/alluser.php'>Nutzer</a></li>";
+										echo "<li><a href='users/alluser.php'>Nutzerübersicht</a></li>";
 									 }
 								?>
 								<li><a href="events/myentries.php">Meine Einträge</a></li>

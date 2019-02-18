@@ -1,14 +1,11 @@
 <?php 
 session_start();
-
 $ini = parse_ini_file('../my_stable_config.ini');
 $host = $ini["db_servername"];
 $db = $ini['db_name'];
-
 $dsn = "mysql:host=$host;dbname=$db";
 $pdo = new PDO($dsn, $ini['db_user'], $ini['db_password']);
 $checkLogin=true;
-
 if(isset($_GET['login'])) {
     $email = $_POST['email'];
     $passwort = $_POST['passwort'];
@@ -16,7 +13,6 @@ if(isset($_GET['login'])) {
     $statement = $pdo->prepare("SELECT * FROM users WHERE email = :email");
     $result = $statement->execute(array('email' => $email));
 		$user = $statement->fetch();
-
 	
     
     //Überprüfung des Passworts
@@ -26,7 +22,6 @@ if(isset($_GET['login'])) {
 		$checkLogin= true;
 		$_SESSION['message'] = "Die Eingabe war erfolgreich<br>";
 		header ("Location: calendarview.php");
-
     } else {
 			$checkLogin = false;
 			$_SESSION['message'] = "E-Mail oder Passwort ist ungültig<br>";

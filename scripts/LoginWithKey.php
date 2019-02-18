@@ -1,18 +1,13 @@
 <?php 
 session_start();
 //include ("dbconnect.php");
-
-
 $ini = parse_ini_file('../my_stable_config.ini');
 $host = $ini["db_servername"];
 $db = $ini['db_name'];
-
 $dsn = "mysql:host=$host;dbname=$db";
 $pdo = new PDO($dsn, $ini['db_user'], $ini['db_password']);
 //$pdo = new PDO('mysql:host=localhost;dbname=mystable', 'MyStableDBRoot', 'Nick&Alex2019');
 $checkLogin=true;
-
-
 if(isset($_GET['login'])) {
     $email = $_POST['email'];
     $passwort = $_POST['passwort'];

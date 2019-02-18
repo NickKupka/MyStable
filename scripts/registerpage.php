@@ -3,7 +3,6 @@ $showFormular = true; //Variable ob das Registrierungsformular anezeigt werden s
 include ("dbconnect.php");
 $ini = parse_ini_file('../my_stable_config.ini');
 $checkLogin= true;
-
 if(isset($_GET['register'])) {
     $error = false;
     $vorname = $_POST['vorname'];
@@ -12,7 +11,6 @@ if(isset($_GET['register'])) {
     $passwort = $_POST['passwort'];
     $passwort2 = $_POST['passwort2'];
 	$NameDesPferdes =$_POST['NameDesPferdes'];
-
   
     if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = true;
@@ -63,7 +61,6 @@ if(isset($_GET['register'])) {
 		$_SESSION['message'] = "can't do anything";
 	}		
 }
-
 function generateLicenceKey() {
 $length = 19;
 $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -83,7 +80,6 @@ for ($i = 0; $i < $length; $i++) {
 //echo $randomString;
 return $randomString;
 }
-
 ?>
 <html>
 	<head>

@@ -108,7 +108,7 @@ if (mysqli_connect_errno()){
 							?>
 							<li class="current"><a >Meine Einträge</a></li>
 							<li><a href="../impressum.php">Impressum</a></li>
-							<li><a href="datenschutz.php">Datenschutz</a></li>
+							<li><a href="../datenschutz.php">Datenschutz</a></li>
 							<li><a href="../Logout.php">Logout</a></li>					
 					</ul>
 						</nav>
