@@ -31,6 +31,8 @@ if($date < $now) {
 $sessionIDSPlitted = explode(" ", $session_value);
 $vorname = $sessionIDSPlitted[0]; // vorname aus session id
 $nachname = $sessionIDSPlitted[1]; // nachname aus session id
+$userID = $sessionIDSPlitted[2]; // user id aus session id
+$stableID = $sessionIDSPlitted[3]; // stable aus session id
 
 /*
 Check if current user is admin
@@ -59,11 +61,11 @@ Check if current user is admin
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
 	</head>
 	<body class="is-preload">
-		<div id="page-wrapper" style="width: 100%" align="center">
+		<div id="page-wrapper" align="center">
 			<!-- Header -->
 				<div id="header">
 					<!-- Logo -->
-						<h1><a href="../../index.html" id="logo">MyStable <em>by Technick Solutions</em></a></h1>
+						<h1><a id="logo">MyStable <em>by Technick Solutions</em></a></h1>
 					<!-- Nav -->
 						<nav id="nav">
 							<ul>
@@ -80,7 +82,7 @@ Check if current user is admin
 								$row = mysqli_fetch_array($result);
 
 								if ($row['adminAllowed'] == "1") {
-									echo "<li class='current'><a>Nutzerübersicht</a></li>";
+									echo "<li class='current'><a>Reiter Verwaltung</a></li>";
 								 } else {
 								 }
 							?>
@@ -101,20 +103,37 @@ Check if current user is admin
 					<div style="width: 100%; height: 400px; overflow-y: scroll;">
 						
 					<?php 
-						$result = mysqli_query($con,"SELECT * FROM `users`");
+						$result = mysqli_query($con,"SELECT * FROM `users`WHERE  `stable_id` LIKE '%{$stableID}%'");
 						$count = 1;
-						echo "<table class='table' ><thead><tr>";
-						echo"<th scope='col'><b>#</b></th><th scope='col'><b>Vorname</b></th><th scope='col'><b>Nachname</b></th><th scope='col'><b>Name des Pferdes</b></th><th scope='col'><b>Aktiv seit</b></th><th scope='col'><b>Lizenz bis</b></th><th scope='col'><b>Reiter aktiv</b></th></tr></thead><tbody>";
+						echo "<table class='table' >
+								<thead>
+									<tr>";
+								echo"<th scope='col'><b>#</b></th>
+									 <th scope='col'><b>Vorname</b></th>
+									 <th scope='col'><b>Nachname</b></th>
+									 <th scope='col'><b>Name des Pferdes</b></th>
+									 <th scope='col'><b>Aktiv seit</b></th>
+									 <th scope='col'><b>Lizenz bis</b></th>
+									 <th scope='col'><b>Reiter aktiv</b></th>
+									 <th scope='col'><b>Reiter verwarnen</b></th>
+									 <th scope='col'><b>Reiter sperren</b></th>
+
+									 </tr>
+								</thead>
+							<tbody>";
 						$date = date('d-m-Y H:i');
 						while($row = mysqli_fetch_array($result)){
 							setlocale(LC_TIME, 'de_DE', 'deu_deu');
-
+							$idDB = $row['id'];
 							$vornameDB = $row['vorname'];
 							$nachnameDB = $row['nachname'];
 							$NameDesPferdesDB = $row['NameDesPferdes'];
 							$aktivSeitDB = $row['created_at'];
 							$lizenzBisDB = $row['ExpiryDate'];
-							$nutzerAktivDB = $row['active'];			
+							$nutzerAktivDB = $row['active'];
+							$nutzerVerwarntDB = $row['Verwarnt'];			
+							$nutzerGesperrtDB = $row['Gesperrt'];			
+							
 							switch ($nutzerAktivDB) {
 								case "1":
 									$nutzerAktivDB = "Reiter aktiv";
@@ -123,9 +142,79 @@ Check if current user is admin
 									$nutzerAktivDB = "Reiter nicht aktiv";
 									break;
 								default:
-								break;
+									break;
 							}
-							echo " <th scope='row'><b>".$count."</b></th>  <th scope='row'>".$vornameDB  ."</th><th scope='row'>".$nachnameDB  ."</th><th scope='row'>".$NameDesPferdesDB  ."</th>  <th scope='col'>". date('d.m.Y  H:i:s', strtotime($aktivSeitDB))."</th> <td>".  date('d.m.Y', strtotime($lizenzBisDB))."</td><td>".$nutzerAktivDB."</td></tr>";
+							echo "<td scope='row'><b>".$count."</b></td>
+							      <td scope='row'>".$vornameDB  ."</td>
+								  <td scope='row'>".$nachnameDB  ."</td>
+								  <td scope='row'>".$NameDesPferdesDB  ."</td>  
+								  <td scope='col'>". date('d.m.Y  H:i:s', strtotime($aktivSeitDB))."</td> 
+								  <td>".  date('d.m.Y', strtotime($lizenzBisDB))."</td>
+								  <td>".$nutzerAktivDB."</td>";
+							if ($nutzerAktivDB == "Reiter aktiv"){
+								switch($nutzerVerwarntDB){
+									case "0":
+										echo"<td>
+											<form name='frmVerwarnen' action='userverwaltung.php' method='post'>
+												<input type='hidden' name='itemid' value=".$idDB.">
+												<input style='background-color: #FFFF00' type='submit' name='verwarnenButton' value='Verwarnen'>
+											</form>
+										  </td>";
+										  echo "<td>
+											<form name='frmSperren' action='userverwaltung.php' method='post' >
+												<input type='hidden' name='itemid' value=".$idDB.">
+												<input style='background-color: #e7e7e7;  pointer-events: none;' type='submit' disabled name='sperrenButton' value='Sperren'>
+											</form>
+										  </td>";
+										break;
+									  case "1":
+										  if ($nutzerGesperrtDB == 0){
+												echo"<td>
+												<form name='frmVerwarnen' action='userverwaltung.php' method='post' >
+													<input type='hidden' name='itemid' value=".$idDB.">
+													<input style='background-color: #4CAF50' type='submit' name='verwarnenAufhebenButton' value='Verwarnung aufheben' >
+												</form>
+											  </td>";
+												echo "<td>
+												<form name='frmSperren' action='userverwaltung.php' method='post' >
+													<input type='hidden' name='itemid' value=".$idDB.">
+													<input style='background-color: #f44336' type='submit' name='sperrenButton' value='Sperren'>
+												</form>
+											  </td>";
+											}else if ($nutzerGesperrtDB == 1){
+												echo"<td>
+												<form name='frmVerwarnen' action='userverwaltung.php' method='post' >
+													<input type='hidden' name='itemid' value=".$idDB.">
+													<input style='background-color: #e7e7e7; pointer-events: none;' type='submit' disabled name='verwarnenAufhebenButton' value='Verwarnung aufheben' >
+												</form>
+											  </td>";
+												echo "<td>
+												<form name='frmSperren' action='userverwaltung.php' method='post' disabled>
+													<input type='hidden' name='itemid' value=".$idDB.">
+													<input style='background-color: #4CAF50;' type='submit' name='sperrenAufhebenButton'  value='Sperre aufheben' >
+												</form>
+											  </td>";
+											}									  
+										break;									
+								}
+							}else{
+									echo"<td>
+										<form name='frmVerwarnen' action='userverwaltung.php' method='post'>
+											<input type='hidden' name='itemid' value=".$idDB.">
+											<input style='background-color: #e7e7e7; pointer-events: none;' disabled type='submit' name='verwarnenButton' value='Verwarnen'>
+										</form>
+									  </td>";
+									  echo "<td>
+										<form name='frmSperren' action='userverwaltung.php' method='post' >
+											<input type='hidden' name='itemid' value=".$idDB.">
+											<input style='background-color: #e7e7e7;  pointer-events: none;' type='submit' disabled name='sperrenButton' value='Sperren'>
+										</form>
+									  </td>";
+									
+							}
+							
+							
+							echo"</tr>";
 							$count = $count + 1;
 							
 						}

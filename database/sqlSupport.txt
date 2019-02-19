@@ -1,0 +1,20 @@
+Alle User Informationen inkl. Stallname
+
+select *
+from users usr
+inner join stable stbl
+on usr.stable_id = stbl.id
+
+---> verkürzte Version
+
+select vorname, nachname, stable_name
+from users usr
+inner join stable stbl
+on usr.stable_id = stbl.id
+
+----> hol dir den stallnamen vom aktuellen user
+select stable_name
+from stable stbl
+inner join users usr
+on stbl.id = usr.stable_id where usr.id = "76"
+

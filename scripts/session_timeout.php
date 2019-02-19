@@ -1,6 +1,6 @@
 <?php
 // Session expired
-$expireAfter = 1; // Session timeout in minutes - Changeable
+$expireAfter = 30; // Session timeout in minutes - Changeable
 error_reporting(0);
 if(isset($_SESSION['last_action'])){
     $secondsInactive = time() - $_SESSION['last_action'];

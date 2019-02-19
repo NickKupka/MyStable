@@ -17,7 +17,7 @@ if(isset($_GET['login'])) {
     
     //Überprüfung des Passworts
     if ($user !== false && password_verify($passwort, $user['passwort']) && $user['active'] == "1") {
-		$_SESSION['userid'] = $user['vorname'] ." ". $user['nachname'] ;
+		$_SESSION['userid'] = $user['vorname'] ." ". $user['nachname']." ". $user['id']." ". $user['stable_id'] ;
 		$_SESSION['expiryDate'] = $user['ExpiryDate'];
 		$checkLogin= true;
 		$_SESSION['message'] = "Die Eingabe war erfolgreich<br>";
@@ -71,6 +71,8 @@ if(isset($_GET['login'])) {
 								<li><a href="registerpage.php">Registrierung</a></li>
 								<li class="current"><a href="Login.php">Login</a></li>
 								<li><a href="../impressum.html">Impressum</a></li>
+								<li><a href="../datenschutz.html">Datenschutz</a></li>
+
 							</ul>
 						</nav>
 

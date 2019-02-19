@@ -31,7 +31,9 @@ if($date < $now) {
 $sessionIDSPlitted = explode(" ", $session_value);
 $vorname = $sessionIDSPlitted[0]; // vorname aus session id
 $nachname = $sessionIDSPlitted[1]; // nachname aus session id
-
+$userID = $sessionIDSPlitted[2]; // user id aus session id
+$stableID = $sessionIDSPlitted[3]; // stable aus session id
+$stableName = "";
 
 $statement = $pdo->prepare("SELECT * FROM users WHERE vorname = :vorname AND nachname = :nachname");
 $statement->execute(array(':vorname' => $vorname, ':nachname' => $nachname));   
@@ -47,6 +49,9 @@ if($user['active'] =='1'){
 $userPferd = $user['NameDesPferdes'];
 $userAngelegtAm = $user['created_at'];
 $userLaueftAusAm = $user['ExpiryDate'];
+$userVerwarnt = $user['Verwarnt'];
+$userGesperrt = $user['Gesperrt'];
+
 
 if (isset($_POST['submit'])) {
   $error = false;
@@ -125,7 +130,7 @@ if (isset($_POST['submit'])) {
 			<!-- Header -->
 				<div id="header">
 					<!-- Logo -->
-						<h1><a href="../../index.html" id="logo">MyStable <em>by Technick Solutions</em></a></h1>
+						<h1><a id="logo">MyStable <em>by Technick Solutions</em></a></h1>
 					<!-- Nav -->
 						<nav id="nav">
 							<ul>
@@ -141,7 +146,7 @@ if (isset($_POST['submit'])) {
 								$row = mysqli_fetch_array($result);
 
 								if ($row['adminAllowed'] == "1") {
-									echo "<li><a href='alluser.php'>Nutzerübersicht</a></li>";
+									echo "<li><a href='alluser.php'>Reiter Verwaltung</a></li>";
 								}
 							?>
 							<li><a href="../events/myentries.php">Meine Einträge</a></li>
@@ -224,7 +229,55 @@ if (isset($_POST['submit'])) {
 									</select>
 								  </div>
 								</div>
+								
+								<!-- Text input-->
+								<div class="form-group">
+								  <label class="col-md-4 control-label" for="meinStall">Mein Stall</label>  
+								  <div class="col-md-4">
+								  <input id="meinStall" name="meinStall" type="text" value="<?php 
+										/*
+										Get current stable
+										*/
+										$con=mysqli_connect($host,$dbUser,$dbPWD,$db);
+										$resultStableName = mysqli_query($con,"SELECT stable_name from stable stbl inner join users usr on stbl.id = usr.stable_id where usr.id LIKE '%{$userID}%'");
+										$rowStableResult = mysqli_fetch_array($resultStableName);
+										$aktuellerStallname = $rowStableResult['stable_name'];
+										echo "$aktuellerStallname";?>" 
+									class="form-control input-md" readonly>
+									
+								  </div>
+								</div>
 
+								<div class="form-group">
+								  <label class="col-md-4 control-label" for="reiterverwarnt">Verwarnung</label>  
+								  <div class="col-md-4">
+								  <?php 
+									if ($userVerwarnt == "1"){
+										$userVerwarnt = "Reiter wurde verwarnt.";
+									}else if ($userVerwarnt == "0"){
+										$userVerwarnt = "Keine derzeitige Verwarnung vorhanden.";
+									}
+									
+								  ?>
+								  <input id="reiterverwarnt" name="reiterverwarnt" type="text" value="<?php echo ($userVerwarnt);?>" class="form-control input-md" readonly>
+									
+								  </div>
+								</div>
+							<div class="form-group">
+								  <label class="col-md-4 control-label" for="reitergesperrt">Sperre</label>  
+								  <div class="col-md-4">
+								  <?php 
+									
+									if ($userGesperrt == "1"){
+										$userGesperrt = "Reiter ist derzeit gesperrt.";
+									}else if ($userGesperrt == "0"){
+										$userGesperrt = "Keine derzeitige Sperre vorhanden.";
+									}
+								  ?>
+								  <input id="reitergesperrt" name="reitergesperrt" type="text" value="<?php echo ($userGesperrt);?>" class="form-control input-md" readonly>
+									
+								  </div>
+								</div>
 
 								<!-- Button -->
 								<div class="form-group">

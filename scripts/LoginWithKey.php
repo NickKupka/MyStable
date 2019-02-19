@@ -30,7 +30,7 @@ if(isset($_GET['login'])) {
 			$db = new mysqli($ini['db_servername'], $ini['db_user'], $ini['db_password'], $ini['db_name']) or die ("Verbindungsfehler: " . $db->error);
 			$eintragen = mysqli_query($db, "UPDATE users SET active='1', ExpiryDate='$date' WHERE `email` = '".$_POST['email']."'") or exit(mysqli_error($connectionID));
 			if ($eintragen){
-				$_SESSION['userid'] = $user['vorname'] . " " . $user['nachname'];
+				$_SESSION['userid'] = $user['vorname'] ." ". $user['nachname']." ". $user['id']." ". $user['stable_id'] ;
 				$_SESSION['expiryDate'] = $date;
 				$checkLogin= true;
 				$_SESSION['message'] = "Die Eingabe war erfolgreich<br>";

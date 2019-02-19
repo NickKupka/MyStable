@@ -31,6 +31,8 @@ if($date < $now) {
 $sessionIDSPlitted = explode(" ", $session_value);
 $vorname = $sessionIDSPlitted[0]; // vorname aus session id
 $nachname = $sessionIDSPlitted[1]; // nachname aus session id
+$userID = $sessionIDSPlitted[2]; // user id aus session id
+$stableID = $sessionIDSPlitted[3]; // stable aus session id
 
 
 $con=mysqli_connect($host,$dbUser,$dbPWD,$db);
@@ -64,11 +66,11 @@ if (mysqli_connect_errno()){
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
 	</head>
 	<body class="is-preload">
-		<div id="page-wrapper" style="width: 100%" align="center">
+		<div id="page-wrapper"align="center">
 			<!-- Header -->
 				<div id="header">
 					<!-- Logo -->
-						<h1><a href="../../index.html" id="logo">MyStable <em>by Technick Solutions</em></a></h1>
+						<h1><a id="logo">MyStable <em>by Technick Solutions</em></a></h1>
 					<!-- Nav -->
 						<nav id="nav">
 							<ul>
@@ -126,7 +128,7 @@ if (mysqli_connect_errno()){
 				
 
 					<?php 
-						$result = mysqli_query($con,"SELECT * FROM `events` WHERE `title` LIKE '%{$nachname}%' AND `title` LIKE '%{$vorname}%'");
+						$result = mysqli_query($con,"SELECT * FROM `events` WHERE `title` LIKE '%{$nachname}%' AND `title` LIKE '%{$vorname}%' and `stable_id` LIKE '%{$stableID}%'");
 						$count = 1;
 						echo "<table id='exportTable' class='table'><thead><tr>";
 						echo"<th scope='col'><b>Nr.</b></th><th scope='col'><b>Wochentag</b></th><th scope='col'><b>Datum</b></th><th scope='col'><b>Startzeit</b></th><th scope='col'><b>Endzeit</b></th><th scope='col'><b>Name des Events</b></th></tr></thead><tbody>";
@@ -256,7 +258,7 @@ if (mysqli_connect_errno()){
 						<a href="#" class="exportBtn btn btn-info" id="btnExportToPDFOld"><span class="fa fa-file-pdf-o"> PDF</a>
 						<a href="#" class="exportBtn btn btn-info" id="btnPrintOld" ><span class="fas fa-print"> Print</a>  -->
 					<?php 
-						$result = mysqli_query($con,"SELECT * FROM `events` WHERE `title` LIKE '%{$nachname}%' AND `title` LIKE '%{$vorname}%'");
+						$result = mysqli_query($con,"SELECT * FROM `events` WHERE `title` LIKE '%{$nachname}%' AND `title` LIKE '%{$vorname}%' and `stable_id` LIKE '%{$stableID}%'");
 						$count = 1;
 						echo "<table class='table'><thead><tr>";
 						echo"<th scope='col'><b>#</b></th><th scope='col'><b>Wochentag</b></th><th scope='col'><b>Datum</b></th><th scope='col'><b>Startzeit</b></th><th scope='col'><b>Endzeit</b></th><th scope='col'><b>Name des Events</b></th></tr></thead><tbody>";

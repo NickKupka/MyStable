@@ -11,6 +11,8 @@ if(isset($_GET['register'])) {
     $passwort = $_POST['passwort'];
     $passwort2 = $_POST['passwort2'];
 	$NameDesPferdes =$_POST['NameDesPferdes'];
+	$stableName=$_POST['stableName'];
+
   
     if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = true;
@@ -27,6 +29,12 @@ if(isset($_GET['register'])) {
     if($passwort != $passwort2) {
         $error = true;
     }
+	if ($stableName == "kolm"){
+		$stableName = 1;
+	}
+	if ($stableName == "anderer"){
+		$stableName = 999;
+	}
 	/*if(strlen($NameDesPferdes) == 0) {
         $error = true;
     }*/
@@ -45,7 +53,7 @@ if(isset($_GET['register'])) {
 		//echo $licensekey;
 		$passwort_hash = password_hash($passwort, PASSWORD_DEFAULT);
 		//echo $passwort_hash;
-		$eintragen = mysqli_query($db, "INSERT INTO users (vorname, nachname, email, passwort, LicenseKey, NameDesPferdes) VALUES ('$vorname', '$nachname', '$email', '$passwort_hash','$licensekey','$NameDesPferdes')");
+		$eintragen = mysqli_query($db, "INSERT INTO users (vorname, nachname, email, passwort, LicenseKey, NameDesPferdes, stable_id) VALUES ('$vorname', '$nachname', '$email', '$passwort_hash','$licensekey','$NameDesPferdes','$stableName')");
 		if($eintragen) {     
 			$php = $ini["php_path"];
 			$checkLogin= true;
@@ -175,8 +183,16 @@ return $randomString;
 								<input type="password" size="40"  maxlength="250" name="passwort" required><br>
 								 
 								Passwort wiederholen: *<br>
-								<input type="password" size="40" maxlength="250" name="passwort2" required><br><br>
+								<input type="password" size="40" maxlength="250" name="passwort2" required><br>
+									<!-- Stall auswählen : TODO-->
 								 
+								 Bitte wählen Sie einen Stall für die Registrierung: *<br>
+								<select id="stableName" name="stableName" required>
+								  <option value=""></option>
+								  <option value="kolm">Kolm Ranch</option>
+								  <option value="anderer">Neuer Stall</option>
+								  
+								</select><br><br>
 								<input type="submit" value="Abschicken">
 							</form>
 							 

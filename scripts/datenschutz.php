@@ -48,7 +48,7 @@ $nachname = $sessionIDSPlitted[1]; // nachname aus session id
 			<!-- Header -->
 				<div id="header">
 					<!-- Logo -->
-						<h1><a  id="logo">MyStable <em>by Technick Solutions</em></a></h1>
+						<h1><a id="logo">MyStable <em>by Technick Solutions</em></a></h1>
 					<!-- Nav -->
 						<nav id="nav">
 							<ul>
