@@ -261,6 +261,11 @@ $reservation_Time = 1;
 		var nachname = '<?php echo $nachname;?>';
 		var username= vorname + " " + nachname;
 		var reservationTime = '<?php echo $reservation_Time;?>';
+		/*
+		Variable will be used to prevent users to drag events from the past to the future....what a fix. 20.02.2019
+		*/
+		var eventDropOriginalDate = "";
+
 		$(document).ready(function() {
 	   
 	   
@@ -287,9 +292,7 @@ $reservation_Time = 1;
 		  
 
 		businessHours: {
-		  
 		  dow: [ 1, 2, 3, 4,5,6,0 ], 
-
 		  start: '07:00', 
 		  end: '21:00', 
 		},
@@ -300,105 +303,172 @@ $reservation_Time = 1;
 		
 		eventConstraint: "businessHours",
 		events: 'load.php',
-						
-
-		
+	
 		select: function(start, end, allDay){
-			//  var title = <?php $userid; ?>;
-		 var eventName = prompt("Bitte gib den Namen deines Pferdes ein.");
-		 
-		 if(eventName){
-		  var start = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
-		  var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
-		  
-		  eventName = eventName + ": " + username;
-		  $.ajax({		  
-		   url:"insert.php",
-		   type:"POST",
-		   data:{title:eventName, start:start, end:end},
-		   success:function()
-		   {
-			location.reload();
-			calendar.fullCalendar('refetchEvents');
-			alert("Added Successfully");
-			
-		   }
-		  })
-		 }
+			var check = $.fullCalendar.formatDate(start,'yyyy-MM-dd');
+			var todayDate = new Date();
+			if(todayDate > start){
+			 window.alert("Du kannst keinen Termin in der Vergangenheit einstellen.");
+			}else{
+				var eventName = prompt("Bitte gib den Namen deines Pferdes ein.");
+				if(eventName){
+				  var start = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
+				  var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
+					eventName = eventName + ": " + username;
+					  $.ajax({		  
+					   url:"insert.php",
+					   type:"POST",
+					   data:{title:eventName, start:start, end:end},
+					   success:function(){
+						location.reload();
+						calendar.fullCalendar('refetchEvents');
+						alert("Added Successfully");
+						
+						}
+					})
+				}
+			}
 		},
 
 		editable:true,
-		eventResize:function(event)
-		{
-		 var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
-		 var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
-		 var title = event.title;
-		 var id = event.id;
-		 $.ajax({
-		  url:"update.php",
-		  type:"POST",
-		  data:{title:title, start:start, end:end, id:id},
-		  success:function(){
-			location.reload();
-		   calendar.fullCalendar('refetchEvents');
-		   alert('Event Update');
-		  }
-		 })
+
+		/*
+			Get date BEFORE it is dropped because users can drop past events in the future and this will prevent them from doing it. pui.... what a fix. 20.02.2019
+		*/
+		eventDragStart: function(event) {
+			var originalDate = new Date(event.start);  // Make a copy of the event date
+			eventDropOriginalDate = $.fullCalendar.formatDate(event.start,'Y-MM-DD');
+			eventDropOriginalDateAndTime = $.fullCalendar.formatDate(event.start,'Y-MM-DD HH:mm');
+
 		},
 
-		eventDrop:function(event){
-		var id = event.id;
-		var eventTitle = event.title;
-		var isUserAllowedToUpdate = eventTitle.includes(username);
-		if (isUserAllowedToUpdate){
-		 var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
-		 var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
-		 var title = event.title;
-		 //var id = event.id;
-		 $.ajax({
-		  url:"update.php",
-		  type:"POST",
-		  data:{title:title, start:start, end:end, id:id},
-		  success:function()
-		  {
-			  location.reload();
-		   calendar.fullCalendar('refetchEvents');
-		   alert("Event Updated");
-		  }
-		 });
-		}else{
-						location.reload()
-						window.alert("Dieses event gehört " + eventTitle + " - du bist nicht berechtigt es zu ändern.");
+		eventResize:function(event){
+			var id = event.id;
+			var eventTitle = event.title;
+			var isUserAllowedToUpdate = eventTitle.includes(username);
+			if (isUserAllowedToUpdate){
+			 var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
+ 			 
+			 var check = $.fullCalendar.formatDate(event.start,'Y-MM-DD');
+			 var todayDate = new Date().toISOString().slice(0,10);
+			 if(todayDate > eventDropOriginalDate && todayDate > start){
+			   window.alert("Du kannst keinen Termin in der Vergangenheit updaten.");
+			   location.reload();
+				calendar.fullCalendar('refetchEvents');
+			 }
+			 else{
+				var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
+				var title = event.title;
+				var id = event.id;
+				$.ajax({
+					url:"update.php",
+					type:"POST",
+					data:{title:title, start:start, end:end, id:id},
+					success:function(){
+						location.reload();
+						calendar.fullCalendar('refetchEvents');
+						alert('Event Update');
+					}
+				})
+			 }
+			}else{
+			   window.alert("Du kannst keine Termine von anderen Reitern updaten.");
+			   location.reload();
+				calendar.fullCalendar('refetchEvents');
+			}
+		},
+		
+		
 
-		}
+		eventDrop:function(event){
+			var id = event.id;
+			var eventTitle = event.title;
+			var isUserAllowedToUpdate = eventTitle.includes(username);
+			var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
+			var todayDate = js_yyyy_mm_dd_hh_mm_ss(new Date());
+			console.log("today hh:mm -> " + todayDate);
+			console.log("vergleiche  -> " + eventDropOriginalDateAndTime);
+			if (eventDropOriginalDateAndTime > start){
+				window.alert("Du kannst einen Termin nicht in die Vergangenheit schieben.");
+				location.reload();
+				calendar.fullCalendar('refetchEvents');
+				return;
+			}
+				 if(todayDate < eventDropOriginalDate){
+					 if (isUserAllowedToUpdate){
+						var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
+						var title = event.title;
+						//var id = event.id;
+						$.ajax({
+							url:"update.php",
+							type:"POST",
+							data:{title:title, start:start, end:end, id:id},
+							success:function(){
+								location.reload();
+								calendar.fullCalendar('refetchEvents');
+								alert("Event Updated");
+							}
+						});
+					 }else{
+						window.alert("Du kannst keine Termine von anderen Reitern ändern.");
+						location.reload();
+						calendar.fullCalendar('refetchEvents');
+					 }
+				}else{
+					window.alert("Du kannst keine Termine in der Vergangenheit ändern.");
+					location.reload();
+					calendar.fullCalendar('refetchEvents');
+				}
+				 
+			
 		},
 
 		eventClick:function(event){
-		var id = event.id;
-		var eventTitle = event.title;
-		var isUserAllowedToDelete = eventTitle.includes(username);
-		if (isUserAllowedToDelete){
-			// darf event löschen
-			if(confirm("Bist du dir sicher, dass du deinen Eintrag löschen möchtest?")){
-		  //var id = event.id;
-		  $.ajax({
-		   url:"delete.php",
-		   type:"POST",
-		   data:{id:id},
-		   success:function(){
-			   location.reload();
-			calendar.fullCalendar('refetchEvents');
-			alert("Event Removed");
-		   }
-		  })
-		 }
-		}else{
-			window.alert("Dieses event gehört " + eventTitle + " - du bist nicht berechtigt es zu löschen.");
-		}
+			var id = event.id;
+			var eventTitle = event.title;
+			var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
+			var todayDate = new Date().toISOString().slice(0,10);
+			var check = $.fullCalendar.formatDate(event.start,'Y-MM-DD');
+			if(todayDate < check){
+				var isUserAllowedToDelete = eventTitle.includes(username);		
+				if (isUserAllowedToDelete){
+					// darf event löschen
+					if(confirm("Bist du dir sicher, dass du deinen Eintrag löschen möchtest?")){
+				  $.ajax({
+				   url:"delete.php",
+				   type:"POST",
+				   data:{id:id},
+				   success:function(){
+					   location.reload();
+					calendar.fullCalendar('refetchEvents');
+					alert("Event Removed");
+				   }
+				  })
+				 }
+				}else{
+					window.alert("Dieses event gehört " + eventTitle + " - du bist nicht berechtigt es zu löschen.");
+				}
+			}else{
+				window.alert("Du kannst keine vergangenen Events löschen.");
+			}
+			
+		
 		},		
 	   });	   
 	   calendar = $('#calendar').fullCalendar('changeView', 'agendaWeek');
 	  });
+	  
+	  
+	  function js_yyyy_mm_dd_hh_mm_ss (now) {
+		  year = "" + now.getFullYear();
+		  month = "" + (now.getMonth() + 1); if (month.length == 1) { month = "0" + month; }
+		  day = "" + now.getDate(); if (day.length == 1) { day = "0" + day; }
+		  hour = "" + now.getHours(); if (hour.length == 1) { hour = "0" + hour; }
+		  minute = "" + now.getMinutes(); if (minute.length == 1) { minute = "0" + minute; }
+		  second = "" + now.getSeconds(); if (second.length == 1) { second = "0" + second; }
+		  return year + "-" + month + "-" + day + " " + hour + ":" + minute;
+		}
+	  
 	  </script>
 	  
 	</body>
