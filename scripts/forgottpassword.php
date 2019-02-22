@@ -1,35 +1,80 @@
 <?php 
 session_start();
+include ("dbconnect.php");
 $ini = parse_ini_file('../my_stable_config.ini');
 $host = $ini["db_servername"];
-$db = $ini['db_name'];
-$dsn = "mysql:host=$host;dbname=$db";
+$dbPDO = $ini['db_name'];
+$dsn = "mysql:host=$host;dbname=$dbPDO";
 $pdo = new PDO($dsn, $ini['db_user'], $ini['db_password']);
 $checkLogin=true;
-if(isset($_GET['login'])) {
+$userTrue = false;
+$email = "";
+if(isset($_POST) & !empty($_POST)){
+
     $email = $_POST['email'];
-    $passwort = $_POST['passwort'];
-	
-    $statement = $pdo->prepare("SELECT * FROM users WHERE email = :email");
+    $statement = $pdo->prepare("SELECT * FROM `users` WHERE email = :email");
     $result = $statement->execute(array('email' => $email));
 	$user = $statement->fetch();
     
     //Überprüfung des Passworts
-    if ($user !== false && password_verify($passwort, $user['passwort']) && $user['active'] == "1") {
-		$_SESSION['userid'] = $user['vorname'] ." ". $user['nachname']." ". $user['id']." ". $user['stable_id'] ;
-		$_SESSION['expiryDate'] = $user['ExpiryDate'];
-		$checkLogin= true;
-		$_SESSION['message'] = "Die Eingabe war erfolgreich<br>";
-		header ("Location: calendarview.php");
-    } else {
-			$checkLogin = false;
-			$_SESSION['message'] = "E-Mail oder Passwort ist ungültig<br>";
+    if ($user !== false && $user['active'] == "1") {
+		$userTrue = true;    
+		$randomPWD = randomPassword();
+		$passwort_hash = password_hash($randomPWD, PASSWORD_DEFAULT);
+		
+		 $queryUpdate = "UPDATE `users` SET passwort= :passwort WHERE email= :email";
+		 $statementUpdate = $pdo->prepare($queryUpdate);
+		 $statementUpdate->execute(
+		  array(
+		   ':passwort'  => $passwort_hash,
+		   ':email' => $email,
+		  ));
+		$count = $statementUpdate->rowCount();
+
+		if($count > 0) {     
+			$php = $ini["php_path"];
+			$checkLogin= true;
+			$_SESSION['message'] = "Die Eingabe war erfolgreich<br>";
+			exec("$php sendMailNewPWD.php $email $randomPWD");
+            $showFormular = false;
+		} else {
+			$checkLogin= false;
+			$_SESSION['message'] = "Bei der Eingabe ist leider einer unerwarteter Fehler aufgetreten. Bitte versuchen Sie es erneut.<br>";
+		}
+	}else{
+		$checkLogin = false;
+		$_SESSION['message'] = "E-Mail Adresse ist im System nicht vorhanden<br>";
+	}
+  
+}
+
+
+
+
+function randomPassword() {
+    $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+    $pass = array(); //remember to declare $pass as an array
+    $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+    for ($i = 0; $i < 8; $i++) {
+        $n = rand(0, $alphaLength);
+        $pass[] = $alphabet[$n];
     }
+    return implode($pass); //turn the array into a string
 }
 ?>
 <html>
 	<head>
 		<title>MyStable Login</title>
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
+
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" >
+
+		<link rel="stylesheet" href="../assets/css/forgottpasswordstyle.css" >
+
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
@@ -92,31 +137,39 @@ if(isset($_GET['login'])) {
 
 								</div>
 						</div>
-				<?php	
-				} else {
-					?>
-						<div class="container">
-						
-						</div>
-		<?php
-				}
+				<?php } ?>
 				
+				<?php	
+				if ($userTrue == true){
+					?>
+					<style type="text/css">#passwortVergessenHeader{ display:none;} #passwortVergessenForm{ display:none;</style>
+						<div align="center" class="container">	
+							<h2>Vielen Dank.</h2>
+							<h2  >Wir haben Ihnen eine E-Mail mit Ihrem neuen Passwort gesendet.</h2>
+							<a  href="login.php">Zurück zum Login</a>
+
+						</div>
+				<?php
+				}
 				?>
-					<div class="container">
+
+				
+				<div id="passwortVergessenHeader" align="center">
+				<h2 class="form-signin-heading">Passwort vergessen</h2>
+				<p>Bitte geben Sie Ihre E-Mail Adresse an.</p>
+					</div>
+					<div id="passwortVergessenForm" class="container">
 						<div id="content">
-
-							<!-- Content -->
-							<form action="?login=1" method="post">
-								E-Mail:<br>
-								<input type="email" size="40" maxlength="250" name="email"><br><br>
-								 
-								Passwort:<br>
-								<input type="password" size="40"  maxlength="250" name="passwort"><br>
+						<form class="form-signin" method="POST">
 								
-								<input type="submit" value="Abschicken"><br/><br/>
-								<a  href="forgottpassword.php">Passwort vergessen?</a>
-
-							</form> 						
+								<div class="input-group">
+							  <span class="input-group-addon" id="basic-addon1">@</span>
+							  <input type="text" name="email" class="form-control" placeholder="E-Mail Adresse" required>
+							</div>
+							<br />
+								<button class="btn btn-lg btn-primary btn-block" type="submit">Neues Passwort anfordern</button>
+								<a class="btn btn-lg btn-primary btn-block" href="Login.php">Zurück zum Login</a>
+							  </form>		
 						</div>
 					</div>
 				</section>
