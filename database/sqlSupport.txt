@@ -18,3 +18,7 @@ from stable stbl
 inner join users usr
 on stbl.id = usr.stable_id where usr.id = "76"
 
+
+----> update all to stable 1
+UPDATE logging SET stable_id = 1;
+
