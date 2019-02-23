@@ -78,7 +78,7 @@ $NameDesPferdes = $user['NameDesPferdes'];
 						<div class="row">
 							<section class="col-6 col-12-narrower">
 								<h3>Get In Touch</h3>
-								<form class="form-horizontal" action="sendRequestMailInSystem.php" method="post" enctype="multipart/form-data">
+								<form class="form-horizontal" action="mailservice/sendRequestMailInSystem.php" method="post" enctype="multipart/form-data">
 									<div class="row gtr-50">
 										<div class="col-6 col-12-mobilep">
 											<input type="text" name="name" id="name" placeholder="Name" />

@@ -1,13 +1,13 @@
 
 <?php
 
-require '../ThirdParty/phpmailer/PHPMailerAutoload.php';
+require '../../ThirdParty/phpmailer/PHPMailerAutoload.php';
 //error_reporting(0);	
 
 $emailreceiver = $argv[1];
 $newPWD = $argv[2];
 
-$ini = parse_ini_file('../my_stable_config.ini');
+$ini = parse_ini_file('../../my_stable_config.ini');
 	 
 
 $mailAnforderer = new PHPMailer;

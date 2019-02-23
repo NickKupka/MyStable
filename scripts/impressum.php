@@ -44,7 +44,6 @@ $nachname = $sessionIDSPlitted[1]; // nachname aus session id
 	</head>
 	<body class="is-preload">
 		<div id="page-wrapper">
-		
 			<!-- Header -->
 				<div id="header">
 					<!-- Logo -->
@@ -64,7 +63,7 @@ $nachname = $sessionIDSPlitted[1]; // nachname aus session id
 									$row = mysqli_fetch_array($result);
 
 									if ($row['adminAllowed'] == "1") {
-										echo "<li><a href='users/alluser.php'>Nutzerübersicht</a></li>";
+										echo "<li><a href='users/alluser.php'>Reiter Verwaltung</a></li>";
 									 }
 								?>
 								<li><a href="events/myentries.php">Meine Einträge</a></li>
@@ -73,7 +72,6 @@ $nachname = $sessionIDSPlitted[1]; // nachname aus session id
 								<li><a href="Logout.php">Logout</a></li>
 							</ul>
 						</nav>
-
 				</div>
 		
 			<!-- Posts -->

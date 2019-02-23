@@ -43,7 +43,7 @@ if(isset($_POST) & !empty($_POST)){
 		}
 	}else{
 		$checkLogin = false;
-		$_SESSION['message'] = "E-Mail Adresse ist im System nicht vorhanden<br>";
+		$_SESSION['message'] = "E-Mail Adresse ist im System nicht vorhanden oder der User ist bereits inaktiv.<br>";
 	}
   
 }
@@ -145,8 +145,8 @@ function randomPassword() {
 					<style type="text/css">#passwortVergessenHeader{ display:none;} #passwortVergessenForm{ display:none;</style>
 						<div align="center" class="container">	
 							<h2>Vielen Dank.</h2>
-							<h2  >Wir haben Ihnen eine E-Mail mit Ihrem neuen Passwort gesendet.</h2>
-							<a  href="login.php">Zurück zum Login</a>
+							<h2>Wir haben Ihnen eine E-Mail mit Ihrem neuen Passwort gesendet.</h2>
+							<a  href="Login.php">Zurück zum Login</a>
 
 						</div>
 				<?php
@@ -160,16 +160,15 @@ function randomPassword() {
 					</div>
 					<div id="passwortVergessenForm" class="container">
 						<div id="content">
-						<form class="form-signin" method="POST">
-								
-								<div class="input-group">
-							  <span class="input-group-addon" id="basic-addon1">@</span>
-							  <input type="text" name="email" class="form-control" placeholder="E-Mail Adresse" required>
+						<form class="form-signin" method="POST">	
+							<div class="input-group">
+								<span class="input-group-addon" id="basic-addon1">@</span>
+								<input type="text" name="email" class="form-control" placeholder="E-Mail Adresse" required>
 							</div>
-							<br />
-								<button class="btn btn-lg btn-primary btn-block" type="submit">Neues Passwort anfordern</button>
-								<a class="btn btn-lg btn-primary btn-block" href="Login.php">Zurück zum Login</a>
-							  </form>		
+							<br/>
+							<button class="btn btn-lg btn-primary btn-block" type="submit">Neues Passwort anfordern</button>
+							<a class="btn btn-lg btn-primary btn-block" href="Login.php">Zurück zum Login</a>
+						</form>		
 						</div>
 					</div>
 				</section>

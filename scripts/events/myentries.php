@@ -65,8 +65,8 @@ if (mysqli_connect_errno()){
 		<!-- Latest compiled JavaScript -->
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
 	</head>
-	<body class="is-preload">
-		<div id="page-wrapper"align="center">
+	<body  class="is-preload">
+		<div style="background-color: white"  id="page-wrapper"align="center">
 			<!-- Header -->
 				<div id="header">
 					<!-- Logo -->
@@ -86,7 +86,7 @@ if (mysqli_connect_errno()){
 								$row = mysqli_fetch_array($result);
 
 								if ($row['adminAllowed'] == "1") {
-									echo "<li><a href='../users/alluser.php'>Nutzerübersicht</a></li>";
+									echo "<li><a href='../users/alluser.php'>Reiter Verwaltung</a></li>";
 								}
 
 								$result = mysqli_query($con,"SELECT * FROM `events` WHERE `title` LIKE '%{$nachname}%' AND `title` LIKE '%{$vorname}%'");
@@ -116,7 +116,7 @@ if (mysqli_connect_errno()){
 						</nav>
 				</div>
 			<!-- Main -->
-				<section style="width: 80%" align="center">
+				<section class="wrapper style1"  style="width: 80%" align="center">
 					<div style="width: 100%">
 					<br/><br/>
 					<h2>Hier sehen Sie Ihre zukünftigen Reservierungen</h2><br/><br/>
@@ -286,7 +286,7 @@ if (mysqli_connect_errno()){
 								case "Monday":
 									$dayOfWeek = "Montag";
 								break;
-								case "Tueday":
+								case "Tuesday":
 									$dayOfWeek = "Dienstag";
 									break;
 								case "Wednesday":
@@ -324,7 +324,9 @@ if (mysqli_connect_errno()){
 					<br/>
 				</section>
 				
-			<!-- Footer -->
+			
+		</div>
+		<!-- Footer -->
 				<div  id="footer">
 					
 					<!-- Copyright -->
@@ -335,7 +337,6 @@ if (mysqli_connect_errno()){
 							</ul>
 						</div>
 				</div>
-		</div>
 
 		<!-- Scripts -->
 			<script src="../assets/js/jquery.min.js"></script>

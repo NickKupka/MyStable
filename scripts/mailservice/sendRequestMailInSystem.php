@@ -1,10 +1,12 @@
 
 <?php
 
-	require '../ThirdParty/phpmailer/PHPMailerAutoload.php';
+	require '../../ThirdParty/phpmailer/PHPMailerAutoload.php';
 	//error_reporting(0);	
+	session_start();
 
-	$ini = parse_ini_file('../my_stable_config.ini');
+	$ini = parse_ini_file('../../my_stable_config.ini');
+ 	
 
 		if(isset($_POST['submit'])){
 
@@ -26,6 +28,7 @@
 		$mailAnforderer = new PHPMailer;
 		$mailAnforderer->IsSMTP();
 		$mailAnforderer->SMTPAuth = true;
+		$mailAnforderer->SMTPAuth = true;
 		$mailAnforderer->Host = $ini["smtp_host"];
 		$mailAnforderer->CharSet = $ini["smtp_charset"];   
 		$mailAnforderer->Port= $ini["smtp_port"];
@@ -38,8 +41,8 @@
 
 
 		if(!$mailAnforderer->send()) {
-		  header("Location: ../index.html");
+		  header("Location: ../calendarview.php");
 		} else {
-		  header("Location: ../index.html");
+		  header("Location: ../calendarview.php");
 		}
 ?>

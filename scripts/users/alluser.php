@@ -42,63 +42,54 @@ Check if current user is admin
 <html>
 	<head>
 		<title>Alle Nutzer (My-Stable)</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 		<link rel="stylesheet" href="../../assets/css/main.css" />
 		<link rel="shortcut icon" href="../../pictures/favicon.ico" type="image/x-icon">
 		<link rel="icon" href="../../pictures/favicon.ico" type="image/x-icon">
 
 		
-		<!-- Latest compiled and minified CSS -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
-
-		<!-- jQuery library -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-		<!-- Popper JS -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
-
-		<!-- Latest compiled JavaScript -->
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
 	</head>
+	
 	<body class="is-preload">
-		<div id="page-wrapper" align="center">
+		<div style="background-color: white" id="page-wrapper" align="center">
 			<!-- Header -->
 				<div id="header">
 					<!-- Logo -->
 						<h1><a id="logo">MyStable <em>by Technick Solutions</em></a></h1>
 					<!-- Nav -->
+					
 						<nav id="nav">
 							<ul>
-							<li ><a href="../calendarview.php">Mein Kalendar</a></li>
-							<li ><a href="edituser.php">Meine Daten</a></li>
-							
-							<?php 
-								/*
-								Check if current user is admin - otherwise page can not be visited
-								*/
-								$con=mysqli_connect($host,$dbUser,$dbPWD,$db);
+								<li ><a href="../calendarview.php">Mein Kalendar</a></li>
+								<li ><a href="edituser.php">Meine Daten</a></li>
+								
+								<?php 
+									/*
+									Check if current user is admin - otherwise page can not be visited
+									*/
+									$con=mysqli_connect($host,$dbUser,$dbPWD,$db);
 
-								$result = mysqli_query($con,"SELECT * FROM `users` WHERE `nachname` LIKE '%{$nachname}%' AND `vorname` LIKE '%{$vorname}%'");
-								$row = mysqli_fetch_array($result);
+									$result = mysqli_query($con,"SELECT * FROM `users` WHERE `nachname` LIKE '%{$nachname}%' AND `vorname` LIKE '%{$vorname}%'");
+									$row = mysqli_fetch_array($result);
 
-								if ($row['adminAllowed'] == "1") {
-									echo "<li class='current'><a>Reiter Verwaltung</a></li>";
-								 } else {
-								 }
-							?>
-						
-							
-							<li ><a href="../events/myentries.php">Meine Einträge</a></li>
-							<li><a href="../impressum.php">Impressum</a></li>
-							<li><a href="../datenschutz.php">Datenschutz</a></li>
-							<li><a href="../Logout.php">Logout</a></li>					
-					</ul>
-						</nav>
+									if ($row['adminAllowed'] == "1") {
+										echo "<li class='current'><a>Reiter Verwaltung</a></li>";
+									 }
+								?>								
+								<li ><a href="../events/myentries.php">Meine Einträge</a></li>
+								<li><a href="../impressum.php">Impressum</a></li>
+								<li><a href="../datenschutz.php">Datenschutz</a></li>
+								<li><a href="../Logout.php">Logout</a></li>					
+						</ul>
+					</nav>
 				</div>
+				
 			<!-- Main -->
-				<section style="width: 80%" align="center">
+				<section class="wrapper style1" style="width: 80%" align="center">
 					<div style="width: 100%">
-					<br/><br/>
+					
 					<h2>Hier sehen Sie alle Nutzer Ihres Stalls</h2><br/><br/>
 					<div style="width: 100%; height: 400px; overflow-y: scroll;">
 						
@@ -230,7 +221,9 @@ Check if current user is admin
 					<br/>
 				</section>
 				
-			<!-- Footer -->
+			
+		</div>
+		<!-- Footer -->
 				<div  id="footer">
 					
 					<!-- Copyright -->
@@ -241,7 +234,6 @@ Check if current user is admin
 							</ul>
 						</div>
 				</div>
-		</div>
 
 		<!-- Scripts -->
 			<script src="../assets/js/jquery.min.js"></script>

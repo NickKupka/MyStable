@@ -46,7 +46,30 @@ $reservation_Time = 1;
 		<link rel="shortcut icon" href="../pictures/favicon.ico" type="image/x-icon">
 		<link rel="icon" href="../pictures/favicon.ico" type="image/x-icon">
 	</head>
-	<body >
+	<style>
+		
+		#mainleft {
+	  width:95%;
+	  float:right;
+	  background:#fff;
+	  padding-bottom:10px;
+	}
+
+	#maincenter {
+	  width:34%;
+	  float:center;
+	  background:#fff;
+	  padding-bottom:10px;
+	}
+
+	#mainright {
+	  width:10%;
+	  float:right;
+	  background:#fff;
+	  padding-bottom:10px;
+	}
+	</style>
+	<body class="is-preload">
 		<div id="page-wrapper">
 			<!-- Header -->
 				<div id="header">
@@ -77,13 +100,13 @@ $reservation_Time = 1;
 								<li><a href="impressum.php">Impressum</a></li>
 								<li><a href="datenschutz.php">Datenschutz</a></li>
 								<li><a href="Logout.php">Logout</a></li>
-					</ul>
+						</ul>
 						</nav>
 				</div>
 			<!-- Main -->
 				<section class="wrapper style1">
 					<div class="container" style="width:100%">
-						<div id="content">
+						<div >
 							
 							<h2 align="center">Willkommen in deinem Bereich <?php echo "$vorname $nachname";?></h2>
 							<h3 align="center">Reithallen-Plan für 
@@ -137,11 +160,17 @@ $reservation_Time = 1;
 						</div>
 						
 						<br/>
+						<br/>
+						<!-- Hauptdiv -->
+						<div>
+							<!-- Left arrow --> 
+							<div id="mainleft">
+							</div>
+						
 						<!-- Calender integration -->
-						<div class="container" style="height: 100%; width: 100%">
-							<div id="calendar" style=" width: 65%"></div>
-						</div>
-					</div>
+							<div class="container"  style="height: 110%; width: 100%">
+								<div id="calendar" style=" width: 65%"></div>
+							</div>
 					<br/>
 					<br/>
 				</section>
@@ -152,7 +181,7 @@ $reservation_Time = 1;
 						<div class="row">
 							<section  class="col-6 col-12-narrower">
 								<h3>Schreiben Sie uns eine Nachricht</h3>
-								<form class="form-horizontal" action="sendRequestMailInSystem.php" method="post" enctype="multipart/form-data">
+								<form class="form-horizontal" action="mailservice/sendRequestMailInSystem.php" method="post" enctype="multipart/form-data">
 									<div class="row gtr-50">
 										<div class="col-6 col-12-mobilep">
 											<input type="text" name="name" id="name" placeholder="Name" />
@@ -236,20 +265,7 @@ $reservation_Time = 1;
 			}
 
 		</style>
-		<script type = "text/javascript">
-         <!--
-            function getConfirmation() {
-               var retVal = confirm("Do you want to continue ?");
-               if( retVal == true ) {
-                  document.write ("User wants to continue!");
-                  return true;
-               } else {
-                  document.write ("User does not want to continue!");
-                  return false;
-               }
-            }
-         //-->
-      </script>     
+	
 		<script>
 				
 		window.mobilecheck = function() {
@@ -270,6 +286,7 @@ $reservation_Time = 1;
 	   
 	   
 	   var calendar = $('#calendar').fullCalendar({
+
 
 		displayEventTime: false,
 		locale: 'de',

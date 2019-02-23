@@ -3,7 +3,7 @@ $showFormular = true; //Variable ob das Registrierungsformular anezeigt werden s
 include ("dbconnect.php");
 $ini = parse_ini_file('../my_stable_config.ini');
 $checkLogin= true;
-if(isset($_GET['register'])) {
+if(isset($_POST) & !empty($_POST)){
     $error = false;
     $vorname = $_POST['vorname'];
 	$nachname = $_POST['nachname'];
@@ -11,56 +11,120 @@ if(isset($_GET['register'])) {
     $passwort = $_POST['passwort'];
     $passwort2 = $_POST['passwort2'];
 	$NameDesPferdes =$_POST['NameDesPferdes'];
+	$stableName=$_POST['NameDesStalls'];
 
   
     if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $error = true;
+        $checkLogin  = FALSE;
+		$_SESSION['message'] = "E-Mail Adresse ist in einem ungültigen Format.<br>";
+		$error = true;
     }     
     if(strlen($vorname) == 0) {
+		$checkLogin  = FALSE;
+		$_SESSION['message'] = "Es wurde kein Vorname eingegeben.<br>";
         $error = true;
+	
     }
 	if(strlen($nachname) == 0) {
-        $error = true;
+        $checkLogin  = FALSE;
+		$_SESSION['message'] = "Es wurde kein Nachname eingegeben.<br>";
+		$error = true;
     }
 	if(strlen($passwort) == 0) {
+		$checkLogin  = FALSE;
+		$_SESSION['message'] = "Es wurde kein Passwort eingegeben.<br>";
         $error = true;
     }
     if($passwort != $passwort2) {
-        $error = true;
+		$checkLogin  = FALSE;
+		$_SESSION['message'] = "Die beiden Passwörter stimmen nicht überein. Bitte versuchen Sie es erneut.<br>";
+    
+		$error = true;
     }
-	
+	if (strlen($stableName) == 0){
+		$checkLogin  = FALSE;
+		$_SESSION['message'] = "Der Stallname darf nicht leer sein. Bitte versuchen Sie es erneut.<br>";
+		$error = true;
+	}
 	if(strlen($NameDesPferdes) == 0) {
-        $error = true;
+        $checkLogin  = FALSE;
+		$_SESSION['message'] = "Der Name des Pferdes darf nicht leer sein. Bitte versuchen Sie es erneut.<br>";
+		$error = true;
     }
     
     if(!$error) { 
 		$select = mysqli_query($db, "SELECT * FROM users WHERE `email` = '".$_POST['email']."'") or exit(mysqli_error($connectionID));
     }else{
-		$_SESSION['message'] = "error occured";
+		$checkLogin  = FALSE;
 	}
-    
+	$query = mysqli_query($db, "SELECT * FROM users WHERE `email` = '".$_POST['email']."'");
+
+    if (!$query){
+        die('Error: ' . mysqli_error($con));
+    }
+	if(mysqli_num_rows($query) > 0){
+		$checkLogin  = FALSE;
+		$error = true;
+		$_SESSION['message'] = "Der Benutzer ist bereits angelegt.<br>";
+	}
     //Keine Fehler, wir können den Nutzer registrieren
-    if(!$error) {    
-		//exec("java -jar licensekeygenerator/dist/LicenseKeyGenerator.jar 2>&1", $output);
-		//$licensekey = $output[0];
+    if(!$error) {
+		//echo "kein error occured<br/>";
 		$licensekey = generateLicenceKey();
-		//echo $licensekey;
+		//echo $licensekey."<br/>";
 		$passwort_hash = password_hash($passwort, PASSWORD_DEFAULT);
-		//echo $passwort_hash;
-		$eintragen = mysqli_query($db, "INSERT INTO users (vorname, nachname, email, passwort, LicenseKey, NameDesPferdes) VALUES ('$vorname', '$nachname', '$email', '$passwort_hash','$licensekey','$NameDesPferdes')");
-		if($eintragen) {     
+		//echo $passwort."<br/>";
+		//echo $passwort_hash."<br/>";
+		/*
+		Insert new stable owner in users table
+		*/
+		$registerNewStableQuery = "INSERT INTO users (vorname, nachname, email, passwort, LicenseKey, NameDesPferdes, adminAllowed) VALUES ('$vorname', '$nachname', '$email', '$passwort_hash','$licensekey','$NameDesPferdes','1')";
+		if ($db->query($registerNewStableQuery) === TRUE) {
+			//echo "neuer user konnte angelegt werden.<br/>";
+		}else{
+			//echo "neuer user konnte NICHT angelegt werden.<br/>";
+			$checkLogin  = FALSE;
+			$_SESSION['message'] = "Der Nutzer konnte nicht angelegt werden. Bitte versuchen Sie es erneut.<br>";
+		}
+		/*
+		Newly generated ID for stable owner
+		*/
+		$newIDForStableOwner = $db->insert_id;
+		//echo "user id -> " . $newIDForStableOwner."<br/>";
+		/*
+		Insert new stable in stable table
+		*/
+		$insertNewStableQuery = "INSERT INTO stable (stable_name, stable_owner) VALUES ('$stableName', '$newIDForStableOwner')";
+		if ($db->query($insertNewStableQuery) === TRUE) {
+			//echo "neuer stall konnte angelegt werden.<br/>";
+		}else{
+			$checkLogin  = FALSE;
+			$_SESSION['message'] = "Der Stall konnte nicht angelegt werden. Bitte versuchen Sie es erneut.<br>";
+			//echo "neuer stall konnte nicht angelegt werden.<br/>";
+		}
+		/*
+		Newly generated ID for stable
+		*/
+		$newIDForStable = $db->insert_id;
+		//echo "stable id -> " . $newIDForStable."<br/>";
+
+		/*
+		Update user with stable id 
+		*/
+		$updateStableIdForNewStableOwner = "UPDATE users SET stable_id='$newIDForStable' WHERE email='$email'";
+		if ($db->query($updateStableIdForNewStableOwner) === TRUE) {
+			//echo "Record updated successfully";
 			$php = $ini["php_path"];
 			$checkLogin= true;
 			$_SESSION['message'] = "Die Eingabe war erfolgreich<br>";
-			exec("$php mailservice/sendMail.php $email $licensekey $vorname $nachname $NameDesPferdes");
+			exec("$php mailservice/sendMailNewStable.php $email $licensekey $vorname $nachname $NameDesPferdes $stableName");
 			header("Location: LoginWithKey.php");
             $showFormular = false;
-        } else {
+		} else {
 			$checkLogin= false;
 			$_SESSION['message'] = "Bei der Eingabe ist leider einer unerwarteter Fehler aufgetreten. Bitte versuchen Sie es erneut.<br>";
-        }
+		}	
     }else{
-		$_SESSION['message'] = "can't do anything";
 	}		
 }
 function generateLicenceKey() {
@@ -85,7 +149,7 @@ return $randomString;
 ?>
 <html>
 	<head>
-		<title>Registriere dich bei MyStable</title>
+		<title>Registrieren Sie hier Ihren Stall</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -115,7 +179,7 @@ return $randomString;
 									<ul>
 										<li><a href="../aboutmystable.html">Was ist <em>MyStable</em></a></li>
 										<li><a href="../ueberuns.html">Über uns</a></li>
-										<li><a href="../preise.html">Preise</a></li>
+										<li><a href="#">Preise</a></li>
 										<!--<li>
 											<a href="#">Weitere Infos</a>
 											<ul>
@@ -162,8 +226,9 @@ return $randomString;
 				?>
 					<div class="container">
 						<h2 align="center" >Registrierung für die Nutzung von My Stable</h2>
+						<p align="center"> Bitte füllen Sie als Stallbesitzer alle notwendigen Informationen aus</p>
 
-							<form action="?register=1" method="post" accept-charset="utf-8">
+							<form method="post" accept-charset="utf-8">
 								<div class="form-group">
 									Vorname: *<br>
 									<input type="text" size="40" maxlength="250" name="vorname" required><br><br>
@@ -174,18 +239,17 @@ return $randomString;
 									E-Mail: *<br>
 									<input type="email" size="40" maxlength="250" name="email" required><br><br>
 									
-									Bitte geben Sie den Namen Ihres Pferdes ein:*<br>
-									<input id="NameDesPferdes" type="text" name="NameDesPferdes" />
+									Bitte geben Sie den Namen Ihres Stalls ein:*<br>
+									<input id="NameDesStalls" type="text" name="NameDesStalls" required /><br><br>
 									
-									<br>
+									Bitte geben Sie den Namen Ihres Pferdes ein:*<br>
+									<input id="NameDesPferdes" type="text" name="NameDesPferdes" required /><br><br>
 									Passwort: *<br>
 									<input type="password" size="40"  maxlength="250" name="passwort" required><br>
 									 
 									Passwort wiederholen: *<br>
 									<input type="password" size="40" maxlength="250" name="passwort2" required><br>
-										<!-- Stall auswählen : TODO-->
-									 
-									<br><br>
+									<br>
 									<input type="submit" value="Abschicken">
 								</div>
 							</form>

@@ -56,7 +56,7 @@ if(isset($_GET['login'])) {
 									<ul>
 										<li><a href="../aboutmystable.html">Was ist <em>MyStable</em></a></li>
 										<li><a href="../ueberuns.html">Über uns</a></li>
-										<li><a href="#">Preise</a></li>
+										<li><a href="../preise.html">Preise</a></li>
 										<!--<li>
 											<a href="#">Weitere Infos</a>
 											<ul>
