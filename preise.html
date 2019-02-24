@@ -6,7 +6,7 @@
 -->
 <html>
 	<head>
-		<title>Preise und Kosten (My-Stable)</title>
+		<title>Preise und Kosten - myStable</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
@@ -20,7 +20,7 @@
 				<div id="header">
 
 					<!-- Logo -->
-						<h1><a href="index.html" id="logo">MyStable <em>by Technick Solutions</em></a></h1>
+						<h1><a href="index.html" id="logo">myStable <em>by Technick Solutions</em></a></h1>
 
 					<!-- Nav -->
 						<nav id="nav">
@@ -29,12 +29,19 @@
 								<li class="current">
 									<a href="#">Infos</a>
 									<ul>
-										<li><a href="aboutmystable.html">Was ist <em>MyStable</em></a></li>
+										<li><a href="aboutmystable.html">Was ist <em>myStable</em></a></li>
 										<li><a href="ueberuns.html">Über uns</a></li>
 										<li><a href="preise.html">Preise</a></li>
 									</ul>
 								</li>
-								<li><a href="scripts/registerpage.php">Registrierung</a></li>
+								<li>
+									<a href="#">Registrierung</a>
+									<ul>
+										<li><a href="scripts/newstable.php">Neuer Stall</a></li>
+										<li><a href="scripts/registerpage.php">Mitglieder</a></li>
+									</ul>
+										
+								</li>
 								<li><a href="scripts/Login.php">Login</a></li>
 								<li><a href="impressum.html">Impressum</a></li>
 								<li><a href="datenschutz.html">Datenschutz</a></li>
@@ -54,18 +61,19 @@
 
 										<article>
 											<header>
-												<h2>My-Stable</h2>
+												<h2>myStable</h2>
 												<p>Kosten und Preise</p>
 											</header>
 											<h3>BETA-PHASE</h3>
 											<p>Aktuell befinden wir uns in der Beta-Phase und testen unser System. Daher wird das System derzeit kostenlos angeboten.</p>
 											<h3>Lizenzdauer</h3>
 											<p>Die BETA-PHASE beinhaltet eine Lizenz, welche maximal 6 Monate gültig ist. Anschließend wird das System für den User abgeschaltet. <br/> 
-												Sie würden My-Stable gerne länger nutzen? Sprechen Sie uns gerne an.</p>
+												Sie würden myStable gerne länger nutzen? Sprechen Sie uns gerne an.</p>
 											<h3>Interesse ?</h3>											
 											
 											<p>Sie möchten Ihre Stallgemeinschaft gerne digitalisieren und die Belegung der Reithalle oder des Roundpen's online verwalten?</p>
-											<p>Schreiben Sie uns einfach eine Nachricht. Entweder hier über unser Kontaktformular oder ganz einfach via Mail an <a href="mailto:mystableorganizer@gmail.com">MY-STABLE.</a></p>
+											<p>Schreiben Sie uns einfach eine Nachricht. Entweder hier über unser Kontaktformular oder ganz einfach via Mail an <a href="mailto:mystableorganizer@gmail.com">myStable.</a></p>
+											<p>Sie können Ihre Stallgemeinschaft hier <a href="scripts/newstable.php"> Registrieren</a></p>.
 											</article>
 
 								</div>
@@ -77,8 +85,8 @@
 
 										<section>
 											<h3>Das sagen Kunden</h3>
-											<i>"Super! Seitdem wir unseren Stall über My-Stable verwalten und organisieren, gehören lästige Themen über die Hallenbelegung der Vergangenheit an." </i><br/><br/>
-											<i>"Seitdem wir unseren Hallenplan online verwalten, gibt es keine Doppelbelegungen mehr. Es ist einfach und intuitiv. Danke Team von My-Stable." </i><br/><br/>
+											<i>"Super! Seitdem wir unseren Stall über myStable verwalten und organisieren, gehören lästige Themen über die Hallenbelegung der Vergangenheit an." </i><br/><br/>
+											<i>"Seitdem wir unseren Hallenplan online verwalten, gibt es keine Doppelbelegungen mehr. Es ist einfach und intuitiv. Danke Team von myStable." </i><br/><br/>
 										</section>
 
 
@@ -95,7 +103,7 @@
 							
 							<section  class="col-6 col-12-narrower">
 								<h3>Schreiben Sie uns eine Nachricht</h3>
-								<form class="form-horizontal" action="scripts/sendRequestMail.php" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+								<form class="form-horizontal" action="scripts/mailservice/sendRequestMail.php" method="post" enctype="multipart/form-data" accept-charset="utf-8">
 									<div class="row gtr-50">
 										<div class="col-6 col-12-mobilep">
 											<input type="text" name="name" id="name" placeholder="Name" />
@@ -133,7 +141,7 @@
 					<!-- Copyright -->
 						<div class="copyright">
 							<ul class="menu">
-								<li>&copy; Technick Solutions - My Stable Organizer. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+								<li>&copy; Technick Solutions - myStable. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
 							</ul>
 						</div>
 

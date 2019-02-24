@@ -117,7 +117,7 @@ if(isset($_POST) & !empty($_POST)){
 			$php = $ini["php_path"];
 			$checkLogin= true;
 			$_SESSION['message'] = "Die Eingabe war erfolgreich<br>";
-			exec("$php mailservice/sendMailNewStable.php $email $licensekey $vorname $nachname $NameDesPferdes $stableName");
+			exec("$php sendMailNewStable.php $email $licensekey $vorname $nachname $NameDesPferdes $stableName");
 			header("Location: LoginWithKey.php");
             $showFormular = false;
 		} else {
@@ -180,17 +180,16 @@ return $randomString;
 										<li><a href="../aboutmystable.html">Was ist <em>myStable</em></a></li>
 										<li><a href="../ueberuns.html">Über uns</a></li>
 										<li><a href="#">Preise</a></li>
-										<!--<li>
-											<a href="#">Weitere Infos</a>
-											<ul>
-												<li><a href="#">Info1</a></li>
-												<li><a href="#">Info2</a></li>
-												<li><a href="#">Info3</a></li>
-											</ul>
-										</li>-->
 									</ul>
 								</li>
-								<li class="current"><a href="registerpage.php">Registrierung</a></li>
+								<li class="current">
+									<a href="#">Registrierung</a>
+									<ul>
+										<li><a href="newstable.php">Neuer Stall</a></li>
+										<li><a href="registerpage.php">Mitglieder</a></li>
+									</ul>
+										
+								</li>
 								<li><a href="Login.php">Login</a></li>
 								<li><a href="../impressum.html">Impressum</a></li>
 								<li><a href="../datenschutz.html">Datenschutz</a></li>
@@ -225,8 +224,9 @@ return $randomString;
 				
 				?>
 					<div class="container">
-						<h2 align="center" >Registrierung für die Nutzung von myStable</h2>
-						<p align="center"> Bitte füllen Sie als Stallbesitzer alle notwendigen Informationen aus</p>
+						<h2 align="center" > Registrierung eines neuen Stalls</h2>
+						<p align="center">Hier können sich Stallbesitzer für die Nutzung von myStable registrieren.</p>
+						<p align="center"> Bitte füllen Sie als Stallbesitzer alle notwendigen Informationen aus.</p>
 
 							<form method="post" accept-charset="utf-8">
 								<div class="form-group">

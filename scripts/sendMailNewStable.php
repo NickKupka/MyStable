@@ -1,7 +1,7 @@
 
 <?php
 
-require '../../ThirdParty/phpmailer/PHPMailerAutoload.php';
+require '../ThirdParty/phpmailer/PHPMailerAutoload.php';
 //error_reporting(0);	
 
 $emailreceiver = $argv[1];
@@ -12,7 +12,7 @@ $NameDesPferdes = $argv[5];
 $stableName = $argv[6];
 
 
-$ini = parse_ini_file('../../my_stable_config.ini');
+$ini = parse_ini_file('../my_stable_config.ini');
 
 if(isset($_POST['submit'])){
 	$name = filter_input(INPUT_POST, "name");

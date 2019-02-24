@@ -79,17 +79,16 @@ if(isset($_GET['login'])) {
 										<li><a href="../aboutmystable.html">Was ist <em>myStable</em></a></li>
 										<li><a href="../ueberuns.html">Über uns</a></li>
 										<li><a href="#">Preise</a></li>
-										<!--<li>
-											<a href="#">Weitere Infos</a>
-											<ul>
-												<li><a href="#">Info1</a></li>
-												<li><a href="#">Info2</a></li>
-												<li><a href="#">Info3</a></li>
-											</ul>
-										</li>-->
 									</ul>
 								</li>
-								<li><a href="registerpage.php">Registrierung</a></li>
+								<li>
+									<a href="#">Registrierung</a>
+									<ul>
+										<li><a href="newstable.php">Neuer Stall</a></li>
+										<li><a href="registerpage.php">Mitglieder</a></li>
+									</ul>
+										
+								</li>
 								<li class="current"><a href="Login.php">Login</a></li>
 								<li><a href="../impressum.html">Impressum</a></li>
 								<li><a href="../datenschutz.html">Datenschutz</a></li>

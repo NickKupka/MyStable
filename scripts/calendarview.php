@@ -445,7 +445,7 @@ $reservation_Time = 1;
 			var eventTitle = event.title;
 			var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
 			var todayDate = new Date().toISOString().slice(0,10);
-			var check = $.fullCalendar.formatDate(event.start,'Y-MM-DD');
+			var check = $.fullCalendar.formatDate(event.start,'Y-MM-DD HH:mm:ss');
 			if(todayDate < check){
 				var isUserAllowedToDelete = eventTitle.includes(username);		
 				if (isUserAllowedToDelete){
