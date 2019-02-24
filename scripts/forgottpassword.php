@@ -64,7 +64,7 @@ function randomPassword() {
 ?>
 <html>
 	<head>
-		<title>MyStable Login</title>
+		<title>Passwort vergessen - myStable</title>
 		<!-- Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
 
@@ -90,7 +90,7 @@ function randomPassword() {
 				<div id="header">
 
 					<!-- Logo -->
-						<h1><a href="../index.html" id="logo">MyStable <em>by Technick Solutions</em></a></h1>
+						<h1><a href="../index.html" id="logo">myStable <em>by Technick Solutions</em></a></h1>
 
 					<!-- Nav -->
 						<nav id="nav">
@@ -99,7 +99,7 @@ function randomPassword() {
 								<li>
 									<a href="#">Infos</a>
 									<ul>
-										<li><a href="../aboutmystable.html">Was ist <em>MyStable</em></a></li>
+										<li><a href="../aboutmystable.html">Was ist <em>myStable</em></a></li>
 										<li><a href="../ueberuns.html">Über uns</a></li>
 										<li><a href="#">Preise</a></li>
 										<!--<li>
@@ -191,7 +191,7 @@ function randomPassword() {
 					<!-- Copyright -->
 						<div class="copyright">
 							<ul class="menu">
-								<li>&copy; MyStable. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+								<li>&copy; Technick Solutions - myStable. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
 							</ul>
 						</div>
 

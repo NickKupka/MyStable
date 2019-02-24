@@ -32,10 +32,10 @@ $mailAnforderer->Password = $ini["smtp_password"];
 $mailAnforderer->setFrom($ini["smtp_fromAdress"], $ini["smtp_fromName"]);
 $mailAnforderer->addAddress($emailreceiver);
 $mailAnforderer->isHTML(true);                                  
-$mailAnforderer->Subject  = "Neue Stallregistrierung auf My Stable";
+$mailAnforderer->Subject  = "Neue Stallregistrierung auf myStable";
 $mailAnforderer->Body     = "<h2>Hallo " . $vorname . " " .$nachname . ",</h2>
 
-<p>Vielen Dank für Ihre Registrierung bei MyStable, Ihrem persönlichen Stallorganisierer.</p>
+<p>Vielen Dank für Ihre Registrierung bei myStable, Ihrem persönlichen Stallorganisierer.</p>
 <p>Wir freuen uns Sie und Ihren Stall <strong>" . $stableName . "</strong> bei uns Willkommen zu heißen.</p>
 <p>Sie wurden erfolgreich registriert.</p>
 <p>Ab sofort haben Sie die Möglichkeit Ihre Stallgemeinschaft online zu verwalten.<br/>
@@ -44,14 +44,14 @@ Bevor andere Reiter aus Ihrem Stall den Planer nutzen können müssen Sie sich e
 
 <p>Bitte Loggen Sie sich mit Ihrem Lizenzschlüssel unter " . "https://www.my-stable.de/scripts/LoginWithKey.php" . " ein.</p><br/>
 <p>Anschließend können sich alle anderen Reiter Ihres Stalls online Registrieren</p>
-<p>Ihr Team von MyStable by Technick Solutions.<br/>
+<p>Ihr Team von myStable by Technick Solutions.<br/>
  
-MyStable by Technick Solutions<br/>
+myStable by Technick Solutions<br/>
 Vertreten durch <br/>
 Dominik Kupka und Alexander Freitag<br/>
 München, Deutschland<br/>
 Infos unter <a target='_blank' rel='noopener noreferrer' href='https://www.my-stable.de/index.html'>www.my-stable.de</a><br/>
-oder einfach per Mail an <a href='mailto:mystableorganizer@gmail.com'>MyStable</a>.</p>";
+oder einfach per Mail an <a href='mailto:mystableorganizer@gmail.com'>myStable</a>.</p>";
 
 
 

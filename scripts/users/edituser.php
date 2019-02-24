@@ -107,7 +107,7 @@ if (isset($_POST['submit'])) {
 
 ?><html>
 	<head>
-		<title>Ihre Nutzerdaten (My-Stable)</title>
+		<title>Ihre Nutzerdaten - myStable</title>
 		<link rel="stylesheet" href="../../assets/css/main.css" />
 		<link rel="shortcut icon" href="../../pictures/favicon.ico" type="image/x-icon">
 		<link rel="icon" href="../../pictures/favicon.ico" type="image/x-icon">
@@ -130,7 +130,7 @@ if (isset($_POST['submit'])) {
 			<!-- Header -->
 				<div id="header">
 					<!-- Logo -->
-						<h1><a id="logo">MyStable <em>by Technick Solutions</em></a></h1>
+						<h1><a id="logo">myStable <em>by Technick Solutions</em></a></h1>
 					<!-- Nav -->
 						<nav id="nav">
 							<ul>
@@ -302,7 +302,7 @@ if (isset($_POST['submit'])) {
 						<div class="copyright">
 							<ul class="menu">
 							<li><img  src="../../pictures/logoPNG.png"/></li><br/>
-								<li>&copy; Technick Solutions - My Stable Organizer. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+								<li>&copy; Technick Solutions - myStable. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
 							</ul>
 						</div>
 				</div>

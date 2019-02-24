@@ -35,7 +35,7 @@ $nachname = $sessionIDSPlitted[1]; // nachname aus session id
 ?>
 <html>
 	<head>
-		<title>My Stable - Datenschutz</title>
+		<title>Dagtenschutz - myStable</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="../assets/css/main.css" />
@@ -48,7 +48,7 @@ $nachname = $sessionIDSPlitted[1]; // nachname aus session id
 			<!-- Header -->
 				<div id="header">
 					<!-- Logo -->
-						<h1><a id="logo">MyStable <em>by Technick Solutions</em></a></h1>
+						<h1><a id="logo">myStable <em>by Technick Solutions</em></a></h1>
 					<!-- Nav -->
 						<nav id="nav">
 							<ul>
@@ -90,7 +90,7 @@ $nachname = $sessionIDSPlitted[1]; // nachname aus session id
 								<br>Herr Alexander Freitag
 								<br>EMail: mystableorganizer@gmail.com
 								<br>
-								<br>Technick Solutions - My Stable Organizer
+								<br>Technick Solutions - myStable
 								<br>Amerstorfferstraße 14
 								<br>81549 München</p>
 								</div>
@@ -193,7 +193,7 @@ $nachname = $sessionIDSPlitted[1]; // nachname aus session id
 					<!-- Copyright -->
 						<div class="copyright">
 							<ul class="menu">
-								<li>&copy; Technick Solutions - My Stable Organizer. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+								<li>&copy; Technick Solutions - myStable. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
 							</ul>
 						</div>
 

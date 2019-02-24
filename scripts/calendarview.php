@@ -74,7 +74,7 @@ $reservation_Time = 1;
 			<!-- Header -->
 				<div id="header">
 					<!-- Logo -->
-						<h1><a id="logo">MyStable <em>by Technick Solutions</em></a></h1>
+						<h1><a id="logo">myStable <em>by Technick Solutions</em></a></h1>
 					<!-- Nav -->
 						<nav id="nav">
 							<ul>
@@ -219,7 +219,7 @@ $reservation_Time = 1;
 					<!-- Copyright -->
 						<div class="copyright">
 							<ul class="menu">
-								<li>&copy; Technick Solutions - My Stable Organizer. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+								<li>&copy; Technick Solutions - myStable. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
 							</ul>
 						</div>
 				</div>

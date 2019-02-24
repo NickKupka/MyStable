@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>MyStable Organizer - Lizenz Abgelaufen</title>
+		<title>Lizenz Abgelaufen - myStable</title>
 		<link rel="stylesheet" href="../assets/css/main.css" />
 	</head>
 	<body >
@@ -8,7 +8,7 @@
 			<!-- Header -->
 				<div id="header">
 					<!-- Logo -->
-						<h1><a href="../index.html" id="logo">MyStable <em>by Technick Solutions</em></a></h1>
+						<h1><a href="../index.html" id="logo">myStable <em>by Technick Solutions</em></a></h1>
 					<!-- Nav -->
 						<nav id="nav">
 							<ul>
@@ -44,7 +44,7 @@
 					<!-- Copyright -->
 						<div class="copyright">
 							<ul class="menu">
-								<li>&copy; Technick Solutions - My Stable Organizer. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+								<li>&copy; Technick Solutions - myStable. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
 							</ul>
 						</div>
 				</div>

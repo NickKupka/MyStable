@@ -41,7 +41,7 @@ Check if current user is admin
 ?>
 <html>
 	<head>
-		<title>Alle Nutzer (My-Stable)</title>
+		<title>Reiter Verwaltung - myStable</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
@@ -57,7 +57,7 @@ Check if current user is admin
 			<!-- Header -->
 				<div id="header">
 					<!-- Logo -->
-						<h1><a id="logo">MyStable <em>by Technick Solutions</em></a></h1>
+						<h1><a id="logo">myStable <em>by Technick Solutions</em></a></h1>
 					<!-- Nav -->
 					
 						<nav id="nav">
@@ -230,7 +230,7 @@ Check if current user is admin
 						<div class="copyright">
 							<ul class="menu">
 							<li><img  src="../../pictures/logoPNG.png"/></li><br/>
-								<li>&copy; Technick Solutions - My Stable Organizer. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+								<li>&copy; Technick Solutions - myStable. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
 							</ul>
 						</div>
 				</div>

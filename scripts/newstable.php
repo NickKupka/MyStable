@@ -149,7 +149,7 @@ return $randomString;
 ?>
 <html>
 	<head>
-		<title>Registrieren Sie hier Ihren Stall</title>
+		<title>Registrieren Sie hier Ihren Stall - myStable</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -168,7 +168,7 @@ return $randomString;
 				<div id="header">
 
 					<!-- Logo -->
-						<h1><a href="../index.html" id="logo">MyStable <em>by Technick Solutions</em></a></h1>
+						<h1><a href="../index.html" id="logo">myStable <em>by Technick Solutions</em></a></h1>
 
 					<!-- Nav -->
 						<nav id="nav">
@@ -177,7 +177,7 @@ return $randomString;
 								<li>
 									<a href="#">Infos</a>
 									<ul>
-										<li><a href="../aboutmystable.html">Was ist <em>MyStable</em></a></li>
+										<li><a href="../aboutmystable.html">Was ist <em>myStable</em></a></li>
 										<li><a href="../ueberuns.html">Über uns</a></li>
 										<li><a href="#">Preise</a></li>
 										<!--<li>
@@ -225,7 +225,7 @@ return $randomString;
 				
 				?>
 					<div class="container">
-						<h2 align="center" >Registrierung für die Nutzung von My Stable</h2>
+						<h2 align="center" >Registrierung für die Nutzung von myStable</h2>
 						<p align="center"> Bitte füllen Sie als Stallbesitzer alle notwendigen Informationen aus</p>
 
 							<form method="post" accept-charset="utf-8">
@@ -304,7 +304,7 @@ return $randomString;
 					<!-- Copyright -->
 						<div class="copyright">
 							<ul class="menu">
-								<li>&copy; Technick Solutions - My Stable Organizer. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+								<li>&copy; Technick Solutions - myStable Organizer. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
 							</ul>
 						</div>
 

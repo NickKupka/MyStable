@@ -3,6 +3,7 @@ $showFormular = true; //Variable ob das Registrierungsformular anezeigt werden s
 include ("dbconnect.php");
 $ini = parse_ini_file('../my_stable_config.ini');
 $checkLogin= true;
+$registerSuccess = false;
 if(isset($_GET['register'])) {
     $error = false;
     $vorname = $_POST['vorname'];
@@ -11,6 +12,7 @@ if(isset($_GET['register'])) {
     $passwort = $_POST['passwort'];
     $passwort2 = $_POST['passwort2'];
 	$NameDesPferdes =$_POST['NameDesPferdes'];
+	$LizenzschluesselVomStall = $_POST['LizenzschluesselVomStall'];
 
   
     if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -33,6 +35,10 @@ if(isset($_GET['register'])) {
         $error = true;
     }
     
+	if(strlen($LizenzschluesselVomStall) == 0) {
+        $error = true;
+    }
+	
     if(!$error) { 
 		$select = mysqli_query($db, "SELECT * FROM users WHERE `email` = '".$_POST['email']."'") or exit(mysqli_error($connectionID));
     }else{
@@ -43,18 +49,31 @@ if(isset($_GET['register'])) {
     if(!$error) {    
 		//exec("java -jar licensekeygenerator/dist/LicenseKeyGenerator.jar 2>&1", $output);
 		//$licensekey = $output[0];
-		$licensekey = generateLicenceKey();
+		//$licensekey = generateLicenceKey();
 		//echo $licensekey;
 		$passwort_hash = password_hash($passwort, PASSWORD_DEFAULT);
 		//echo $passwort_hash;
-		$eintragen = mysqli_query($db, "INSERT INTO users (vorname, nachname, email, passwort, LicenseKey, NameDesPferdes) VALUES ('$vorname', '$nachname', '$email', '$passwort_hash','$licensekey','$NameDesPferdes')");
+
+		
+		/*
+		Lizenzlaufzeit herausfinden vom Stall
+		*/
+		$findExpiryDateQuery = "SELECT * FROM users WHERE `LicenseKey` = '" .$_POST['LizenzschluesselVomStall']."'";
+		$findExpiryDateResult = mysqli_query($db, $findExpiryDateQuery);
+		while ($row = mysqli_fetch_array($findExpiryDateResult)) {
+			$currentExpiryDate = $row['ExpiryDate'];
+			$currentStableID = $row['stable_id'];
+		}
+
+		$eintragen = mysqli_query($db, "INSERT INTO users (vorname, nachname, email, passwort, LicenseKey, NameDesPferdes, stable_id, ExpiryDate, active) VALUES ('$vorname', '$nachname', '$email', '$passwort_hash','$LizenzschluesselVomStall','$NameDesPferdes','$currentStableID','$currentExpiryDate','1')");
 		if($eintragen) {     
 			$php = $ini["php_path"];
 			$checkLogin= true;
 			$_SESSION['message'] = "Die Eingabe war erfolgreich<br>";
-			exec("$php mailservice/sendMail.php $email $licensekey $vorname $nachname $NameDesPferdes");
-			header("Location: LoginWithKey.php");
+			exec("$php mailservice/sendMail.php $email $vorname $nachname $NameDesPferdes");
+			//header("Location: Login.php");
             $showFormular = false;
+			$registerSuccess = true;
         } else {
 			$checkLogin= false;
 			$_SESSION['message'] = "Bei der Eingabe ist leider einer unerwarteter Fehler aufgetreten. Bitte versuchen Sie es erneut.<br>";
@@ -85,7 +104,7 @@ return $randomString;
 ?>
 <html>
 	<head>
-		<title>Registriere dich bei MyStable</title>
+		<title>Registrierung bei einem Stall - myStable</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -104,7 +123,7 @@ return $randomString;
 				<div id="header">
 
 					<!-- Logo -->
-						<h1><a href="../index.html" id="logo">MyStable <em>by Technick Solutions</em></a></h1>
+						<h1><a href="../index.html" id="logo">myStable <em>by Technick Solutions</em></a></h1>
 
 					<!-- Nav -->
 						<nav id="nav">
@@ -113,7 +132,7 @@ return $randomString;
 								<li>
 									<a href="#">Infos</a>
 									<ul>
-										<li><a href="../aboutmystable.html">Was ist <em>MyStable</em></a></li>
+										<li><a href="../aboutmystable.html">Was ist <em>myStable</em></a></li>
 										<li><a href="../ueberuns.html">Über uns</a></li>
 										<li><a href="../preise.html">Preise</a></li>
 										<!--<li>
@@ -151,17 +170,27 @@ return $randomString;
 						</div>
 					</div>
 				<?php	
-				} else {
-					?>
-				<div class="container">
+				}
+
+
+				if($registerSuccess == true){
 				
-				</div>
+					?>
+				
+				<style type="text/css">#registerDiv{ display:none;} </style>
+						<div align="center" class="container">	
+							<h2>Die Registrierung war erfolgreich.</h2>
+							<h2>Sie können Sich nun in Ihrem Stall einloggen.</h2>
+							<a  href="Login.php">Zum Login</a>
+
+						</div>
+
 				<?php
 				}
 				
 				?>
-					<div class="container">
-						<h2 align="center" >Registrierung für die Nutzung von My Stable</h2>
+					<div id="registerDiv" class="container">
+						<h2 align="center" >Registrierung für die Nutzung von myStable</h2>
 
 							<form action="?register=1" method="post" accept-charset="utf-8">
 								<div class="form-group">
@@ -184,6 +213,9 @@ return $randomString;
 									Passwort wiederholen: *<br>
 									<input type="password" size="40" maxlength="250" name="passwort2" required><br>
 										<!-- Stall auswählen : TODO-->
+									 
+									 Lizenzschlüssel vom Stall:*<br>
+									<input id="LizenzschluesselVomStall" type="text" name="LizenzschluesselVomStall" />
 									 
 									<br><br>
 									<input type="submit" value="Abschicken">
@@ -240,7 +272,7 @@ return $randomString;
 					<!-- Copyright -->
 						<div class="copyright">
 							<ul class="menu">
-								<li>&copy; Technick Solutions - My Stable Organizer. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+								<li>&copy; Technick Solutions - myStable. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
 							</ul>
 						</div>
 
