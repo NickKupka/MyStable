@@ -105,12 +105,42 @@ if (isset($_POST['submit'])) {
 	}		
 }
 
+/*
+Check if current user is admin
+*/
+$con=mysqli_connect($host,$dbUser,$dbPWD,$db);
+$result = mysqli_query($con,"SELECT * FROM `users` WHERE `nachname` LIKE '%{$nachname}%' AND `vorname` LIKE '%{$vorname}%'");
+$row = mysqli_fetch_array($result);
+
+
 ?><html>
 	<head>
 		<title>Ihre Nutzerdaten - myStable</title>
+		<meta charset="utf-8" />
+		<!--<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />-->
+
 		<link rel="stylesheet" href="../../assets/css/main.css" />
 		<link rel="shortcut icon" href="../../pictures/favicon.ico" type="image/x-icon">
 		<link rel="icon" href="../../pictures/favicon.ico" type="image/x-icon">
+		<link rel="apple-touch-icon" sizes="57x57" href="../../pictures/favicons/apple-icon-57x57.png">
+		<link rel="apple-touch-icon" sizes="60x60" href="../../pictures/favicons/apple-icon-60x60.png">
+		<link rel="apple-touch-icon" sizes="72x72" href="../../pictures/favicons/apple-icon-72x72.png">
+		<link rel="apple-touch-icon" sizes="76x76" href="../../pictures/favicons/apple-icon-76x76.png">
+		<link rel="apple-touch-icon" sizes="114x114" href="../../pictures/favicons/apple-icon-114x114.png">
+		<link rel="apple-touch-icon" sizes="120x120" href="../../pictures/favicons/apple-icon-120x120.png">
+		<link rel="apple-touch-icon" sizes="144x144" href="../../pictures/favicons/apple-icon-144x144.png">
+		<link rel="apple-touch-icon" sizes="152x152" href="../../pictures/favicons/apple-icon-152x152.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="../../pictures/favicons/apple-icon-180x180.png">
+		<link rel="icon" type="image/png" sizes="192x192"  href="../../pictures/favicons/android-icon-192x192.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="../../pictures/favicons/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="96x96" href="../../pictures/favicons/favicon-96x96.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="../../pictures/favicons/favicon-16x16.png">
+		<link rel="manifest" href="../../pictures/favicons/manifest.json">
+		<meta name="msapplication-TileColor" content="#ffffff">
+		<meta name="msapplication-TileImage" content="../../pictures/favicons/ms-icon-144x144.png">
+		<meta name="theme-color" content="#ffffff">
+		<link rel="icon" href="../pictures/favicon.ico" type="image/x-icon">
+
 
 		
 		<!-- Latest compiled and minified CSS -->
@@ -132,29 +162,25 @@ if (isset($_POST['submit'])) {
 					<!-- Logo -->
 						<h1><a id="logo">myStable <em>by Technick Solutions</em></a></h1>
 					<!-- Nav -->
-						<nav id="nav">
-							<ul>
-							<li ><a href="../calendarview.php">Mein Kalendar</a></li>
-							<li class="current"><a >Meine Daten</a></li>
-							<?php 
-															/*
-								Check if current user is admin - otherwise page can not be visited
-								*/
-								$con=mysqli_connect($host,$dbUser,$dbPWD,$db);
-
-								$result = mysqli_query($con,"SELECT * FROM `users` WHERE `nachname` LIKE '%{$nachname}%' AND `vorname` LIKE '%{$vorname}%'");
-								$row = mysqli_fetch_array($result);
-
-								if ($row['adminAllowed'] == "1") {
-									echo "<li><a href='alluser.php'>Reiter Verwaltung</a></li>";
-								}
-							?>
-							<li><a href="../events/myentries.php">Meine Einträge</a></li>
-							<li><a href="../impressum.php">Impressum</a></li>
-							<li><a href="../datenschutz.php">Datenschutz</a></li>
-							<li><a href="../Logout.php">Logout</a></li>					
-					</ul>
-						</nav>
+						<nav id="nav" style="background: white;">
+								<ul>
+									<li onmouseover="this.style.background=' #4db8ff';" onmouseout="this.style.background='white';"><a href="../calendarview.php"><img border="0" alt="calendar" src="../../pictures/icons/myicons/png/005-calendar-1.png"  width="52" height="52"></a></li>
+									<li class='current' onmouseover="this.style.background=' #4db8ff';" onmouseout="this.style.background='white';"><a href="#.php"><img border="0" alt="myentires" src="../../pictures/icons/myicons/png/008-settings.png"  width="52" height="52"></a></li>
+									<?php 
+										/*
+											Admin only
+										*/
+										if ($row['adminAllowed'] == "1") {
+											echo "<li onmouseover=\"this.style.background=' #4db8ff';\" onmouseout=\"this.style.background='white'\";'><a href='alluser.php'><img border='0' alt='allusers' src='../../pictures/icons/myicons/png/001-tasks.png'  width='52' height='52'></a></li>";
+											$reservation_Time = 24;				
+										}
+									?>
+									<li onmouseover="this.style.background=' #4db8ff';" onmouseout="this.style.background='white';"><a href="../events/myentries.php"><img border="0" alt="myentries" src="../../pictures/icons/myicons/png/012-clipboard.png"  width="52" height="52"></a></li>
+									<li onmouseover="this.style.background=' #4db8ff';" onmouseout="this.style.background='white';"><a href="../impressum.php"><img border="0" alt="imprint" src="../../pictures/icons/myicons/png/013-advise.png"  width="52" height="52"></a></li>
+									<li onmouseover="this.style.background=' #4db8ff';" onmouseout="this.style.background='white';"><a href="../datenschutz.php"><img border="0" alt="datasecurity" src="../../pictures/icons/myicons/png/015-security.png"  width="52" height="52"></a></li>
+									<li onmouseover="this.style.background=' #4db8ff';" onmouseout="this.style.background='white';"><a href="../Logout.php"><img border="0" alt="logout" src="../../pictures/icons/myicons/png/002-logout.png"  width="52" height="52"></a></li>
+								</ul>
+						</nav>				
 				</div>
 			<!-- Main -->
 				<section class="wrapper style1">
@@ -301,8 +327,9 @@ if (isset($_POST['submit'])) {
 					<!-- Copyright -->
 						<div class="copyright">
 							<ul class="menu">
-							<li><img  src="../../pictures/logoPNG.png"/></li><br/>
-								<li>&copy; Technick Solutions - myStable. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+								<li>&copy; Technick Solutions - myStable. All rights reserved</li>
+								<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+								<li>Icons made by <a href="http://okodesign.ru/" title="Elias Bikbulatov">Elias Bikbulatov</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></li>
 							</ul>
 						</div>
 				</div>
