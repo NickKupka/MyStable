@@ -15,6 +15,7 @@ $dsn = "mysql:host=$host;dbname=$db";
 $pdo = new PDO($dsn, $ini['db_user'], $ini['db_password']);
 $dbUser = $ini['db_user'];
 $dbPWD = $ini['db_password'];
+$con=mysqli_connect($host,$dbUser,$dbPWD,$db);
 
 $userid = $_SESSION['userid'];
 $session_value=(isset($_SESSION['userid']))?$_SESSION['userid']:''; 
@@ -37,6 +38,27 @@ $userID = $sessionIDSPlitted[2]; // user id aus session id
 $stableID = $sessionIDSPlitted[3]; // stable aus session id
 $stableName = "";
 $reservation_Time = 1;
+
+
+
+/*
+Number of used licences
+*/
+$result = mysqli_query($con,"SELECT * FROM `users` WHERE `stable_id` LIKE '%{$stableID}%'");
+$count = 0;
+while($row = mysqli_fetch_array($result)){
+$count = $count + 1; 
+}
+$NumberOfUsers = $count;
+
+/*
+Check if current user is admin
+*/
+
+$result = mysqli_query($con,"SELECT * FROM `users` WHERE `nachname` LIKE '%{$nachname}%' AND `vorname` LIKE '%{$vorname}%'");
+$row = mysqli_fetch_array($result);
+
+
 ?>
 <html>
 	<head>
@@ -81,14 +103,9 @@ $reservation_Time = 1;
 							<li class="current"><a href="calendarview.php">Mein Kalendar</a></li>
 								<li><a href="users/edituser.php">Meine Daten</a></li>
 								<?php 
-/*
-									Check if current user is admin - otherwise page can not be visited
+									/*
+										Admin only
 									*/
-									$con=mysqli_connect($host,$dbUser,$dbPWD,$db);
-
-									$result = mysqli_query($con,"SELECT * FROM `users` WHERE `nachname` LIKE '%{$nachname}%' AND `vorname` LIKE '%{$vorname}%'");
-									$row = mysqli_fetch_array($result);
-
 									if ($row['adminAllowed'] == "1") {
 										echo "<li><a href='users/alluser.php'>Reiter Verwaltung</a></li>";
 										$reservation_Time = 24;
@@ -121,6 +138,17 @@ $reservation_Time = 1;
 									echo "$aktuellerStallname";
 								?>
 							</h3>
+							<?php 
+									/*
+										Admin only
+									*/
+									if ($row['adminAllowed'] == "1") {
+										echo "<div align='center'>
+												<i >Über Ihren Lizenzschlüssel wurde(n) <strong style='color: green'>" . "$NumberOfUsers" . "</strong> Nutzer registriert.</i>
+											</div><br/>";
+									}
+								?>
+							
 
 							<?php 
 									/*	
