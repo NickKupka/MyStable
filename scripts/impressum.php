@@ -2,7 +2,8 @@
 session_start();
 
 if(!isset($_SESSION['userid'])) {
-    die('Bitte zuerst <a href="login.php">einloggen</a>');
+    header("Location:bittezuersteinloggen.php");
+	exit;
 }
 include("dbconnect.php");
 $ini = parse_ini_file('../my_stable_config.ini');

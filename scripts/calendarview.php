@@ -2,7 +2,8 @@
 session_start();
 include("session_timeout.php");
 if(!isset($_SESSION['userid'])) {
-    die('Bitte zuerst <a href="Login.php">einloggen</a>');
+    header("Location:bittezuersteinloggen.php");
+	exit;
 } 
 header('Content-Type: text/html; charset=utf-8');
 include("dbconnect.php");

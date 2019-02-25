@@ -22,10 +22,8 @@
 			<!-- Main -->
 				<section class="wrapper style1">
 					<div class="container">
-						<div id="content">
-							
-							<h2 style="color: red" align="center">Deine Session ist abgelaufen.</h2>
-							<h3 align="center">Bitte <a  href="Login.php">Logge</a> dich erneut ein.</h3>
+						<div align="center" id="content">
+							<?php echo "<h2 style='color : red '>Bitte zuerst <a href='Login.php'>einloggen</a>.</h2>"?>
 						</div>
 						
 						<br/>

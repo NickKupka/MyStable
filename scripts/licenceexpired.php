@@ -83,32 +83,6 @@
 		<script src='fullcalendar/lib/moment.min.js'></script>
 		<script src='fullcalendar/fullcalendar.min.js'></script>
 		<script src='fullcalendar/locale/de.js'></script>
-		<script src="fcbasic.js"></script>
-		<style>
-			#calendar {
-			width: 100%;
-			height:60%;
-			display: block;
-			margin-left: auto;
-			margin-right: auto;
-			}
-
-			.centered {
-			text-align: center;
-			}
-			#calendar {
-			width: 70%;
-			height:30%;
-			display: block;
-			margin-left: auto;
-			margin-right: auto;
-			}
-
-			.centered {
-			text-align: center;
-			}
-
-		</style>
-	  
+		<script src="fcbasic.js"></script>	  
 	</body>
 </html>

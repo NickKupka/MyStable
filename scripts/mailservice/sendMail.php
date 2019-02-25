@@ -1,4 +1,3 @@
-
 <?php
 
 require '../../ThirdParty/phpmailer/PHPMailerAutoload.php';

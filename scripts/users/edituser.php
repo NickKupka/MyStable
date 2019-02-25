@@ -2,7 +2,8 @@
 session_start();
 
 if(!isset($_SESSION['userid'])) {
-    die('Bitte zuerst <a href="../Login.php">einloggen</a>');
+    header("Location:../bittezuersteinloggen.php");
+	exit;
 }
 //include('../dbconnect.php'); entweder direkt die ini-Datei ODER die dbconnect
 $ini = parse_ini_file('../../my_stable_config.ini');
@@ -23,7 +24,7 @@ $now = new DateTime();
 
 if($date < $now) {
 	// your licence has expired - you can't login anymore.
-	header("Location:licenceexpired.php");
+	header("Location:../licenceexpired.php");
 }else{
 	//Licence is active
 }
