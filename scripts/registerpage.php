@@ -6,13 +6,13 @@ $checkLogin= true;
 $registerSuccess = false;
 if(isset($_GET['register'])) {
     $error = false;
-    $vorname = $_POST['vorname'];
-	$nachname = $_POST['nachname'];
-	$email = $_POST['email'];
-    $passwort = $_POST['passwort'];
-    $passwort2 = $_POST['passwort2'];
-	$NameDesPferdes =$_POST['NameDesPferdes'];
-	$LizenzschluesselVomStall = $_POST['LizenzschluesselVomStall'];
+    $vorname = trim($_POST['vorname']);
+	$nachname = trim($_POST['nachname']);
+	$email = trim($_POST['email']);
+    $passwort = trim($_POST['passwort']);
+    $passwort2 = trim($_POST['passwort2']);
+	$NameDesPferdes = trim($_POST['NameDesPferdes']);
+	$LizenzschluesselVomStall = trim($_POST['LizenzschluesselVomStall']);
 
   
     if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -40,7 +40,7 @@ if(isset($_GET['register'])) {
     }
 	
     if(!$error) { 
-		$select = mysqli_query($db, "SELECT * FROM users WHERE `email` = '".$_POST['email']."'") or exit(mysqli_error($connectionID));
+		$select = mysqli_query($db, "SELECT * FROM users WHERE `email` = '".$email."'") or exit(mysqli_error($connectionID));
     }else{
 		$_SESSION['message'] = "error occured";
 	}
@@ -58,7 +58,7 @@ if(isset($_GET['register'])) {
 		/*
 		Lizenzlaufzeit herausfinden vom Stall
 		*/
-		$findExpiryDateQuery = "SELECT * FROM users WHERE `LicenseKey` = '" .$_POST['LizenzschluesselVomStall']."'";
+		$findExpiryDateQuery = "SELECT * FROM users WHERE `LicenseKey` = '" .$LizenzschluesselVomStall."'";
 		$findExpiryDateResult = mysqli_query($db, $findExpiryDateQuery);
 		while ($row = mysqli_fetch_array($findExpiryDateResult)) {
 			$currentExpiryDate = $row['ExpiryDate'];

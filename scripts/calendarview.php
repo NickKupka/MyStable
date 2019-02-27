@@ -89,7 +89,6 @@ $row = mysqli_fetch_array($result);
 		<meta name="theme-color" content="#ffffff">
 		<link rel="icon" href="../pictures/favicon.ico" type="image/x-icon">
 	</head>
-	
 	<body class="is-preload">
 		<div id="page-wrapper">
 			<!-- Header -->
@@ -329,7 +328,11 @@ $row = mysqli_fetch_array($result);
 			 var duration = moment.duration(selectInfo.end.diff(selectInfo.start));
 			 return duration.asHours() <= reservationTime;
 		},
-		  
+
+		/*
+		Show current time as line in calendar view for week 27.02.2019
+		*/		
+		nowIndicator: true,
 
 		businessHours: {
 		  dow: [ 1, 2, 3, 4,5,6,0 ], 
@@ -508,7 +511,8 @@ $row = mysqli_fetch_array($result);
 		  second = "" + now.getSeconds(); if (second.length == 1) { second = "0" + second; }
 		  return year + "-" + month + "-" + day + " " + hour + ":" + minute;
 		}
-	  
+	
+
 	  </script>
 	  
 	</body>

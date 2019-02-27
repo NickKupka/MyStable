@@ -5,13 +5,13 @@ $ini = parse_ini_file('../my_stable_config.ini');
 $checkLogin= true;
 if(isset($_POST) & !empty($_POST)){
     $error = false;
-    $vorname = $_POST['vorname'];
-	$nachname = $_POST['nachname'];
-	$email = $_POST['email'];
-    $passwort = $_POST['passwort'];
-    $passwort2 = $_POST['passwort2'];
-	$NameDesPferdes =$_POST['NameDesPferdes'];
-	$stableName=$_POST['NameDesStalls'];
+    $vorname = trim($_POST['vorname']);
+	$nachname = trim($_POST['nachname']);
+	$email = trim($_POST['email']);
+    $passwort = trim($_POST['passwort']);
+    $passwort2 = trim($_POST['passwort2']);
+	$NameDesPferdes = trim($_POST['NameDesPferdes']);
+	$stableName= trim($_POST['NameDesStalls']);
 
   
     if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -53,11 +53,11 @@ if(isset($_POST) & !empty($_POST)){
     }
     
     if(!$error) { 
-		$select = mysqli_query($db, "SELECT * FROM users WHERE `email` = '".$_POST['email']."'") or exit(mysqli_error($connectionID));
+		$select = mysqli_query($db, "SELECT * FROM users WHERE `email` = '".$email."'") or exit(mysqli_error($connectionID));
     }else{
 		$checkLogin  = FALSE;
 	}
-	$query = mysqli_query($db, "SELECT * FROM users WHERE `email` = '".$_POST['email']."'");
+	$query = mysqli_query($db, "SELECT * FROM users WHERE `email` = '".$email."'");
 
     if (!$query){
         die('Error: ' . mysqli_error($con));

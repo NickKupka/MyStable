@@ -56,10 +56,10 @@ $userGesperrt = $user['Gesperrt'];
 
 if (isset($_POST['submit'])) {
   $error = false;
-	$vorname =  $_POST['vorname'];
-	$nachname = $_POST['nachname'];
-	$email = $_POST['Email'];
-	$NameDesPferdes =$_POST['namedespferdes'];
+	$vorname =  trim($_POST['vorname']);
+	$nachname = trim($_POST['nachname']);
+	$email = trim($_POST['Email']);
+	$NameDesPferdes =trim($_POST['namedespferdes']);
 	$aktiv = $_POST['dropdownuseractive'];
 	
   
