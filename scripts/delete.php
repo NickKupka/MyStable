@@ -8,6 +8,8 @@ if(!isset($_SESSION['userid'])) {
 } 
 header('Content-Type: text/html; charset=utf-8');
 include("dbconnect.php");
+$objectID = $_GET["id"];
+
 $ini = parse_ini_file('../my_stable_config.ini');
 $host = $ini["db_servername"];
 $db = $ini['db_name'];
@@ -50,7 +52,7 @@ $startDateTime = $eventInformation['start_event'];
 $endDateTime = $eventInformation['end_event'];
 $eventTitle = $eventInformation['title'];
 
-$queryLoggingInsert = "INSERT INTO logging (action, starttime, endtime, eventid, user, stable_id)  VALUES (:action, :start_event, :end_event, :id, :title, :stable_id)";
+$queryLoggingInsert = "INSERT INTO logging (action, starttime, endtime, eventid, user, stable_id, stable_object_id)  VALUES (:action, :start_event, :end_event, :id, :title, :stable_id, :stable_object_id)";
 $statementLogging = $pdo->prepare($queryLoggingInsert);
 $statementLogging->execute(
 	array(
@@ -60,6 +62,7 @@ $statementLogging->execute(
 		':id' => $eventID,
 		':title'  => $eventTitle,
 		':stable_id' => $stableID,
+		':stable_object_id' => $objectID
 	)
 );
 

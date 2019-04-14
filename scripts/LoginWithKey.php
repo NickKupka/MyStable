@@ -34,7 +34,14 @@ if(isset($_GET['login'])) {
 				$_SESSION['expiryDate'] = $date;
 				$checkLogin= true;
 				$_SESSION['message'] = "Die Eingabe war erfolgreich<br>";
-				header("Location: calendarview.php");
+
+				$statementGetStableObject = $pdo->prepare("SELECT stable_object.id AS objectId FROM stable_object INNER JOIN users ON stable_object.stable_id = users.stable_id WHERE users.id = :id");
+				$resultGetStableObject = $statementGetStableObject->execute(array('id' => $user['id']));
+				$StableObject = $statementGetStableObject->fetch();
+				if ($StableObject != false){
+					$StableObject['id'];
+					header ("Location: calendarview.php?id=".$StableObject[0]);
+				}
 			}else{
 				$checkLogin = false;
 			$_SESSION['message'] = "Bei der Eingabe ist leider einer unerwarteter Fehler aufgetreten. Bitte versuchen Sie es erneut.<br>";

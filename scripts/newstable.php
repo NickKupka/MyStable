@@ -107,7 +107,18 @@ if(isset($_POST) & !empty($_POST)){
 		*/
 		$newIDForStable = $db->insert_id;
 		//echo "stable id -> " . $newIDForStable."<br/>";
-
+		/*
+		Insert new stable object in stable_object table
+		*/
+		$insertNewStableObjectQuery = "INSERT INTO stable_object (stable_id, stable_object_name) VALUES ('$newIDForStable', 'Reithalle')";
+		if ($db->query($insertNewStableObjectQuery) === TRUE) {
+			//echo "neues stallobjekt konnte angelegt werden.<br/>";
+		}else{
+			$checkLogin  = FALSE;
+			$_SESSION['message'] = "Das Stallobjekt konnte nicht angelegt werden. Bitte versuchen Sie es erneut.<br>";
+			//echo "neues stallobjekt konnte nicht angelegt werden.<br/>";
+		}
+		
 		/*
 		Update user with stable id 
 		*/

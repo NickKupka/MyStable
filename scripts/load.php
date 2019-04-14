@@ -7,6 +7,7 @@ include("session_timeout.php");
 if(!isset($_SESSION['userid'])) {
     header("Location:bittezuersteinloggen.php");
 } 
+$objectID = $_GET["id"];
 header('Content-Type: text/html; charset=utf-8');
 include("dbconnect.php");
 $ini = parse_ini_file('../my_stable_config.ini');
@@ -23,8 +24,6 @@ $userid = $_SESSION['userid'];
 $session_value=(isset($_SESSION['userid']))?$_SESSION['userid']:''; 
 $expireDate = $_SESSION['expiryDate'];
 
-$expireDate = $_SESSION['expiryDate'];
-
 $date = new DateTime($expireDate);
 $now = new DateTime();
 if($date < $now) {
@@ -39,13 +38,13 @@ $nachname = $sessionIDSPlitted[1]; // nachname aus session id
 $userID = $sessionIDSPlitted[2]; // user id aus session id
 $stableID = $sessionIDSPlitted[3]; // stable aus session id
 
+
 $data = array();
 
-$query = "SELECT * FROM events WHERE stable_id = :stable_ID";
+$query = "SELECT * FROM events WHERE stable_id = :stable_ID AND stable_object_id = :object_ID";
 $statement = $pdo->prepare($query);
-$statement->execute(array(':stable_ID' => $stableID));
+$statement->execute(array(':stable_ID' => $stableID, ':object_ID' => $objectID));
 $result = $statement->fetchAll();
-
 
 
 foreach($result as $row){

@@ -116,7 +116,7 @@ $row = mysqli_fetch_array($result);
 
 ?><html>
 	<head>
-		<title>Ihre Nutzerdaten - myStable</title>
+		<title>Ihr Stall - myStable</title>
 		<meta charset="utf-8" />
 		<!--<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />-->
 	
@@ -157,7 +157,7 @@ $row = mysqli_fetch_array($result);
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
 	</head>
 	<body class="is-preload">
-			
+			<script type="text/javascript" src="../js/fullscreen.js"></script>
 
 		<div id="page-wrapper">
 			<!-- Header -->
@@ -167,26 +167,25 @@ $row = mysqli_fetch_array($result);
 					<!-- Nav -->
 						<nav id="nav" style="background: white;">
 							<ul>
-							<li>
-								<a href="#" title="Mein Kalendar"  onmouseover="this.style.background=' #4db8ff';" onmouseout="this.style.background='white';"><img border="0" alt="calendar" src="../../pictures/icons/myicons/png/005-calendar-1.png"  width="52" height="52"  ></a>
-								<?php		
-									echo '<ul>';
-									$resultStableObjektName = mysqli_query($con,"SELECT stable_object_name, stable_object.id AS objectId FROM stable_object INNER JOIN users ON stable_object.stable_id = users.stable_id WHERE users.id LIKE '%{$userID}%'");
-									while ($rowStableObject = mysqli_fetch_array($resultStableObjektName)){
-											echo '<li><a href="../calendarview.php?id='.$rowStableObject['objectId'] .'" >'.$rowStableObject['stable_object_name'] . '</a></li>';
-									}
-									
-									echo '</ul>';						
-								?>
-							</li>	
-									<li title="Meine Daten" class='current' onmouseover="this.style.background=' #4db8ff';" onmouseout="this.style.background='white';"><a href="#.php"><img border="0" alt="myentires" src="../../pictures/icons/myicons/png/008-settings.png"  width="52" height="52"></a></li>
+								<li>
+									<a href="#" title="Mein Kalendar"  onmouseover="this.style.background=' #4db8ff';" onmouseout="this.style.background='white';"><img border="0" alt="calendar" src="../../pictures/icons/myicons/png/005-calendar-1.png"  width="52" height="52"  ></a>
+									<?php		
+										echo '<ul>';
+										$resultStableObjektName = mysqli_query($con,"SELECT stable_object_name, stable_object.id AS objectId FROM stable_object INNER JOIN users ON stable_object.stable_id = users.stable_id WHERE users.id LIKE '%{$userID}%'");
+										while ($rowStableObject = mysqli_fetch_array($resultStableObjektName)){
+												echo '<li><a href="../calendarview.php?id='.$rowStableObject['objectId'] .'" >'.$rowStableObject['stable_object_name'] . '</a></li>';
+										}
+										
+										echo '</ul>';						
+									?>
+							</li><li title="Meine Daten"  onmouseover="this.style.background=' #4db8ff';" onmouseout="this.style.background='white';"><a href="../users/edituser.php	"><img border="0" alt="myentires" src="../../pictures/icons/myicons/png/008-settings.png"  width="52" height="52"></a></li>
 									<?php 
 										/*
 											Admin only
 										*/
 										if ($row['adminAllowed'] == "1") {
-											//echo "<li title='Stall Verwaltung' onmouseover=\"this.style.background=' #4db8ff';\" onmouseout=\"this.style.background='white'\";'><a href='../stable/editstable.php'><img border='0' alt='allconfig' src='../../pictures/icons/myicons/png/settings.png'  width='52' height='52' ></a></li>";
-											echo "<li title='Reiter Verwaltung' onmouseover=\"this.style.background=' #4db8ff';\" onmouseout=\"this.style.background='white'\";'><a href='alluser.php'><img border='0' alt='allusers' src='../../pictures/icons/myicons/png/001-tasks.png'  width='52' height='52'></a></li>";
+											//echo "<li title='Stall Verwaltung' class='current' onmouseover=\"this.style.background=' #4db8ff';\" onmouseout=\"this.style.background='white'\";'><a href='../stable/editstable.php'><img border='0' alt='allconfig' src='../../pictures/icons/myicons/png/settings.png'  width='52' height='52' ></a></li>";
+											echo "<li title='Reiter Verwaltung' onmouseover=\"this.style.background=' #4db8ff';\" onmouseout=\"this.style.background='white'\";'><a href='../users/alluser.php'><img border='0' alt='allusers' src='../../pictures/icons/myicons/png/001-tasks.png'  width='52' height='52'></a></li>";
 											$reservation_Time = 24;				
 										}
 									?>

@@ -9,6 +9,8 @@ if(!isset($_SESSION['userid'])) {
 } 
 header('Content-Type: text/html; charset=utf-8');
 include("dbconnect.php");
+$objectID = $_GET["id"];
+
 $ini = parse_ini_file('../my_stable_config.ini');
 $host = $ini["db_servername"];
 $db = $ini['db_name'];
@@ -21,8 +23,6 @@ $dbPWD = $ini['db_password'];
 
 $userid = $_SESSION['userid'];
 $session_value=(isset($_SESSION['userid']))?$_SESSION['userid']:''; 
-$expireDate = $_SESSION['expiryDate'];
-
 $expireDate = $_SESSION['expiryDate'];
 
 $date = new DateTime($expireDate);
@@ -52,7 +52,7 @@ if(isset($_POST["id"])){
  );
  
 
- $queryLogging = "INSERT INTO logging (action, starttime, endtime, eventid, user,stable_id)  VALUES (:action, :start_event, :end_event, :id, :title, :stable_id)";
+ $queryLogging = "INSERT INTO logging (action, starttime, endtime, eventid, user,stable_id, stable_object_id)  VALUES (:action, :start_event, :end_event, :id, :title, :stable_id, :stable_object_id)";
  $statementLogging = $pdo->prepare($queryLogging);
  $statementLogging->execute(
   array(
@@ -61,7 +61,9 @@ if(isset($_POST["id"])){
    ':end_event' => $_POST['end'],
    ':id' => $_POST['id'],
   ':title'  => $_POST['title'],
-  ':stable_id' => $stableID
+  ':stable_id' => $stableID,
+  ':stable_object_id' => $objectID
+
   )
  );
  

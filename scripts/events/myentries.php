@@ -1,11 +1,12 @@
 <?php
 session_start();
-
+include("../session_timeout.php");
 if(!isset($_SESSION['userid'])) {
     header("Location:../bittezuersteinloggen.php");
 	exit;
 }
-//include("../dbconnect.php");
+header('Content-Type: text/html; charset=utf-8');
+include("../dbconnect.php");
 $ini = parse_ini_file('../../my_stable_config.ini');
 $host = $ini["db_servername"];
 $db = $ini['db_name'];
@@ -14,6 +15,7 @@ $dsn = "mysql:host=$host;dbname=$db";
 $pdo = new PDO($dsn, $ini['db_user'], $ini['db_password']);
 $dbUser = $ini['db_user'];
 $dbPWD = $ini['db_password'];
+$con=mysqli_connect($host,$dbUser,$dbPWD,$db);
 
 $userid = $_SESSION['userid'];
 $session_value=(isset($_SESSION['userid']))?$_SESSION['userid']:''; 
@@ -36,16 +38,20 @@ $userID = $sessionIDSPlitted[2]; // user id aus session id
 $stableID = $sessionIDSPlitted[3]; // stable aus session id
 
 
-$con=mysqli_connect($host,$dbUser,$dbPWD,$db);
 // Check connection
 if (mysqli_connect_errno()){
 	echo "Failed to connect to MySQL: " . mysqli_connect_error();
 }
+$resultStableObjektName = mysqli_query($con,"SELECT stable_object_name, stable_object.id AS objectId FROM stable_object INNER JOIN users ON stable_object.stable_id = users.stable_id WHERE users.id LIKE '%{$userID}%'");
+$resultStableName = mysqli_query($con,"SELECT stable_name from stable stbl inner join users usr on stbl.id = usr.stable_id where usr.id LIKE '%{$userID}%'");
     
 ?>
 <html>
 	<head>
 		<title>Ihre Kalendereinträge - myStable</title>
+		<meta charset="utf-8" />
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 		<link rel="stylesheet" type="text/css" href="/Content/font-awesome/css/font-awesome.min.css" />
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
@@ -72,9 +78,7 @@ if (mysqli_connect_errno()){
 		<link rel="icon" href="../pictures/favicon.ico" type="image/x-icon">
 
 
-		
-		<!-- Latest compiled and minified CSS -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+	
 
 		<!-- jQuery library -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -84,8 +88,11 @@ if (mysqli_connect_errno()){
 
 		<!-- Latest compiled JavaScript -->
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
+		
 	</head>
 	<body class="is-preload">
+		<!--<script type="text/javascript" src="../js/fullscreen.js"></script>-->
+	<div id="page-wrapper">
 		<div style="background-color: white"  id="page-wrapper" align="center">
 			<!-- Header -->
 				<div id="header">
@@ -94,8 +101,18 @@ if (mysqli_connect_errno()){
 					<!-- Nav -->
 						<nav id="nav" style="background: white;">
 							<ul>
-							
-							<li title="Mein Kalendar" onmouseover="this.style.background=' #4db8ff';" onmouseout="this.style.background='white';"><a href="../calendarview.php"><img border="0" alt="calendar" src="../../pictures/icons/myicons/png/005-calendar-1.png"  width="52" height="52"></a></li>
+								<li>
+									<a href="#" title="Mein Kalendar"  onmouseover="this.style.background=' #4db8ff';" onmouseout="this.style.background='white';"><img border="0" alt="calendar" src="../../pictures/icons/myicons/png/005-calendar-1.png"  width="52" height="52"  ></a>
+									<?php		
+										echo '<ul>';
+										$resultStableObjektName = mysqli_query($con,"SELECT stable_object_name, stable_object.id AS objectId FROM stable_object INNER JOIN users ON stable_object.stable_id = users.stable_id WHERE users.id LIKE '%{$userID}%'");
+										while ($rowStableObject = mysqli_fetch_array($resultStableObjektName)){
+												echo '<li><a href="../calendarview.php?id='.$rowStableObject['objectId'] .'" >'.$rowStableObject['stable_object_name'] . '</a></li>';
+										}
+										
+										echo '</ul>';						
+									?>
+							</li>	
 							<li title="Meine Daten" onmouseover="this.style.background=' #4db8ff';" onmouseout="this.style.background='white';"><a href="../users/edituser.php"><img border="0" alt="myentires" src="../../pictures/icons/myicons/png/008-settings.png"  width="52" height="52"></a></li>
 							
 							<?php 
@@ -108,6 +125,7 @@ if (mysqli_connect_errno()){
 								$row = mysqli_fetch_array($result);
 
 								if ($row['adminAllowed'] == "1") {
+									//echo "<li title='Stall Verwaltung' onmouseover=\"this.style.background=' #4db8ff';\" onmouseout=\"this.style.background='white'\";'><a href='../stable/editstable.php'><img border='0' alt='allconfig' src='../../pictures/icons/myicons/png/settings.png'  width='52' height='52' ></a></li>";
 									echo "<li title='Reiter Verwaltung' onmouseover=\"this.style.background=' #4db8ff';\" onmouseout=\"this.style.background='white'\";' ><a href='../users/alluser.php'><img border='0' alt='allusers' src='../../pictures/icons/myicons/png/001-tasks.png'  width='52' height='52'></a></li>";
 									$reservation_Time = 24;				
 								}
@@ -152,10 +170,10 @@ if (mysqli_connect_errno()){
 				
 
 					<?php 
-						$result = mysqli_query($con,"SELECT * FROM `events` WHERE `title` LIKE '%{$nachname}%' AND `title` LIKE '%{$vorname}%' and `stable_id` LIKE '%{$stableID}%'");
+						$result = mysqli_query($con,"SELECT events.*, stable_object.stable_object_name AS objectName FROM events INNER JOIN stable_object ON (events.stable_object_id = stable_object.id) WHERE events.title LIKE '%{$nachname}%' AND events.title LIKE '%{$vorname}%' and events.stable_id LIKE '%{$stableID}%'");
 						$count = 1;
 						echo "<table id='exportTable' class='table'><thead><tr>";
-						echo"<th scope='col'><b>Nr.</b></th><th scope='col'><b>Wochentag</b></th><th scope='col'><b>Datum</b></th><th scope='col'><b>Startzeit</b></th><th scope='col'><b>Endzeit</b></th><th scope='col'><b>Name des Events</b></th></tr></thead><tbody>";
+						echo"<th scope='col'><b>Nr.</b></th><th scope='col'><b>Wochentag</b></th><th scope='col'><b>Datum</b></th><th scope='col'><b>Startzeit</b></th><th scope='col'><b>Endzeit</b></th><th scope='col'><b>Wo?</b></th></tr></thead><tbody>";
 						$date = date('d-m-Y H:i');
 						while($row = mysqli_fetch_array($result)){
 							setlocale(LC_TIME, 'de_DE', 'deu_deu');
@@ -207,7 +225,8 @@ if (mysqli_connect_errno()){
 								# in other words, 2010-05-15 16:00:00 has passed
 							}else{							
 								$eventTitle = $row['title'];
-								echo " <th scope='row'><b>".$count."</b></th>  <th scope='row'>".$dayOfWeek  ."</th>  <th scope='col'>".date('d.m.Y', $dateOfEvent)."</th> <td>" . date('H:i', $dateOfEvent)."</td><td>".date('H:i', $EnddateOfEvent)."</td><td>".$eventTitle."</td></tr>";
+								$stableObjectName = $row['objectName'];
+								echo "<th scope='row'><b>".$count."</b></th>  <th scope='row'>".$dayOfWeek  ."</th>  <th scope='col'>".date('d.m.Y', $dateOfEvent)."</th> <td>" . date('H:i', $dateOfEvent)."</td><td>".date('H:i', $EnddateOfEvent)."</td><td>".$stableObjectName."</td></tr>";
 								$count = $count + 1;
 							}
 						}
@@ -282,10 +301,10 @@ if (mysqli_connect_errno()){
 						<a href="#" class="exportBtn btn btn-info" id="btnExportToPDFOld"><span class="fa fa-file-pdf-o"> PDF</a>
 						<a href="#" class="exportBtn btn btn-info" id="btnPrintOld" ><span class="fas fa-print"> Print</a>  -->
 					<?php 
-						$result = mysqli_query($con,"SELECT * FROM `events` WHERE `title` LIKE '%{$nachname}%' AND `title` LIKE '%{$vorname}%' and `stable_id` LIKE '%{$stableID}%'");
+						$result = mysqli_query($con,"SELECT events.*, stable_object.stable_object_name AS objectName FROM events INNER JOIN stable_object ON (events.stable_object_id = stable_object.id) WHERE events.title LIKE '%{$nachname}%' AND events.title LIKE '%{$vorname}%' and events.stable_id LIKE '%{$stableID}%'");
 						$count = 1;
 						echo "<table class='table'><thead><tr>";
-						echo"<th scope='col'><b>#</b></th><th scope='col'><b>Wochentag</b></th><th scope='col'><b>Datum</b></th><th scope='col'><b>Startzeit</b></th><th scope='col'><b>Endzeit</b></th><th scope='col'><b>Name des Events</b></th></tr></thead><tbody>";
+						echo"<th scope='col'><b>Nr.</b></th><th scope='col'><b>Wochentag</b></th><th scope='col'><b>Datum</b></th><th scope='col'><b>Startzeit</b></th><th scope='col'><b>Endzeit</b></th><th scope='col'><b>Wo?</b></th></tr></thead><tbody>";
 						$date = date('d-m-Y H:i');
 						while($row = mysqli_fetch_array($result)){
 							setlocale(LC_TIME, 'de_DE', 'deu_deu');
@@ -331,7 +350,9 @@ if (mysqli_connect_errno()){
 
 							if ($date > date('d-m-Y H:i', $dateOfEvent)) {
 								$eventTitle = $row['title'];
-								echo " <th scope='row'><b>".$count."</b></th>  <th scope='row'>".$dayOfWeek  ."</th>  <th scope='col'>".date('d-m-Y', $dateOfEvent)."</th> <td>" . date('H:i', $dateOfEvent)."</td><td>".date('H:i', $EnddateOfEvent)."</td><td>".$eventTitle."</td></tr>";
+								$stableObjectName = $row['objectName'];
+
+								echo " <th scope='row'><b>".$count."</b></th>  <th scope='row'>".$dayOfWeek  ."</th>  <th scope='col'>".date('d.m.Y', $dateOfEvent)."</th> <td>" . date('H:i', $dateOfEvent)."</td><td>".date('H:i', $EnddateOfEvent)."</td><td>".$stableObjectName."</td></tr>";
 								$count = $count + 1;
 							}else{							
 								
@@ -358,18 +379,18 @@ if (mysqli_connect_errno()){
 							<ul class="menu">
 								<li>&copy; Technick Solutions - myStable. All rights reserved</li>
 								<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-								<li>Icons made by <a href="http://okodesign.ru/" title="Elias Bikbulatov">Elias Bikbulatov</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></li>
+								<li>Icons made by <a href="http://okodesign.ru/" title="Elias Bikbulatov">Elias Bikbulatov</a> and <a href="https://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></li>
 							</ul>
 						</div>
 				</div>
 
 		<!-- Scripts -->
-			<script src="../assets/js/jquery.min.js"></script>
-			<script src="../assets/js/jquery.dropotron.min.js"></script>
-			<script src="../assets/js/browser.min.js"></script>
-			<script src="../assets/js/breakpoints.min.js"></script>
-			<script src="../assets/js/util.js"></script>
-			<script src="../assets/js/main.js"></script>
+			<script src="../../assets/js/jquery.min.js"></script>
+			<script src="../../assets/js/jquery.dropotron.min.js"></script>
+			<script src="../../assets/js/browser.min.js"></script>
+			<script src="../../assets/js/breakpoints.min.js"></script>
+			<script src="../../assets/js/util.js"></script>
+			<script src="../../assets/js/main.js"></script>
 
 			<script type="text/javascript" src="tableExport.js">
 			<script type="text/javascript" src="jquery.base64.js">	

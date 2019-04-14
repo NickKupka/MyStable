@@ -32,6 +32,8 @@ if($date < $now) {
 $sessionIDSPlitted = explode(" ", $session_value);
 $vorname = $sessionIDSPlitted[0]; // vorname aus session id
 $nachname = $sessionIDSPlitted[1]; // nachname aus session id
+$userID = $sessionIDSPlitted[2]; // user id aus session id
+$stableID = $sessionIDSPlitted[3]; // stable aus session id
 
 $con=mysqli_connect($host,$dbUser,$dbPWD,$db);
 /*
@@ -46,7 +48,7 @@ $row = mysqli_fetch_array($result);
 ?>
 <html>
 	<head>
-		<title>Dagtenschutz - myStable</title>
+		<title>Datenschutz - myStable</title>
 		<meta charset="utf-8" />
 		<!--<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />-->
 		<link rel="stylesheet" href="../assets/css/main.css" />
@@ -74,7 +76,8 @@ $row = mysqli_fetch_array($result);
 	</head>
 	<body class="is-preload">
 		<div id="page-wrapper">
-		
+			<script type="text/javascript" src="js/fullscreen.js"></script>
+
 			<!-- Header -->
 				<div id="header">
 					<!-- Logo -->
@@ -82,13 +85,26 @@ $row = mysqli_fetch_array($result);
 					<!-- Nav -->
 						<nav id="nav" style="background: white;">
 							<ul>
-								<li title="Mein Kalendar" onmouseover="this.style.background=' #4db8ff';" onmouseout="this.style.background='white';" ><a href="calendarview.php"><img border="0" alt="calendar" src="../pictures/icons/myicons/png/005-calendar-1.png"  width="52" height="52"></a></li>
-								<li title="Meine Daten" onmouseover="this.style.background=' #4db8ff';" onmouseout="this.style.background='white';"><a href="users/edituser.php"><img border="0" alt="myentires" src="../pictures/icons/myicons/png/008-settings.png"  width="52" height="52"></a></li>
+							<li>
+								<a href="#" title="Mein Kalendar"  onmouseover="this.style.background=' #4db8ff';" onmouseout="this.style.background='white';"><img border="0" alt="calendar" src="../pictures/icons/myicons/png/005-calendar-1.png"  width="52" height="52"  ></a>
+								<?php		
+									echo '<ul>';
+									$con=mysqli_connect($host,$dbUser,$dbPWD,$db);
+									$resultStableObjektName = mysqli_query($con,"SELECT stable_object_name, stable_object.id AS objectId FROM stable_object INNER JOIN users ON stable_object.stable_id = users.stable_id WHERE users.id LIKE '%{$userID}%'");
+									while ($rowStableObject = mysqli_fetch_array($resultStableObjektName)){
+											echo '<li><a href="calendarview.php?id='.$rowStableObject['objectId'] .'" >'.$rowStableObject['stable_object_name'] . '</a></li>';
+									}
+									
+									echo '</ul>';						
+								?>
+							</li>	
+							<li title="Meine Daten" onmouseover="this.style.background=' #4db8ff';" onmouseout="this.style.background='white';"><a href="users/edituser.php"><img border="0" alt="myentires" src="../pictures/icons/myicons/png/008-settings.png"  width="52" height="52"></a></li>
 								<?php 
 									/*
 										Admin only
 									*/
 									if ($row['adminAllowed'] == "1") {
+										echo "<li title='Stall Verwaltung' onmouseover=\"this.style.background=' #4db8ff';\" onmouseout=\"this.style.background='white'\";'><a href='stable/editstable.php'><img border='0' alt='allconfig' src='../pictures/icons/myicons/png/settings.png'  width='52' height='52' ></a></li>";
 										echo "<li title='Reiter Verwaltung' onmouseover=\"this.style.background=' #4db8ff';\" onmouseout=\"this.style.background='white'\";'><a href='users/alluser.php'><img border='0' alt='allusers' src='../pictures/icons/myicons/png/001-tasks.png'  width='52' height='52'></a></li>";
 										$reservation_Time = 24;				
 									}
@@ -221,7 +237,7 @@ $row = mysqli_fetch_array($result);
 							<ul class="menu">
 								<li>&copy; Technick Solutions - myStable. All rights reserved</li>
 								<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-								<li>Icons made by <a href="http://okodesign.ru/" title="Elias Bikbulatov">Elias Bikbulatov</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></li>
+								<li>Icons made by <a href="http://okodesign.ru/" title="Elias Bikbulatov">Elias Bikbulatov</a> and <a href="https://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></li>
 							</ul>
 						</div>
 				</div>

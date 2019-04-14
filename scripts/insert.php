@@ -8,6 +8,8 @@ if(!isset($_SESSION['userid'])) {
 } 
 header('Content-Type: text/html; charset=utf-8');
 include("dbconnect.php");
+$objectID = $_GET["id"];
+
 $ini = parse_ini_file('../my_stable_config.ini');
 $host = $ini["db_servername"];
 $db = $ini['db_name'];
@@ -44,19 +46,20 @@ $stableID = $sessionIDSPlitted[3]; // stable aus session id
 
 if(isset($_POST["title"]))
 {
- $query = "INSERT INTO events (title, start_event, end_event, stable_id)  VALUES (:title, :start_event, :end_event, :stable_id)";
+ $query = "INSERT INTO events (title, start_event, end_event, stable_id, stable_object_id)  VALUES (:title, :start_event, :end_event, :stable_id, :stable_object_id)";
  $statement = $pdo->prepare($query);
  $statement->execute(
   array(
    ':title'  => $_POST['title'],
    ':start_event' => $_POST['start'],
    ':end_event' => $_POST['end'],
-   ':stable_id' => $stableID
+   ':stable_id' => $stableID,
+   ':stable_object_id' => $objectID
   )
  );
  $id = $pdo->lastInsertId();
 
- $queryLogging = "INSERT INTO logging (action, starttime, endtime, eventid, user, stable_id)  VALUES (:action, :start_event, :end_event, :id, :title, :stable_id)";
+ $queryLogging = "INSERT INTO logging (action, starttime, endtime, eventid, user, stable_id, stable_object_id)  VALUES (:action, :start_event, :end_event, :id, :title, :stable_id, :stable_object_id)";
  $statementLogging = $pdo->prepare($queryLogging);
  $statementLogging->execute(
   array(
@@ -65,7 +68,8 @@ if(isset($_POST["title"]))
    ':end_event' => $_POST['end'],
    ':id' => $id,
   ':title'  => $_POST['title'],
-  ':stable_id' => $stableID
+  ':stable_id' => $stableID,
+  ':stable_object_id' => $objectID
   )
  );
  }

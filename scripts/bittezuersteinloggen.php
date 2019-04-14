@@ -14,8 +14,9 @@
 					<!-- Nav -->
 						<nav id="nav">
 							<ul>
-							<li ><a href="calendarview.php">Home</a></li>
-								<li><a href="impressum.html">Impressum</a></li>
+							<li ><a href="../index.html">Home</a></li>
+								<li><a href="../impressum.html">Impressum</a></li>
+								<li><a href="../datenschutz.html">Datenschutz</a></li>
 							</ul>
 						</nav>
 				</div>

@@ -22,8 +22,6 @@ $userid = $_SESSION['userid'];
 $session_value=(isset($_SESSION['userid']))?$_SESSION['userid']:''; 
 $expireDate = $_SESSION['expiryDate'];
 
-$expireDate = $_SESSION['expiryDate'];
-
 $date = new DateTime($expireDate);
 $now = new DateTime();
 if($date < $now) {
@@ -59,6 +57,8 @@ Check if current user is admin
 $result = mysqli_query($con,"SELECT * FROM `users` WHERE `nachname` LIKE '%{$nachname}%' AND `vorname` LIKE '%{$vorname}%'");
 $row = mysqli_fetch_array($result);
 
+$resultStableObjektName = mysqli_query($con,"SELECT stable_object_name, stable_object.id AS objectId FROM stable_object INNER JOIN users ON stable_object.stable_id = users.stable_id WHERE users.id LIKE '%{$userID}%'");
+$resultStableName = mysqli_query($con,"SELECT stable_name from stable stbl inner join users usr on stbl.id = usr.stable_id where usr.id LIKE '%{$userID}%'");
 
 ?>
 <html>
@@ -90,6 +90,7 @@ $row = mysqli_fetch_array($result);
 		<link rel="icon" href="../pictures/favicon.ico" type="image/x-icon">
 	</head>
 	<body class="is-preload">
+	<script type="text/javascript" src="js/fullscreen.js"></script>
 		<div id="page-wrapper">
 			<!-- Header -->
 				<div id="header">
@@ -98,13 +99,25 @@ $row = mysqli_fetch_array($result);
 		<!-- Nav -->
 			<nav id="nav" style="background: white;">
 				<ul>
-					<li title="Mein Kalendar" class="current" onmouseover="this.style.background=' #4db8ff';" onmouseout="this.style.background='white';"><a  href="calendarview.php"><img border="0" alt="calendar" src="../pictures/icons/myicons/png/005-calendar-1.png"  width="52" height="52"  ></a></li>
+					<li class="current">
+						<a href="#" title="Mein Kalendar"  onmouseover="this.style.background=' #4db8ff';" onmouseout="this.style.background='white';"><img border="0" alt="calendar" src="../pictures/icons/myicons/png/005-calendar-1.png"  width="52" height="52"  ></a>
+						<?php		
+							echo '<ul>';
+							$resultStableObjektName = mysqli_query($con,"SELECT stable_object_name, stable_object.id AS objectId FROM stable_object INNER JOIN users ON stable_object.stable_id = users.stable_id WHERE users.id LIKE '%{$userID}%'");
+							while ($rowStableObject = mysqli_fetch_array($resultStableObjektName)){
+									echo '<li><a href="calendarview.php?id='.$rowStableObject['objectId'] .'" >'.$rowStableObject['stable_object_name'] . '</a></li>';
+							}
+							
+							echo '</ul>';						
+						?>
+					</li>
 					<li title="Meine Daten" onmouseover="this.style.background=' #4db8ff';" onmouseout="this.style.background='white';"><a href="users/edituser.php"><img border="0" alt="myentires" src="../pictures/icons/myicons/png/008-settings.png"  width="52" height="52" ></a></li>
 					<?php 
 						/*
 							Admin only
 						*/
 						if ($row['adminAllowed'] == "1") {
+							//echo "<li title='Stall Verwaltung' onmouseover=\"this.style.background=' #4db8ff';\" onmouseout=\"this.style.background='white'\";'><a href='users/editstable.php'><img border='0' alt='allconfig' src='../pictures/icons/myicons/png/settings.png'  width='52' height='52' ></a></li>";
 							echo "<li title='Reiter Verwaltung' onmouseover=\"this.style.background=' #4db8ff';\" onmouseout=\"this.style.background='white'\";'><a href='users/alluser.php'><img border='0' alt='allusers' src='../pictures/icons/myicons/png/001-tasks.png'  width='52' height='52' ></a></li>";
 							$reservation_Time = 24;				
 						}
@@ -122,16 +135,27 @@ $row = mysqli_fetch_array($result);
 						<div >
 							
 							<h2 align="center">Willkommen in deinem Bereich <?php echo "$vorname $nachname";?></h2>
-							<h3 align="center">Reithallen-Plan für 
+							<h3 align="center"> 
+								Dein Stall: 
 								<?php 
 									/*
 									Get current stable
 									*/
-									$con=mysqli_connect($host,$dbUser,$dbPWD,$db);
-									$resultStableName = mysqli_query($con,"SELECT stable_name from stable stbl inner join users usr on stbl.id = usr.stable_id where usr.id LIKE '%{$userID}%'");
 									$rowStableResult = mysqli_fetch_array($resultStableName);
 									$aktuellerStallname = $rowStableResult['stable_name'];
 									echo "$aktuellerStallname";
+									
+								?>
+								<br/>Dein aktueller Kalender: 
+								<?php 
+									/*
+									Get current stable object like roundpen or reithalle or whatever
+									*/
+									$resultStableObjektName = mysqli_query($con,"SELECT stable_object_name FROM stable_object INNER JOIN users ON stable_object.stable_id = users.stable_id WHERE users.id LIKE '%{$userID}%'  AND stable_object.id = " .$_GET['id']);
+									$rowStableObjektResult = mysqli_fetch_array($resultStableObjektName);
+									$aktuellerstallobjekt = $rowStableObjektResult['stable_object_name'];
+									echo "$aktuellerstallobjekt";
+									
 								?>
 							</h3>
 							<?php 
@@ -175,7 +199,7 @@ $row = mysqli_fetch_array($result);
 										}
 										
 										
-										echo "<h4 align='center'>Hinweis: Aktuell kann maximal 1 Stunde am Stück gebucht werden.<br/>Längere Zeiten sind derzeit nur über mehrere Buchung verfügbar.</h4>";
+										echo "<h4 align='center'>Hinweis: Aktuell kann maximal 1 Stunde am Stück gebucht werden. Längere Zeiten sind derzeit nur über mehrere Buchung verfügbar.</h4>";
 							
 									} 
 									
@@ -241,7 +265,7 @@ $row = mysqli_fetch_array($result);
 							<ul class="menu">
 								<li>&copy; Technick Solutions - myStable. All rights reserved</li>
 								<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-								<li>Icons made by <a href="http://okodesign.ru/" title="Elias Bikbulatov">Elias Bikbulatov</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></li>
+								<li>Icons made by <a href="http://okodesign.ru/" title="Elias Bikbulatov">Elias Bikbulatov</a> and <a href="https://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></li>
 							</ul>
 						</div>
 				</div>
@@ -254,7 +278,7 @@ $row = mysqli_fetch_array($result);
 			<script src="../assets/js/breakpoints.min.js"></script>
 			<script src="../assets/js/util.js"></script>
 			<script src="../assets/js/main.js"></script>
-		
+			
 		
 		<link rel='stylesheet' href='fullcalendar/fullcalendar.css' />
 		<script src='fullcalendar/lib/jquery.min.js'></script>
@@ -297,8 +321,9 @@ $row = mysqli_fetch_array($result);
 		};				
 		var vorname = '<?php echo $vorname;?>';
 		var nachname = '<?php echo $nachname;?>';
-		var username= vorname + " " + nachname;
+		var username= vorname + " " + nachname;	
 		var reservationTime = '<?php echo $reservation_Time;?>';
+		var stable_object_id = '<?php echo $_GET['id']; ?>';
 		/*
 		Variable will be used to prevent users to drag events from the past to the future....what a fix. 20.02.2019
 		*/
@@ -345,7 +370,8 @@ $row = mysqli_fetch_array($result);
 		selectHelper:true,
 		
 		eventConstraint: "businessHours",
-		events: 'load.php',
+		
+		events: "load.php?id="+stable_object_id ,
 	
 		select: function(start, end, allDay){
 			var check = $.fullCalendar.formatDate(start,'yyyy-MM-dd');
@@ -359,7 +385,7 @@ $row = mysqli_fetch_array($result);
 				  var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
 					eventName = eventName + ": " + username;
 					  $.ajax({		  
-					   url:"insert.php",
+					   url:"insert.php?id="+stable_object_id ,
 					   type:"POST",
 					   data:{title:eventName, start:start, end:end},
 					   success:function(){
@@ -404,7 +430,7 @@ $row = mysqli_fetch_array($result);
 				var title = event.title;
 				var id = event.id;
 				$.ajax({
-					url:"update.php",
+					url:"update.php?id="+stable_object_id ,
 					type:"POST",
 					data:{title:title, start:start, end:end, id:id},
 					success:function(){
@@ -443,7 +469,7 @@ $row = mysqli_fetch_array($result);
 						var title = event.title;
 						//var id = event.id;
 						$.ajax({
-							url:"update.php",
+							url:"update.php?id="+stable_object_id ,
 							type:"POST",
 							data:{title:title, start:start, end:end, id:id},
 							success:function(){
@@ -478,7 +504,7 @@ $row = mysqli_fetch_array($result);
 					// darf event löschen
 					if(confirm("Bist du dir sicher, dass du deinen Eintrag löschen möchtest?")){
 				  $.ajax({
-				   url:"delete.php",
+				   url:"delete.php?id="+stable_object_id ,
 				   type:"POST",
 				   data:{id:id},
 				   success:function(){
