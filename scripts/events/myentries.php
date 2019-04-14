@@ -91,7 +91,7 @@ $resultStableName = mysqli_query($con,"SELECT stable_name from stable stbl inner
 		
 	</head>
 	<body class="is-preload">
-		<!--<script type="text/javascript" src="../js/fullscreen.js"></script>-->
+	<script type="text/javascript" src="../js/fullscreen.js"></script>
 	<div id="page-wrapper">
 		<div style="background-color: white"  id="page-wrapper" align="center">
 			<!-- Header -->

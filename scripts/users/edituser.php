@@ -157,7 +157,8 @@ $row = mysqli_fetch_array($result);
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
 	</head>
 	<body class="is-preload">
-			
+		<script type="text/javascript" src="../js/fullscreen.js"></script>
+
 
 		<div id="page-wrapper">
 			<!-- Header -->
