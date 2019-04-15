@@ -254,9 +254,9 @@ return $randomString;
 				
 				?>
 					<div class="container">
-						<h2 align="center" > Registrierung eines neuen Stalls</h2>
+						<h2 align="center" >Registrierung eines neuen Stalls</h2>
 						<p align="center">Hier können sich Stallbesitzer für die Nutzung von myStable registrieren.</p>
-						<p align="center"> Bitte füllen Sie als Stallbesitzer alle notwendigen Informationen aus.</p>
+						<p align="center">Bitte füllen Sie als Stallbesitzer alle notwendigen Informationen aus.</p>
 
 							<form method="post" accept-charset="utf-8">
 								<div class="form-group">

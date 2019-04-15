@@ -53,59 +53,6 @@ $userLaueftAusAm = $user['ExpiryDate'];
 $userVerwarnt = $user['Verwarnt'];
 $userGesperrt = $user['Gesperrt'];
 
-
-if (isset($_POST['submit'])) {
-  $error = false;
-	$vorname =  trim($_POST['vorname']);
-	$nachname = trim($_POST['nachname']);
-	$email = trim($_POST['Email']);
-	$NameDesPferdes =trim($_POST['namedespferdes']);
-	$aktiv = $_POST['dropdownuseractive'];
-	
-  
-    if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $error = true;
-    }     
-	if(strlen($nachname) == 0) {
-        $error = true;
-    }
-	
-	if(strlen($NameDesPferdes) == 0) {
-        $error = true;
-    }
-    
-	if(!$error) { 
-		$statementCheckUser = $pdo->prepare("SELECT * FROM users WHERE id = '$id'");
-		$statementCheckUser->execute(array(':vorname' => $vorname, ':nachname' => $nachname));   
-		$userCheck = $statementCheckUser->fetch();
-    }else{
-		echo "error occured";
-	}
-    
-    if(!$error) {    
-		$statementUpdateUser = $pdo->prepare("UPDATE users SET vorname = :vorname_neu, nachname = :nachname_neu, email = :email_neu, NameDesPferdes = :NameDesPferdes_neu WHERE id = '$id'");
-		$statementUpdateUser->execute(array(':vorname_neu' => $vorname, ':nachname_neu' => $nachname, ':email_neu' => $email, ':NameDesPferdes_neu' => $NameDesPferdes));   
-		$count = $statementUpdateUser->rowCount();
-
-		if($count == '0'){
-			"Beim Aktualisieren Ihrer Daten ist ein Fehler aufgetreten";
-		} else {
-			"Aktualisieren erfolgreich";
-			header("Location: edituser.php");
-		}
-		
-		/* if($userUpdate != false) {     
-			// update hat funktioniert
-			
-        } else {
-						echo 'Beim Abspeichern ist leider ein Fehler aufgetreten<br>';
-						var_dump($userUpdate);
-        } */
-    }else{
-		echo "can't do anything";
-	}		
-}
-
 /*
 Check if current user is admin
 */
@@ -113,6 +60,73 @@ $con=mysqli_connect($host,$dbUser,$dbPWD,$db);
 $result = mysqli_query($con,"SELECT * FROM `users` WHERE `nachname` LIKE '%{$nachname}%' AND `vorname` LIKE '%{$vorname}%'");
 $row = mysqli_fetch_array($result);
 
+/*
+Insert new Stable Object
+*/
+if (isset($_POST['submit'])) {
+	$error = false;
+	$stableObjectName = trim($_POST['nameDesObjekts']);
+	$oeffnungsTage = filter_input(INPUT_POST, "oeffnungsTage");
+	$startZeit = trim($_POST['uhrzeitVon']);
+	$endZeit = trim($_POST['uhrzeitBis']);
+	$anzahlParallelerReiterDropwdown = filter_input(INPUT_POST, "anzahlParallelerReiterDropwdown");
+	$maximaleBelegungsdauer = filter_input(INPUT_POST, "maximaleBelegungsdauer");
+	
+	if(strlen($stableObjectName) == 0) {
+        $error = true;
+    }
+	
+	if(strlen($oeffnungsTage) == 0) {
+        $error = true;
+    }
+    
+	if(strlen($startZeit) == 0) {
+        $error = true;
+    }
+	
+	
+	if(strlen($endZeit) == 0) {
+        $error = true;
+    }
+	
+	if(strlen($anzahlParallelerReiterDropwdown) == 0){
+		$error = true;
+	}
+	if (strlen($maximaleBelegungsdauer) == 0){
+		$error = true;
+	}
+	echo "stableObjectName: " . $stableObjectName . "</br>";
+	echo "oeffnungsTage: " . $oeffnungsTage . "</br>";
+	echo "startZeit: " . $startZeit . "</br>";
+	echo "endZeit: " . $endZeit . "</br>";
+	echo "anzahlParallelerReiterDropwdown: " . $anzahlParallelerReiterDropwdown . "</br>";
+	echo "maximaleBelegungsdauer: " . $maximaleBelegungsdauer . "</br>";
+
+
+	
+    if(!$error) {    
+		$statementInsertNewStableObject = $pdo->prepare("INSERT INTO stable_object (stable_id, stable_object_name , max_parallel_users, object_occupancy, openinghours_start, openinghours_end, object_endurance) 
+		VALUES (:stableID, :stableObjectName, :anzahlParallelerReiterDropwdown,:oeffnungsTage, :startZeit, :endZeit, :maximaleBelegungsdauer)");
+		$statementInsertNewStableObject->execute(array(
+		':stableID' => $stableID
+		, ':stableObjectName' => $stableObjectName
+		, ':anzahlParallelerReiterDropwdown' => $anzahlParallelerReiterDropwdown
+		, ':oeffnungsTage' => $oeffnungsTage
+		, ':startZeit' => $startZeit
+		, ':endZeit' => $endZeit
+		, ':maximaleBelegungsdauer' => $maximaleBelegungsdauer));   
+		$count = $statementInsertNewStableObject->rowCount();
+
+		if($count == '0'){
+			"Beim Anlegen Ihrer Daten ist ein Fehler aufgetreten";
+		} else {
+			"Objekt wurde erfolgreich hinzugefügt erfolgreich";
+			header("Location: editstable.php");
+		}
+    }else{
+		echo "can't do anything";
+	}		
+}
 
 ?><html>
 	<head>
@@ -157,7 +171,7 @@ $row = mysqli_fetch_array($result);
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
 	</head>
 	<body class="is-preload">
-			<script type="text/javascript" src="../js/fullscreen.js"></script>
+			<!--<script type="text/javascript" src="../js/fullscreen.js"></script>-->
 
 		<div id="page-wrapper">
 			<!-- Header -->
@@ -184,7 +198,7 @@ $row = mysqli_fetch_array($result);
 											Admin only
 										*/
 										if ($row['adminAllowed'] == "1") {
-											//echo "<li title='Stall Verwaltung' class='current' onmouseover=\"this.style.background=' #4db8ff';\" onmouseout=\"this.style.background='white'\";'><a href='../stable/editstable.php'><img border='0' alt='allconfig' src='../../pictures/icons/myicons/png/settings.png'  width='52' height='52' ></a></li>";
+											echo "<li title='Stall Verwaltung' class='current' onmouseover=\"this.style.background=' #4db8ff';\" onmouseout=\"this.style.background='white'\";'><a href='#'><img border='0' alt='allconfig' src='../../pictures/icons/myicons/png/settings.png'  width='52' height='52' ></a></li>";
 											echo "<li title='Reiter Verwaltung' onmouseover=\"this.style.background=' #4db8ff';\" onmouseout=\"this.style.background='white'\";'><a href='../users/alluser.php'><img border='0' alt='allusers' src='../../pictures/icons/myicons/png/001-tasks.png'  width='52' height='52'></a></li>";
 											$reservation_Time = 24;				
 										}
@@ -199,137 +213,150 @@ $row = mysqli_fetch_array($result);
 			<!-- Main -->
 				<section class="wrapper style1">
 					<div align="center" class="container">
+					<h2>Legen Sie ein neues Stallobjekt an.</h2>
 						<form class="form-horizontal" action="#" method="POST"> <!--?editUser=1 -->
 								<fieldset>
 
 								<!-- Form Name -->
-								<legend>Hier sehen Sie Ihre hinterlegten Daten.</legend>
-
+								<p>Sollten sie ein neues Objekt in Ihrem Stall verwalten möchten, tragen Sie es einfach hier ein.</br>Es wird automatisch übernommen.</p>
 								<!-- Text input-->
 								<div class="form-group">
-								  <label class="col-md-4 control-label" for="Vorname">Vorname</label>  
+								  <label class="col-md-4 control-label" >Name des neues Stallobjekts</label>  
 								  <div class="col-md-4">
-								  <input id="vorname" name="vorname" type="text" size="100" value="<?php echo $vorname;?>" class="form-control input-lg" readonly>
+								  <input id="nameDesObjekts" name="nameDesObjekts" type="text" placeholder="Neue tolle große Reithalle" class="form-control input-md" required>
 								  </div>
 								</div>
 
-								<!-- Text input-->
 								<div class="form-group">
-								  <label class="col-md-4 control-label" for="nachname">Nachname</label>  
+								  <label class="col-md-4 control-label" for="oeffnungsZeiten">Belegungstage des Objekts</label>
 								  <div class="col-md-4">
-								  <input id="nachname" name="nachname" type="text"  value="<?php echo $nachname;?>" class="form-control input-md" readonly> 
-									
+									<select id="oeffnungsTage" name="oeffnungsTage" class="form-control"  required>
+									  <option value="Montag bis Sonntag">Montag bis Sonntag</option>
+									  <option value="Montag bis Freitag">Montag bis Freitag</option>
+									  <option value="Wochenende">Wochenende</option>
+									  <option value="Montag">Montag</option>
+									  <option value="Dienstag">Dienstag</option>
+									  <option value="Mittwoch">Mittwoch</option>
+									  <option value="Donnerstag">Donnerstag</option>
+									  <option value="Freitag">Freitag</option>
+									  <option value="Samstag">Samstag</option>
+									  <option value="Sonntag">Sonntag</option>
+									  </select>
 								  </div>
 								</div>
-
-								<!-- Text input-->
 								<div class="form-group">
-								  <label class="col-md-4 control-label" for="namedespferdes">Name des Pferdes</label>  
-								  <div class="col-md-4">
-								  <input id="namedespferdes" name="namedespferdes" type="text" value="<?php echo $userPferd;?>" class="form-control input-md" >
-									
+								  <label class="col-md-2 control-label" >Uhrzeit von:</label>  
+								  <div class="col-md-2">
+									<input id="uhrzeitVon" name="uhrzeitVon" type="time" placeholder="07:00" class="form-control input-md" required>
 								  </div>
 								</div>
-
-								<!-- Text input-->
 								<div class="form-group">
-								  <label class="col-md-4 control-label" for="email">E-Mail Adresse</label>  
-								  <div class="col-md-4">
-								  <input id="email" name="Email" type="text"value="<?php echo $userEMail;?>" class="form-control input-md" >
-									
-								  </div>
-								</div>
-
-								<!-- Text input-->
-								<div class="form-group">
-								  <label class="col-md-4 control-label" for="aktivseit">Registriert seit</label>  
-								  <div class="col-md-4">
-								  <input id="aktivseit" name="aktivseit" type="text" value="<?php echo date('d.m.Y  H:i:s', strtotime($userAngelegtAm));?>" class="form-control input-md" readonly>
-									
-								  </div>
-								</div>
-
-								<!-- Text input-->
-								<div class="form-group">
-								  <label class="col-md-4 control-label" for="lizenzlaeuftbis">Lizenz läuft bis zum</label>  
-								  <div class="col-md-4">
-								  <input id="lizenzlaeuftbis" name="lizenzlaeuftbis" type="text" value="<?php echo date('d.m.Y', strtotime($userLaueftAusAm));?>" class="form-control input-md" readonly>
-									
-								  </div>
-								</div>
-
-								<!-- Select Basic -->
-								<div class="form-group">
-								  <label class="col-md-4 control-label" for="dropdownuseractive">Nutzerdaten</label>
-								  <div class="col-md-4">
-									<select id="dropdownuseractive" name="dropdownuseractive" class="form-control" readonly>
-										<option selected hidden="true"><?php echo $userAktiv;?></option>
-									  <option value="1">Reiter aktiv</option>
-									  <option value="0">Reiter nicht mehr in Stall</option>
-									</select>
+								  <label class="col-md-2 control-label" >Uhrzeit bis:</label>  
+								  <div class="col-md-2">
+									<input id="uhrzeitBis" name="uhrzeitBis" type="time" placeholder="22:00" class="form-control input-md" required>
 								  </div>
 								</div>
 								
+								<div class="form-group">
+								  <label class="col-md-4 control-label" for="anzahlParallelerReiterDropwdown">Maximale Anzahl an Reitern auf dem Platz</label>
+								  <div class="col-md-4">
+									<select id="anzahlParallelerReiterDropwdown" name="anzahlParallelerReiterDropwdown" class="form-control" required>
+									  <option value="1">1</option>
+									  <option value="2">2</option>
+									  <option value="3">3</option>
+									  <option value="4">4</option>
+									  <option value="5">5</option>
+									  </select>
+								  </div>
+								</div>
+								
+								<div class="form-group">
+								  <label class="col-md-4 control-label" for="anzahlParallelerReiterDropwdown">Maximale Belegungsdauer</label>
+								  <div class="col-md-4">
+									<select id="maximaleBelegungsdauer" name="maximaleBelegungsdauer" class="form-control" required>
+									  <option value="00:30:00">0:30 Stunde</option>
+									  <option value="00:45:00">0:45 Stunde</option>
+									  <option value="01:00:00">01:00 Stunde</option>
+									  <option value="01:30:00">01:30 Stunden</option>
+									  <option value="02:00:00">02:00 Stunden</option>
+									  </select>
+								  </div>
+								</div>
 								<!-- Text input-->
 								<div class="form-group">
-								  <label class="col-md-4 control-label" for="meinStall">Mein Stall</label>  
+								  <label class="col-md-4 control-label" for="submit">Stallobjekt anlegen</label>
 								  <div class="col-md-4">
-								  <input id="meinStall" name="meinStall" type="text" value="<?php 
-										/*
-										Get current stable
-										*/
-										$con=mysqli_connect($host,$dbUser,$dbPWD,$db);
-										$resultStableName = mysqli_query($con,"SELECT stable_name from stable stbl inner join users usr on stbl.id = usr.stable_id where usr.id LIKE '%{$userID}%'");
-										$rowStableResult = mysqli_fetch_array($resultStableName);
-										$aktuellerStallname = $rowStableResult['stable_name'];
-										echo "$aktuellerStallname";?>" 
-									class="form-control input-md" readonly>
-									
+									<button id="submit" type="submit" name="submit" class="btn btn-success">Anlegen</button>
 								  </div>
 								</div>
-
-								<div class="form-group">
-								  <label class="col-md-4 control-label" for="reiterverwarnt">Verwarnung</label>  
-								  <div class="col-md-4">
-								  <?php 
-									if ($userVerwarnt == "1"){
-										$userVerwarnt = "Reiter wurde verwarnt.";
-									}else if ($userVerwarnt == "0"){
-										$userVerwarnt = "Keine derzeitige Verwarnung vorhanden.";
-									}
-									
-								  ?>
-								  <input id="reiterverwarnt" name="reiterverwarnt" type="text" value="<?php echo ($userVerwarnt);?>" class="form-control input-md" readonly>
-									
-								  </div>
-								</div>
-							<div class="form-group">
-								  <label class="col-md-4 control-label" for="reitergesperrt">Sperre</label>  
-								  <div class="col-md-4">
-								  <?php 
-									
-									if ($userGesperrt == "1"){
-										$userGesperrt = "Reiter ist derzeit gesperrt.";
-									}else if ($userGesperrt == "0"){
-										$userGesperrt = "Keine derzeitige Sperre vorhanden.";
-									}
-								  ?>
-								  <input id="reitergesperrt" name="reitergesperrt" type="text" value="<?php echo ($userGesperrt);?>" class="form-control input-md" readonly>
-									
-								  </div>
-								</div>
-
-								<!-- Button -->
-								<div class="form-group">
-								  <label class="col-md-4 control-label" for="speicherButton"></label>
-								  <div class="col-md-4">
-									<input type="submit" name="submit" class="btn btn-primary" id="speichern" value="Speichern" />
-								  </div>
-								</div>
-
 								</fieldset>
-								</form>
+								</form></br></br>
+								
+						<h2>Hier sehen Sie alle Ihre Stallobjekte.</h2><br/>
+					<div style="width: 100%; height: 400px; overflow-y: scroll;">
+						
+					<?php 
+						$result = mysqli_query($con,"SELECT * FROM `stable_object` WHERE  `stable_id` = '{$stableID}'");
+						$count = 1;
+						echo "<table class='table' >
+								<thead>
+									<tr>";
+								echo"<th scope='col'><b>#</b></th>
+									 <th scope='col'><b>Name des Objekts</b></th>
+									 <th scope='col'><b>Anzahl paralleler Nutzer</b></th>
+									 <th scope='col'><b>Tage</b></th>
+									 <th scope='col'><b>Nutzungszeiten</b></th>
+									 <th scope='col'><b>Max. Belegungsdauer</b></th>
+									 <th scope='col'><b>Löschen</b></th>
+									 </tr>
+								</thead>
+							<tbody>";
+						$dateStart = date('H:i');
+						$dateEnd = date("H:i", strtotime('+5 hours'));
+						while($rowStableObjects = mysqli_fetch_array($result)){
+							setlocale(LC_TIME, 'de_DE', 'deu_deu');
+							$stableObjectID = $rowStableObjects['id'];
+							$stable_id = $rowStableObjects['stable_id'];
+							$maxParallelUsers = $rowStableObjects['max_parallel_users'];
+							$stableObjectName = $rowStableObjects['stable_object_name'];
+							$stableDays = $rowStableObjects['object_occupancy'];
+							$startzeit =  substr($rowStableObjects['openinghours_start'],0,5);
+							$endzeit =  substr($rowStableObjects['openinghours_end'],0,5);
+							$belegungsdauer =  substr($rowStableObjects['object_endurance'],0,5);
+						
+						
+							echo "<td scope='row'><b>".$count."</b></td>
+							      <td scope='row'>".$stableObjectName ."</td>
+								  <td scope='row'>".$maxParallelUsers ."</td>
+								  <td scope='row'>".$stableDays."</td>
+								  <td scope='row'>".$startzeit." - ".$endzeit." Uhr</td>								  
+								  <td scope='row'>".$belegungsdauer." Stunde(n)</td>";
 
+							/*echo "<td>
+								<form name='frmBearbeiten' action='#' method='loadAllData' >
+									<input type='hidden' name='itemid' value=".$stableObjectID.">
+									<input style='background-color: blue;' pointer-events: none;' type='submit'  name='bearbeitenButton' value='Objekt Bearbeiten'>
+								</form>
+								</td>";*/
+							echo "<td>
+								<form name='frmSperren' action='stableObjectBlocked.php' method='post' >
+									<input type='hidden' name='itemid' value=".$stableObjectID.">
+									<input style='background-color: red;' pointer-events: none;' type='submit'  name='sperrenButton' value='Objekt Sperren'>
+								</form>
+								</td>";
+							
+							
+							echo"</tr>";
+							$count = $count + 1;
+							
+						}
+						echo "</tbody></table>";
+						  //echo "Start: " . $row['start_event'] . " Ende : " . $row['end_event'] . " " . $row['title'] ; //these are the fields that you have stored in your database table employee
+						  //echo "<br />";
+							mysqli_close($con);?>"
+					</div>
+					
+				
 					</div>
 					<br/>
 					<br/>
